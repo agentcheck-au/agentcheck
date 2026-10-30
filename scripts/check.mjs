@@ -5,7 +5,9 @@ const publicFiles = await readdir("public");
 const allowed = new Set([
   "index.html",
   "app.js",
+  "app-20261031-mobile-v3.js",
   "styles.css",
+  "styles-20261031-mobile-v3.css",
   "_headers",
   "_routes.json",
   "favicon.svg",
@@ -17,6 +19,7 @@ for (const file of publicFiles)
   assert.ok(allowed.has(file), `Unexpected public artifact: ${file}`);
 for (const file of [
   "public/app.js",
+  "public/app-20261031-mobile-v3.js",
   "public/referral-motion.js",
   "lib/nsw-worker.js",
   "scripts/dev-server.mjs",
@@ -26,6 +29,14 @@ for (const file of [
   "functions/api/[[path]].js",
 ])
   execFileSync(process.execPath, ["--check", file]);
+// The deployed cache-busting copies must exactly match canonical sources.
+for (const [source, deployed] of [
+  ["public/app.js", "public/app-20261031-mobile-v3.js"],
+  ["public/styles.css", "public/styles-20261031-mobile-v3.css"],
+]) {
+  assert.equal(await readFile(deployed, "utf8"), await readFile(source, "utf8"),
+    `Deployed asset out of sync: ${deployed}`);
+}
 const html = await readFile("public/index.html", "utf8");
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
 assert.equal(ids.length, new Set(ids).size, "Duplicate HTML IDs");
