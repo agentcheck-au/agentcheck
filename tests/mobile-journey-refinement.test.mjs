@@ -36,7 +36,7 @@ test("result cards invite visitors to view a record without claiming verificatio
 
 test("HTML loads new asset paths so cached pre-release JavaScript cannot run", () => {
   assert.match(html, /src="\/app-20261031-mobile-v3\.js"/);
-  assert.match(html, /href="\/styles-20261031-mobile-v3\.css"/);
+  assert.match(html, /href="\/styles-20261031-mobile-v4\.css"/);
   const deployedApp = readFileSync(new URL("../public/app-20261031-mobile-v3.js", import.meta.url), "utf8");
   const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v4.css", import.meta.url), "utf8");
   assert.equal(deployedApp, app);
