@@ -226,7 +226,7 @@ test("visitor-reported outcomes cannot become a government all-clear", async () 
   const buttons = ui.document.querySelectorAll(".answer-button");
   ui.click(buttons[0]);
   let conclusion = ui.document.querySelector(".register-conclusion");
-  assert.match(conclusion.textContent, /RED FLAG · Visitor-reported/);
+  assert.match(conclusion.textContent, /RED FLAG · Matching action selected/);
   assert.match(conclusion.textContent, /not a finding independently verified/);
   ui.click(buttons[1]);
   assert.doesNotMatch(conclusion.textContent, /RED FLAG/);

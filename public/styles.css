@@ -3068,3 +3068,21 @@ html, body { overflow-x: clip; }
   .results-section, .results-shell { max-width: 100%; min-width: 0; }
   .results-heading h2 { overflow-wrap: anywhere; }
 }
+
+/* Journey refinements: maintain a readable introduction and explicit check order. */
+.manifesto-explainer { max-width: 620px; }
+.next-regulatory-step {
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
+  margin-top: 24px;
+  text-align: center;
+  white-space: normal;
+}
+#regulatory-check { scroll-margin-top: 100px; }
+/* Safari focuses and zooms any text input below 16px, including the result filter. */
+@media (max-width: 760px) {
+  .search-panel .search-input-wrap input,
+  .results-tools input { font-size: 16px; }
+  .next-regulatory-step { width: 100%; }
+}
