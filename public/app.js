@@ -1,283 +1,1066 @@
-'use strict';
+"use strict";
 (() => {
-  const REGISTRY_URL = 'https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register';
+  const REGISTER =
+    "https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register";
+  const LICENCES = "https://verify.licence.nsw.gov.au/home/Property";
+  const RESUME = "agentcheck:resume";
   const $ = (id) => document.getElementById(id);
-  const form = $('search-form'), input = $('search-input'), searchButton = $('search-button');
-  const section = $('results-section'), list = $('results-list'), panel = $('detail-panel'), status = $('status-message');
-  const toast = $('toast');
-  let requestVersion = 0, toastTimeout = 0, lastResults = [];
-  $('year').textContent = String(new Date().getFullYear());
-
-  const el = (tag, className = '', content) => {
-    const element = document.createElement(tag);
-    if (className) element.className = className;
-    if (content !== undefined) element.textContent = String(content);
-    return element;
+  const el = (tag, css = "", text) => {
+    const node = document.createElement(tag);
+    if (css) node.className = css;
+    if (text !== undefined) node.textContent = String(text);
+    return node;
   };
-  const add = (parent, tag, className = '', content) => parent.appendChild(el(tag, className, content));
-  const safe = (value, fallback = 'Not published') => typeof value === 'string' && value.trim() ? value.trim() : fallback;
-  function displayTime(value) {
-    const date = new Date(value);
-    return !value || Number.isNaN(date.getTime()) ? '' : date.toLocaleString('en-AU', {day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'});
-  }
-  function message(text, isError = false) { status.hidden = !text; status.textContent = text; status.className = `status-message${isError ? ' error' : ''}`; }
-  function announce(text) {toast.textContent = text; toast.hidden = false; clearTimeout(toastTimeout); toastTimeout = setTimeout(() => {toast.hidden=true;},4800);}
-  function icon(name) {
-    const i = el('span', `inline-icon icon-${name}`);
-    i.setAttribute('aria-hidden','true');
-    const symbols = {
-      pin: '<path d="M12 21s7-5.8 7-11a7 7 0 1 0-14 0c0 5.2 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/>',
-      check: '<path d="m4 12 5 5L20 6"/>',
-      shield: '<path d="M12 2 21 6v6c0 6-4 9-9 11-5-2-9-5-9-11V6l9-4Z"/><path d="m8 12 3 3 5-6"/>',
-      flag: '<path d="M5 22V4m0 1q5-3 9 0t7 0v11q-4 3-7 0t-9 0"/>',
-      arrow: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
-      copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
-      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
-    };
-    i.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${symbols[name]||symbols.shield}</svg>`;
-    return i;
-  }
-  function chip(value) {
-    const current = String(value || '').toLowerCase() === 'current';
-    const pill = el('span', `licence-status ${current ? 'is-current' : 'is-other'}`);
-    add(pill,'span','status-dot'); add(pill,'span','',safe(value,'Status not published'));
-    return pill;
-  }
-  function markBusy(busy) {
-    section.setAttribute('aria-busy', String(busy));
-    searchButton.disabled = busy;
-    searchButton.replaceChildren(document.createTextNode(busy ? 'Searching…' : 'Check agent '));
-    if (!busy) searchButton.append(el('span','', '→'));
-  }
-  function initials(name) {return String(name||'').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase() || 'AC';}
+  const add = (parent, tag, css = "", text) =>
+    parent.appendChild(el(tag, css, text));
+  const value = (text, fallback = "Not supplied") =>
+    typeof text === "string" && text.trim() ? text.trim() : fallback;
+  const form = $("search-form"),
+    input = $("search-input"),
+    section = $("results-section");
+  const list = $("results-list"),
+    detail = $("detail-panel"),
+    status = $("status-message");
+  const motionPreference = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+  let paused = false,
+    revision = 0,
+    controller,
+    records = [],
+    activeRecord,
+    activeDetails,
+    activeCheckedAt;
+  let report = "",
+    toastTimer,
+    truncated = false;
+  const reduced = () => paused || motionPreference.matches;
+  const scrollTo = (node, block = "start") =>
+    node.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block });
+  const focus = (node) => {
+    node.tabIndex = -1;
+    node.focus({ preventScroll: true });
+  };
+  const clearSaved = () => {
+    try {
+      sessionStorage.removeItem(RESUME);
+    } catch {}
+  };
+  $("year").textContent = String(new Date().getFullYear());
 
-  function renderList(records) {
-    list.hidden=false; list.replaceChildren();
-    for (const r of records) {
-      const btn = add(list,'button','match-row'); btn.type='button';
-      btn.setAttribute('aria-label',`View ${safe(r.licenceName)} licence ${safe(r.licenceNumber)} in ${safe(r.suburb)}`);
-      const left=add(btn,'div','match-left'); add(left,'span','avatar',initials(r.licenceName));
-      const identity=add(left,'div','match-text'); add(identity,'strong','match-name',safe(r.licenceName));
-      add(identity,'span','match-subtitle',`Licence ${safe(r.licenceNumber)} · ${safe(r.licenceType)}`);
-      const suburb=add(btn,'span',`suburb-tag${r.suburb ? '' : ' is-unknown'}`);
-      suburb.append(icon('pin'));add(suburb,'strong','',safe(r.suburb,'Suburb not listed'));
-      btn.append(chip(r.status));
-      const cta=add(btn,'span','match-view','View record');cta.append(icon('arrow'));
-      btn.addEventListener('click',()=>selectRecord(r));
+  // Only static, developer-owned paths are used in the SVG markup below.
+  const paths = {
+    pin: '<path d="M12 21s7-5.8 7-11a7 7 0 1 0-14 0c0 5.2 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/>',
+    shield:
+      '<path d="M12 2 21 6v6c0 6-4 9-9 11-5-2-9-5-9-11V6l9-4Z"/><path d="m8 12 3 3 5-6"/>',
+    flag: '<path d="M5 22V4m0 1q5-3 9 0t7 0v11q-4 3-7 0t-9 0"/>',
+  };
+  function icon(kind) {
+    const host = el("span", "svg-icon");
+    host.setAttribute("aria-hidden", "true");
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    for (const [key, val] of Object.entries({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "1.8",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+    }))
+      svg.setAttribute(key, val);
+    svg.innerHTML = paths[kind] || paths.shield;
+    host.append(svg);
+    return host;
+  }
+  function time(iso) {
+    const date = new Date(iso);
+    return typeof iso !== "string" || !Number.isFinite(date.valueOf())
+      ? ""
+      : date.toLocaleString("en-AU", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        });
+  }
+  function toast(message) {
+    $("toast").textContent = message;
+    $("toast").hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => ($("toast").hidden = true), 5000);
+  }
+  function notify(message = "", error = false) {
+    status.hidden = !message;
+    status.textContent = message;
+    status.className = "notice" + (error ? " error" : "");
+  }
+  function busy(flag) {
+    section.setAttribute("aria-busy", String(flag));
+    $("search-button").disabled = flag;
+    $("search-button").firstChild.textContent = flag
+      ? "Searching… "
+      : "Check agent ";
+  }
+  function chip(text) {
+    const label = value(text, "Status not supplied");
+    const css =
+      label.toLowerCase() === "current"
+        ? "status-current"
+        : /expired|suspended|cancelled|disqualified/i.test(label)
+          ? "status-expired"
+          : "status-other";
+    return el("span", "status-chip " + css, label);
+  }
+  async function api(path, signal) {
+    let response;
+    const timeout = new AbortController();
+    const stop = () => timeout.abort();
+    signal.addEventListener("abort", stop, { once: true });
+    const timer = setTimeout(stop, 32000);
+    try {
+      response = await fetch(path, {
+        cache: "no-store",
+        credentials: "same-origin",
+        signal: timeout.signal,
+      });
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error(
+          "The licence service returned an unreadable response. Please try again.",
+        );
+      }
+      if (!response.ok)
+        throw new Error(
+          value(
+            data?.error,
+            "Licence lookup is unavailable. Please try again.",
+          ),
+        );
+      return data;
+    } catch (error) {
+      if (timeout.signal.aborted && !signal.aborted)
+        throw new Error(
+          "The lookup took too long. Please try again or use the official licence register.",
+        );
+      if (error instanceof TypeError)
+        throw new Error(
+          "We could not connect. Check your connection and try again.",
+        );
+      throw error;
+    } finally {
+      clearTimeout(timer);
+      signal.removeEventListener("abort", stop);
     }
   }
-  function verificationLoading(record) {
-    const card=el('div','verification-loading');
-    const emblem=add(card,'div','loading-emblem');emblem.append(icon('shield'));
-    const t=add(card,'div','loading-copy');add(t,'strong','',`Checking ${safe(record.licenceName)}'s licence`);
-    add(t,'p','', 'Retrieving licence status and authorised activities from NSW Government records…');
-    const dots=add(card,'div','loading-dots'); for(let i=0;i<3;i++) add(dots,'span');
-    return card;
+  function begin() {
+    controller?.abort();
+    controller = new AbortController();
+    return { id: ++revision, signal: controller.signal };
   }
-  function field(parent, label, value) {
-    const item=add(parent,'div','record-field');add(item,'span','record-label',label);add(item,'strong','record-value',safe(value));return item;
+  function resultRow(record) {
+    const row = el("article", "result-row");
+    const suburb = add(row, "div", "result-suburb");
+    suburb.append(icon("pin"));
+    add(
+      suburb,
+      "span",
+      "",
+      value(record.suburb, "SUBURB NOT LISTED").toUpperCase(),
+    );
+    const identity = add(row, "div", "result-identity");
+    add(
+      identity,
+      "h3",
+      "result-name",
+      value(record.licenceName, "Name not supplied"),
+    );
+    add(
+      identity,
+      "div",
+      "result-meta",
+      `Licence ${value(record.licenceNumber, "—")} · ${value(record.licenceType, "NSW property licence")}`,
+    );
+    row.append(chip(record.status));
+    const button = add(row, "button", "row-button", "Verify this record ↗");
+    button.type = "button";
+    button.setAttribute(
+      "aria-label",
+      `Verify ${value(record.licenceName)} in ${value(record.suburb, "suburb not listed")}, licence ${value(record.licenceNumber)}`,
+    );
+    button.addEventListener("click", () => selectRecord(record));
+    return row;
   }
-  function verificationHeader(licenceStatus) {
-    const current=String(licenceStatus||'').toLowerCase()==='current';
-    const box=el('section','verification-banner');
-    const top=add(box,'div','verification-progress-top');
-    add(top,'span','eyebrow','YOUR TWO-STEP CHECK');add(top,'strong','', '1 of 2 steps completed');
-    const meter=add(box,'div','progress-track');add(meter,'span','progress-fill');
-    const grid=add(box,'div','verification-status-grid');
-    const item1=add(grid,'div','verification-status complete');
-    const symbol=add(item1,'span',`status-symbol ${current?'green':'amber'}`);symbol.append(icon('shield'));
-    const s1=add(item1,'div');add(s1,'span','verify-step','STEP 1 · NSW LICENCE');
-    add(s1,'strong','',current?'Current licence confirmed':`Licence status: ${safe(licenceStatus)}`);
-    add(s1,'p','',current?'NSW Government records confirm the licence is current.':'Review the licence status before proceeding.');
-    const item2=add(grid,'div','verification-status waiting');
-    const w=add(item2,'span','status-symbol amber');w.append(icon('flag'));
-    const s2=add(item2,'div');add(s2,'span','verify-step','STEP 2 · REGULATORY REGISTER');
-    add(s2,'strong','','Still needs checking');
-    add(s2,'p','','The separate NSW Fair Trading register has not been searched by AgentCheck.');
-    return box;
+  function drawRows() {
+    const term = $("suburb-filter").value.trim().toLocaleLowerCase("en-AU");
+    const filtered = records.filter(
+      (r) =>
+        !term ||
+        `${r.suburb} ${r.postcode}`.toLocaleLowerCase("en-AU").includes(term),
+    );
+    list.replaceChildren(...filtered.map(resultRow));
+    $("match-count").textContent =
+      `${filtered.length} of ${records.length} returned records`;
+    if (!filtered.length && records.length)
+      add(
+        list,
+        "p",
+        "notice",
+        "No returned records match this suburb. Clear the filter or search again with more of the agent’s name.",
+      );
   }
-  function syncCopy(value) {
-    if (!value) return false;
-    const selected=document.activeElement;
-    const ta=document.createElement('textarea');ta.value=value;ta.readOnly=true;
-    ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none;width:1px;height:1px';
-    document.body.appendChild(ta); ta.focus(); ta.select();ta.setSelectionRange(0,value.length);
-    let ok=false;
-    try {ok=!!document.execCommand('copy');} catch {ok=false;}
-    ta.remove();
-    if (selected?.focus) selected.focus({preventScroll:true});
-    return ok;
-  }
-  async function copyNumber(value) {
-    if(syncCopy(value)) return true;
-    try {if (!navigator.clipboard?.writeText) return false; await navigator.clipboard.writeText(value);return true;}catch{return false;}
-  }
-  function fallbackCopy(box, number) {
-    box.replaceChildren();box.className='handoff-fallback';
-    add(box,'strong','','Your browser prevented automatic copying.');
-    add(box,'p','','Select the licence number below and copy it, then open the official register.');
-    const row=add(box,'div','fallback-row');
-    const field=add(row,'input','fallback-number');field.type='text';field.value=number;field.readOnly=true;field.setAttribute('aria-label','Licence number to copy');
-    field.addEventListener('click',()=>field.select());field.addEventListener('focus',()=>field.select());
-    const retry=add(row,'button','button button-secondary','Copy number');retry.type='button';
-    retry.addEventListener('click',async()=>{ if(await copyNumber(number)){announce('Licence number copied');retry.textContent='Copied ✓';}else{field.focus();field.select();} });
-    const link=add(box,'a','fallback-link','Open the NSW Government register ↗');link.href=REGISTRY_URL;link.target='_blank';link.rel='noopener noreferrer';
-    field.focus();field.select();
-  }
-  function addRegulatoryStep(parent, number) {
-    const card=add(parent,'section','regulatory-card');
-    const heading=add(card,'div','regulatory-heading');
-    const badge=add(heading,'span','eyebrow action-kicker');badge.append(icon('flag')); badge.append(' STEP 2 OF 2 · YOUR NEXT STEP');
-    add(heading,'h3','','Now check for regulatory actions.');
-    add(heading,'p','','A current licence does not mean an agent has no published regulatory actions. Check the NSW Fair Trading Name and Shame Register before you appoint.');
-    const action=add(card,'div','regulatory-action');
-    const preview=add(action,'div','selected-number');add(preview,'span','','LICENCE NUMBER TO SEARCH');add(preview,'strong','',safe(number));
-    const button=add(action,'button','button button-primary action-button');button.type='button';
-    button.disabled=!number;button.append(icon('copy'));button.append(' Copy number & open NSW register ');button.append(icon('arrow'));
-    const instruction=add(card,'p','paste-instruction');instruction.append(icon('check'));instruction.append('One click copies the licence number and opens the NSW search. Paste it there and press Search.');
-    const feedback=add(card,'div','handoff-status');feedback.hidden=true;
-    let clickCount=0;
-    button.addEventListener('click',async()=>{
-      if(clickCount>0 && !button.disabled) { /* A repeat click is permitted if the first tab was closed. */ }
-      ++clickCount;
-      // Synchronous copy inside the actual click gesture avoids the focus loss seen with a new tab.
-      const instant=syncCopy(number);
-      if(instant){
-        feedback.hidden=false;feedback.className='handoff-status copy-success';feedback.textContent='Licence number copied. On the NSW page, paste it into the search field.';
-        announce(`Licence ${number} copied. Paste into the NSW register.`);
-        const win=window.open(REGISTRY_URL,'_blank','noopener,noreferrer');
-        // noopener can return null even when successfully opened. Do not claim the tab opened.
-        return win;
-      }
-      // Asynchronous clipboard fallback: navigating the same tab avoids popup blockers.
-      if(await copyNumber(number)){
-        feedback.hidden=false;feedback.className='handoff-status copy-success';feedback.textContent='Licence number copied. Opening the NSW register…';
-        window.location.assign(REGISTRY_URL);
-        return;
-      }
-      feedback.hidden=false;fallbackCopy(feedback,number);
-    });
-    const after=add(parent,'section','register-followup');
-    add(after,'div','followup-overline','AFTER CHECKING THE NSW REGISTER');
-    add(after,'h3','','Did the government register show a matching action?');
-    add(after,'p','','Check that the name and licence number match the agent you searched. Then choose what you found.');
-    const answers=add(after,'div','answer-buttons');
-    const yes=add(answers,'button','answer-button answer-danger','Yes, I found a matching action');yes.type='button';yes.append(icon('arrow'));
-    const no=add(answers,'button','answer-button','No matching action appeared');no.type='button';
-    const unsure=add(answers,'button','answer-button','Not sure');unsure.type='button';
-    const conclusion=add(after,'div','register-conclusion');conclusion.hidden=true;
-    const setOutcome=(type)=>{
-      conclusion.hidden=false;conclusion.replaceChildren();
-      yes.setAttribute('aria-pressed',String(type==='found')); no.setAttribute('aria-pressed',String(type==='none'));unsure.setAttribute('aria-pressed',String(type==='unsure'));
-      if(type==='found'){
-        conclusion.className='register-conclusion outcome-danger';
-        const h=add(conclusion,'div','outcome-title');h.append(icon('flag'));add(h,'strong','','RED FLAG — Regulatory action reported');
-        add(conclusion,'p','','You reported finding a published regulatory action for this agent. Treat this as a serious reason to investigate before appointing them. Read the notice, confirm the licence number, and ask for an explanation.');
-        add(conclusion,'small','','This result was reported by you, not independently confirmed by AgentCheck. A published action does not by itself establish an agent is currently prohibited from practising.');
-      }else if(type==='none'){
-        conclusion.className='register-conclusion outcome-neutral';
-        const h=add(conclusion,'div','outcome-title');h.append(icon('check'));add(h,'strong','','No matching action reported');
-        add(conclusion,'p','','You reported no matching entry in the register. This is not an official declaration of a clean disciplinary history. Consider licence status, experience, fees and references as well.');
-      }else{
-        conclusion.className='register-conclusion outcome-amber';
-        const h=add(conclusion,'div','outcome-title');h.append(icon('clock'));add(h,'strong','','Check is not yet resolved');
-        add(conclusion,'p','','If the details are unclear, search by licence number and compare the record carefully. You can revisit the official register.');
-      }
-      const link=add(conclusion,'a','outcome-link','Review the official register ↗');link.href=REGISTRY_URL;link.target='_blank';link.rel='noopener noreferrer';
-      conclusion.scrollIntoView({behavior:'smooth',block:'nearest'});
-    };
-    yes.addEventListener('click',()=>setOutcome('found'));no.addEventListener('click',()=>setOutcome('none'));unsure.addEventListener('click',()=>setOutcome('unsure'));
-  }
-  function recordProfile(record, data, checkedAt) {
-    const wrap=el('div','profile-layout');
-    wrap.append(verificationHeader(data.status||record.status));
-    const profile=add(wrap,'article','profile-card');
-    const head=add(profile,'div','profile-head');
-    const h=add(head,'div');add(h,'span','eyebrow section-eyebrow','NSW GOVERNMENT LICENCE DETAILS');
-    add(h,'h3','',safe(data.licenceName||record.licenceName));
-    const sub=add(h,'p','profile-subtitle',safe(record.suburb,'NSW')+' · '+safe(data.licenceType||record.licenceType));
-    head.append(chip(data.status||record.status));
-    const grid=add(profile,'div','record-grid');
-    field(grid,'LICENCE NUMBER',data.licenceNumber||record.licenceNumber);
-    field(grid,'LICENCE STATUS',data.status||record.status);
-    field(grid,'SUBURB',record.suburb);
-    field(grid,'LICENCE TYPE',data.licenceType||record.licenceType);
-    field(grid,'COMMENCED',data.startDate);
-    field(grid,'EXPIRY',data.expiryDate||record.expiryDate);
-    field(grid,'AUTHORISED ACTIVITIES',(data.classes||[]).filter(Boolean).join(' · '));
-    field(grid,'SOURCE','NSW Government');
-    if(Array.isArray(data.premises)&&data.premises.length){
-      const premises=add(profile,'div','profile-premises');
-      add(premises,'span','record-label','LISTED BUSINESS PREMISES');add(premises,'strong','',data.premises.join(' · '));
+  function showRows(moveFocus = true) {
+    busy(false);
+    detail.hidden = true;
+    list.hidden = false;
+    $("results-tools").hidden = records.length === 0;
+    $("back-button").hidden = true;
+    $("results-kicker").textContent = "NSW GOVERNMENT LICENCE SEARCH";
+    $("results-title").textContent =
+      records.length === 1
+        ? "One record. Confirm it’s your agent."
+        : `${records.length} matching licence records`;
+    $("results-subtitle").textContent =
+      "Start with the suburb. Match the name and licence number before selecting a record.";
+    notify(
+      truncated
+        ? "Showing the first 20 matches. A suburb filter only filters these returned records; search with a full name for more precise results."
+        : records.length
+          ? ""
+          : "No licence records matched. Try a full name or a licence number.",
+    );
+    drawRows();
+    if (moveFocus) {
+      scrollTo(section);
+      focus($("results-title"));
     }
-    if(Array.isArray(data.conditions)&&data.conditions.length){
-      const details=add(profile,'details','conditions-disclosure');
-      add(details,'summary','',`View licence conditions (${data.conditions.length})`);
-      const ul=add(details,'ul');for(const c of data.conditions){ add(ul,'li','',c); }
-    }
-    const time=displayTime(checkedAt);if(time)add(profile,'p','retrieved-at',`Licence checked ${time} · NSW Government records`);
-    addRegulatoryStep(wrap,data.licenceNumber||record.licenceNumber);
+  }
+  function loading(record) {
+    const wrap = el("div", "loading-stage");
+    add(wrap, "div", "loading-crest").append(icon("shield"));
+    add(wrap, "h3", "", "Checking official records");
+    add(
+      wrap,
+      "p",
+      "",
+      `Retrieving the government licence record for ${value(record.licenceName)}…`,
+    );
     return wrap;
   }
-  async function selectRecord(record) {
-    const id=++requestVersion;
-    list.hidden=true;
-    panel.hidden=false;panel.replaceChildren(verificationLoading(record));
-    $('results-kicker').textContent='AGENT VERIFICATION';
-    $('results-title').textContent='Your agent licence check';
-    $('results-subtitle').textContent='Step 1 checks the government licence. Step 2 checks the separate regulatory register.';
-    message('');
-    panel.scrollIntoView({behavior:'smooth',block:'start'});
+  function field(grid, label, content, highlight = false) {
+    const item = add(grid, "div", "profile-field");
+    add(item, "dt", "field-label", label);
+    add(
+      item,
+      "dd",
+      "field-value" + (highlight ? " highlight" : ""),
+      value(content),
+    );
+  }
+  function progress(statusText) {
+    const current = statusText?.toLowerCase() === "current";
+    const part = el("div", "journey-progress");
+    add(
+      part,
+      "span",
+      "progress-medallion" + (current ? "" : " warning"),
+    ).append(icon("shield"));
+    const content = add(part, "div", "progress-content");
+    add(
+      content,
+      "div",
+      "progress-label",
+      "CHECK 01 · NSW GOVERNMENT LICENCE RECORD",
+    );
+    add(
+      content,
+      "strong",
+      "",
+      current
+        ? "Current licence confirmed"
+        : `Licence status: ${value(statusText, "not supplied")}`,
+    );
+    add(
+      content,
+      "p",
+      "",
+      current
+        ? "Licence status only. Regulatory history is a separate check."
+        : "A current licence has not been confirmed. Review the official record before proceeding.",
+    );
+    const steps = add(part, "div", "progress-steps");
+    for (const [name, pending] of [
+      ["01 · LICENCE RECORD", false],
+      ["02 · REGULATORY", true],
+    ]) {
+      const step = add(
+        steps,
+        "div",
+        "progress-part" + (pending ? " pending" : ""),
+      );
+      add(step, "span", "", name);
+      add(step, "div", "progress-bar").append(el("i"));
+    }
+    return part;
+  }
+  function saveJourney() {
+    if (!activeRecord || !activeDetails) return false;
     try {
-      const response=await fetch(`/api/details?id=${encodeURIComponent(record.licenceID)}`,{cache:'no-store'});
-      const payload=await response.json();
-      if(!response.ok)throw Error(payload?.error||'Unable to retrieve the detailed record.');
-      if(id!==requestVersion)return;
-      panel.replaceChildren(recordProfile(record,payload.detail||{},payload.checkedAt));
-    }catch(error){
-      if(id!==requestVersion)return;
-      panel.replaceChildren();
-      const errorBox=add(panel,'div','record-error');add(errorBox,'strong','','Unable to confirm the full licence record');
-      add(errorBox,'p','',error?.message||'Please try later.');
-      const retry=add(errorBox,'button','button button-secondary','Retry licence lookup');retry.type='button';retry.addEventListener('click',()=>selectRecord(record));
-      // An unsuccessful details lookup cannot be presented as verified.
-      addRegulatoryStep(panel,record.licenceNumber);
+      sessionStorage.setItem(
+        RESUME,
+        JSON.stringify({
+          version: 1,
+          record: activeRecord,
+          details: activeDetails,
+          checkedAt: activeCheckedAt,
+          report,
+          created: new Date(activeCheckedAt).valueOf(),
+        }),
+      );
+      return true;
+    } catch {
+      return false;
     }
   }
-  async function search(query) {
-    const id=++requestVersion; lastResults=[];
-    section.hidden=false;panel.hidden=true;list.hidden=false;list.replaceChildren();panel.replaceChildren();
-    $('results-kicker').textContent='NSW GOVERNMENT RECORDS';
-    $('results-title').textContent='Searching licence records';
-    $('results-subtitle').textContent='Finding records that match your search.';
-    message('Contacting NSW Government records…');markBusy(true);
-    section.scrollIntoView({behavior:'smooth',block:'start'});
-    try {
-      const response=await fetch(`/api/search?q=${encodeURIComponent(query)}`,{cache:'no-store'});
-      const data=await response.json();
-      if(!response.ok)throw Error(data?.error||'The search is temporarily unavailable.');
-      if(id!==requestVersion)return;
-      const records=Array.isArray(data.results)?data.results:[];lastResults=records;
-      $('results-title').textContent=records.length===1?'One matching licence':`${records.length}${data.truncated?'+':''} matching licence records`;
-      $('results-subtitle').textContent=records.length===1?'Opening the matching government record.':'Use the suburb and licence number to choose the correct person.';
-      message(records.length?'':'No matching records. Try the full name or licence number.');
-      if(records.length>1)renderList(records);
-      else if(records.length===1)await selectRecord(records[0]);
-      if(data.truncated)message('Showing the first 20 records. Enter more of the name or licence number to narrow the list.');
-    }catch(error){
-      if(id!==requestVersion)return;
-      $('results-title').textContent='Search unavailable';$('results-subtitle').textContent='Please try again shortly.';
-      message(error?.message||'The NSW Government service is temporarily unavailable.',true);
-    }finally {markBusy(false);section.setAttribute('aria-busy','false');}
+  function officialLink(parent, text, href = REGISTER, sameTab = false) {
+    const link = add(parent, "a", "outcome-link", text);
+    link.href = href;
+    link.rel = "noopener noreferrer";
+    if (!sameTab) link.target = "_blank";
+    else link.addEventListener("click", saveJourney);
+    return link;
   }
-  form.addEventListener('submit',(event)=>{
-    event.preventDefault();const query=input.value.trim().replace(/\s+/g,' ');
-    if(query.length<2||query.length>80){input.setCustomValidity('Enter an agent name or licence number with 2–80 characters.');input.reportValidity();return;}
-    input.setCustomValidity('');search(query);
+  function copyLegacy(number) {
+    const focused = document.activeElement,
+      area = el("textarea", "clipboard-helper");
+    area.value = number;
+    area.readOnly = true;
+    area.setAttribute("aria-label", "Copy licence number");
+    document.body.append(area);
+    area.focus();
+    area.select();
+    area.setSelectionRange(0, number.length);
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch {}
+    area.remove();
+    focused?.focus?.({ preventScroll: true });
+    return copied;
+  }
+  async function copyLicence(number) {
+    // The synchronous fallback preserves user activation on older iOS browsers.
+    if (copyLegacy(number)) return true;
+    try {
+      if (navigator.clipboard?.writeText) {
+        const copied = navigator.clipboard.writeText(number).then(
+          () => true,
+          () => false,
+        );
+        let timer;
+        const timeout = new Promise(
+          (resolve) => (timer = setTimeout(() => resolve(false), 3000)),
+        );
+        try {
+          return await Promise.race([copied, timeout]);
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+    } catch {}
+    return false;
+  }
+  function fallbackCopy(host, number, blocked = true) {
+    host.hidden = false;
+    host.replaceChildren();
+    const box = add(host, "div", "handoff-fallback");
+    add(
+      box,
+      "strong",
+      "",
+      blocked
+        ? "Automatic copying is unavailable."
+        : "Copy this licence number manually.",
+    );
+    add(
+      box,
+      "p",
+      "",
+      "Select and copy this licence number, then continue to the NSW register. Use your browser’s Back button to return here.",
+    );
+    const row = add(box, "div", "fallback-row");
+    const numberInput = add(row, "input", "fallback-number");
+    numberInput.readOnly = true;
+    numberInput.value = number;
+    numberInput.setAttribute("aria-label", "Licence number to copy manually");
+    numberInput.addEventListener("focus", () => numberInput.select());
+    numberInput.addEventListener("click", () => numberInput.select());
+    const button = add(row, "button", "fallback-copy", "Try copying");
+    button.type = "button";
+    button.addEventListener("click", async () => {
+      if (await copyLicence(number)) {
+        button.textContent = "Copied ✓";
+        toast("Licence number copied.");
+      } else {
+        numberInput.focus();
+        numberInput.select();
+        toast("Select the number and use your device’s Copy command.");
+      }
+    });
+    officialLink(
+      box,
+      "Continue to the official NSW register ↗",
+      REGISTER,
+      true,
+    );
+    host.scrollIntoView({ behavior: "auto", block: "center" });
+    numberInput.focus();
+    numberInput.select();
+  }
+  function regulatoryStep(parent, record, info) {
+    // Never substitute an identity/status from another source for missing detailed data.
+    const number = value(info.licenceNumber, "");
+    const card = add(parent, "section", "regulatory-card");
+    card.setAttribute("aria-label", "Check two: regulatory register");
+    const content = add(card, "div", "regulatory-content");
+    add(content, "div", "regulatory-kicker", "CHECK 02 / 02 · DO THIS NEXT");
+    add(content, "h3", "", "A licence is only half the story.");
+    add(
+      content,
+      "p",
+      "",
+      "Search the official NSW Fair Trading Name and Shame Register for published regulatory action. This separate check matters even when a licence is current.",
+    );
+    const action = add(card, "div", "regulatory-action");
+    const licence = add(action, "div", "licence-to-copy");
+    add(licence, "span", "", "LICENCE NUMBER");
+    add(licence, "strong", "", number || "Not supplied");
+    const button = add(
+      action,
+      "button",
+      "btn btn-primary regulatory-cta",
+      "Copy licence & check register ↗",
+    );
+    button.type = "button";
+    button.disabled = !number;
+    add(
+      action,
+      "p",
+      "regulatory-hint",
+      "Copies the number and opens the official site in this tab. Paste it into the register’s search field, then use Back to return. AgentCheck does not search this register.",
+    );
+    const savedNotice = add(action, "p", "regulatory-hint");
+    officialLink(
+      action,
+      "Open official register without copying ↗",
+      REGISTER,
+      true,
+    );
+    const fallback = add(parent, "div");
+    fallback.hidden = true;
+    const manual = add(
+      action,
+      "button",
+      "text-button manual-copy",
+      "Copy manually instead",
+    );
+    manual.type = "button";
+    manual.addEventListener("click", () => {
+      saveJourney();
+      fallbackCopy(fallback, number, false);
+    });
+    manual.disabled = !number;
+    button.addEventListener("click", async () => {
+      if (!number) return;
+      const expected = revision;
+      button.disabled = true;
+      const copied = await copyLicence(number);
+      button.disabled = false;
+      if (expected !== revision || activeRecord?.licenceID !== record.licenceID)
+        return;
+      if (!saveJourney()) {
+        savedNotice.textContent =
+          "Your browser blocked session storage. Keep this tab open and use the register link in a new tab.";
+        const link = officialLink(action, "Open register in a new tab ↗");
+        link.focus();
+        return;
+      }
+      if (copied) {
+        toast("Licence number copied. Paste it into the NSW register.");
+        window.location.assign(REGISTER);
+      } else {
+        fallbackCopy(fallback, number);
+        toast("Copy unavailable. Select the number to copy it manually.");
+      }
+    });
+    const follow = add(parent, "section", "register-followup");
+    add(
+      follow,
+      "div",
+      "followup-overline",
+      "YOUR CHECK · NOT INDEPENDENTLY VERIFIED BY AGENTCHECK",
+    );
+    const header = add(follow, "div", "followup-header"),
+      words = add(header, "div");
+    add(words, "h3", "", "What did the official register show?");
+    add(
+      words,
+      "p",
+      "",
+      "After checking the licence number and name on the official site, record what you found. Your selection stays in this browser tab only.",
+    );
+    const buttons = add(follow, "div", "answer-buttons");
+    const answer = add(follow, "div", "register-conclusion");
+    answer.hidden = true;
+    const options = [
+      ["found", "I found a matching regulatory action"],
+      ["none", "I found no matching entry"],
+      ["unsure", "I am not sure"],
+    ];
+    const controls = options.map(([type, label]) => {
+      const control = add(
+        buttons,
+        "button",
+        "answer-button" + (type === "found" ? " answer-danger" : ""),
+        label,
+      );
+      control.type = "button";
+      control.setAttribute("aria-pressed", "false");
+      control.addEventListener("click", () => setOutcome(type, true));
+      return [control, type];
+    });
+    function setOutcome(type, moveFocus = false) {
+      report = type;
+      saveJourney();
+      answer.hidden = false;
+      answer.replaceChildren();
+      for (const [control, name] of controls)
+        control.setAttribute("aria-pressed", String(name === type));
+      const danger = type === "found";
+      answer.className =
+        "register-conclusion " +
+        (danger
+          ? "outcome-danger"
+          : type === "none"
+            ? "outcome-neutral"
+            : "outcome-amber");
+      add(
+        answer,
+        "strong",
+        "outcome-title",
+        danger
+          ? "RED FLAG · Visitor-reported matching action"
+          : type === "none"
+            ? "No matching entry · Visitor-reported"
+            : "Regulatory check still uncertain",
+      );
+      add(
+        answer,
+        "p",
+        "",
+        danger
+          ? "You reported a matching published regulatory action. Read the notice, date, licence number and outcome carefully. Consider the seriousness and seek clarification before appointing this agent."
+          : type === "none"
+            ? "You reported no matching entry. This is not an official all-clear or a guarantee that there is no other relevant history."
+            : "Check both the licence number and name. If the identity or notice is unclear, contact NSW Fair Trading for clarification.",
+      );
+      add(
+        answer,
+        "small",
+        "",
+        "This is your reported result, not a finding independently verified by AgentCheck. A current licence does not establish a clean disciplinary history.",
+      );
+      if (danger)
+        add(
+          answer,
+          "small",
+          "",
+          "A published infringement does not automatically mean a licence is suspended. Read the actual regulatory outcome.",
+        );
+      officialLink(answer, "Review the official register again ↗");
+      if (moveFocus) {
+        scrollTo(answer, "nearest");
+        focus(answer);
+      }
+    }
+    if (["found", "none", "unsure"].includes(report)) setOutcome(report);
+  }
+  function profile(record, info, checkedAt) {
+    const wrapper = el("div", "profile-layout");
+    wrapper.append(progress(info.status));
+    // The second check stays above the extended record, so it is prominent on mobile.
+    regulatoryStep(wrapper, record, info);
+    const card = add(wrapper, "article", "profile-card");
+    const header = add(card, "div", "profile-head"),
+      title = add(header, "div");
+    add(title, "span", "eyebrow eyebrow-dark", "CHECK 01 · RECORD DETAILS");
+    add(title, "h3", "", value(info.licenceName, "Name not supplied"));
+    add(
+      title,
+      "p",
+      "profile-subtitle",
+      `${value(record.suburb, "Suburb not published")} · ${value(info.licenceType)}`,
+    );
+    header.append(chip(info.status));
+    const grid = add(card, "dl", "profile-grid");
+    for (const [label, content] of [
+      ["LICENCE NUMBER", info.licenceNumber],
+      ["STATUS", info.status],
+      ["SUBURB (SEARCH RECORD)", record.suburb],
+      ["EXPIRY", info.expiryDate],
+      ["LICENCE TYPE", info.licenceType],
+      ["COMMENCED", info.startDate],
+      ["AUTHORISED ACTIVITIES", info.classes?.join(" · ")],
+      ["SOURCE", "NSW Government"],
+    ])
+      field(grid, label, content, label === "LICENCE NUMBER");
+    if (info.premises?.length)
+      add(
+        card,
+        "p",
+        "profile-bottom",
+        `Listed business premises: ${info.premises.join(" · ")}`,
+      );
+    if (info.conditions?.length) {
+      const disclosure = add(card, "details", "conditions-disclosure");
+      add(
+        disclosure,
+        "summary",
+        "",
+        `View licence conditions (${info.conditions.length})`,
+      );
+      const ul = add(disclosure, "ul");
+      for (const condition of info.conditions) add(ul, "li", "", condition);
+    }
+    const actions =
+      info.compliance?.actions?.filter(
+        (action) => Number.isSafeInteger(action.count) && action.count > 0,
+      ) || [];
+    if (
+      actions.length ||
+      info.compliance?.cautionsCount > 0 ||
+      info.compliance?.publicWarningsCount > 0
+    ) {
+      const notice = add(card, "div", "notice government-actions");
+      add(
+        notice,
+        "strong",
+        "",
+        "The government licence response includes compliance information.",
+      );
+      add(
+        notice,
+        "p",
+        "",
+        [
+          ...actions.map((a) => `${a.label}: ${a.count}`),
+          ...(info.compliance.cautionsCount > 0
+            ? [`Cautions/reprimands: ${info.compliance.cautionsCount}`]
+            : []),
+          ...(info.compliance.publicWarningsCount > 0
+            ? [`Public warnings: ${info.compliance.publicWarningsCount}`]
+            : []),
+        ].join(" · "),
+      );
+      add(
+        notice,
+        "p",
+        "",
+        "These are licence-response counts, not a search of the separate Name and Shame Register. Review the official sources for details.",
+      );
+    }
+    if (time(checkedAt))
+      add(
+        card,
+        "p",
+        "checked-at",
+        `Licence record checked ${time(checkedAt)} · Source: NSW Government`,
+      );
+    officialLink(
+      card,
+      "View the official property licence register ↗",
+      LICENCES,
+    );
+    const refresh = add(
+      card,
+      "button",
+      "text-button refresh-record",
+      "Refresh licence lookup",
+    );
+    refresh.type = "button";
+    refresh.addEventListener("click", () => selectRecord(record, true));
+    return wrapper;
+  }
+  function detailsValid(info) {
+    return (
+      info &&
+      typeof info === "object" &&
+      !Array.isArray(info) &&
+      [
+        "licenceName",
+        "licenceNumber",
+        "status",
+        "licenceType",
+        "startDate",
+        "expiryDate",
+      ].every(
+        (key) => info[key] === undefined || typeof info[key] === "string",
+      ) &&
+      ["classes", "premises", "conditions"].every(
+        (key) =>
+          info[key] === undefined ||
+          (Array.isArray(info[key]) &&
+            info[key].length <= 8 &&
+            info[key].every(
+              (item) => typeof item === "string" && item.length <= 500,
+            )),
+      ) &&
+      (!info.compliance ||
+        (typeof info.compliance === "object" &&
+          (!info.compliance.actions ||
+            (Array.isArray(info.compliance.actions) &&
+              info.compliance.actions.length <= 8 &&
+              info.compliance.actions.every(
+                (a) =>
+                  a &&
+                  typeof a.label === "string" &&
+                  (a.count === null || Number.isSafeInteger(a.count)),
+              )))))
+    );
+  }
+  async function selectRecord(record, preserveReport = false) {
+    const { id, signal } = begin();
+    activeRecord = record;
+    activeDetails = null;
+    if (!preserveReport) report = "";
+    clearSaved();
+    list.hidden = true;
+    $("results-tools").hidden = true;
+    $("back-button").hidden = records.length === 0;
+    detail.hidden = false;
+    detail.replaceChildren(loading(record));
+    $("results-kicker").textContent = "YOUR TWO SEPARATE CHECKS";
+    $("results-title").textContent = "Behind the name. The facts.";
+    $("results-subtitle").textContent =
+      "First: retrieve the licence record. Next: visit the separate regulatory register.";
+    notify();
+    busy(true);
+    scrollTo(section);
+    focus($("results-title"));
+    try {
+      const data = await api(
+        `/api/details?id=${encodeURIComponent(record.licenceID)}`,
+        signal,
+      );
+      if (id !== revision) return;
+      if (
+        !detailsValid(data.detail) ||
+        !value(data.detail.licenceNumber, "") ||
+        (record.licenceNumber &&
+          data.detail.licenceNumber !== record.licenceNumber)
+      )
+        throw new Error(
+          "The licence service returned an incomplete record. Please try again.",
+        );
+      activeDetails = data.detail;
+      activeCheckedAt = data.checkedAt;
+      detail.replaceChildren(profile(record, data.detail, data.checkedAt));
+      saveJourney();
+    } catch (error) {
+      if (id !== revision) return;
+      detail.replaceChildren();
+      const box = add(detail, "div", "record-error");
+      add(
+        box,
+        "strong",
+        "",
+        "We could not confirm the detailed licence record.",
+      );
+      add(box, "p", "", error.message);
+      const retry = add(box, "button", "", "Retry lookup");
+      retry.type = "button";
+      retry.addEventListener("click", () => selectRecord(record));
+      add(
+        box,
+        "p",
+        "",
+        "No licence verification has been completed. You can still use the official government registers.",
+      );
+      officialLink(box, "Open official licence register ↗", LICENCES);
+      officialLink(box, "Open NSW Fair Trading register ↗");
+    } finally {
+      if (id === revision) busy(false);
+    }
+  }
+  async function search(q) {
+    const { id, signal } = begin();
+    clearSaved();
+    report = "";
+    activeDetails = null;
+    activeRecord = null;
+    records = [];
+    truncated = false;
+    $("suburb-filter").value = "";
+    section.hidden = false;
+    list.hidden = false;
+    detail.hidden = true;
+    list.replaceChildren();
+    detail.replaceChildren();
+    $("results-tools").hidden = true;
+    $("back-button").hidden = true;
+    $("results-kicker").textContent = "NSW GOVERNMENT LICENCE SEARCH";
+    $("results-title").textContent = "Searching NSW records…";
+    $("results-subtitle").textContent =
+      "Matching government licence records for your search.";
+    notify("Contacting NSW Government records…");
+    busy(true);
+    scrollTo(section);
+    focus($("results-title"));
+    try {
+      const data = await api(`/api/search?q=${encodeURIComponent(q)}`, signal);
+      if (id !== revision) return;
+      if (!Array.isArray(data.results))
+        throw new Error(
+          "The licence service returned an unreadable result list. Please try again.",
+        );
+      records = data.results.filter(
+        (r) =>
+          r &&
+          typeof r.licenceID === "string" &&
+          /^[\w-]{1,50}$/.test(r.licenceID),
+      );
+      truncated = data.truncated === true;
+      showRows();
+    } catch (error) {
+      if (id !== revision) return;
+      $("results-title").textContent = "Search unavailable";
+      $("results-subtitle").textContent =
+        "Please try again, or use the official property licence register.";
+      notify(error.message, true);
+      officialLink(
+        list,
+        "Search the official NSW licence register ↗",
+        LICENCES,
+      );
+    } finally {
+      if (id === revision) busy(false);
+    }
+  }
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const raw = input.value;
+    const q = raw.trim().replace(/ +/g, " ");
+    if (q.length < 2 || q.length > 80 || /[\u0000-\u001f\u007f]/.test(raw)) {
+      input.setCustomValidity(
+        "Enter a name or licence number using 2 to 80 characters.",
+      );
+      input.reportValidity();
+      return;
+    }
+    input.setCustomValidity("");
+    search(q);
   });
-  input.addEventListener('input',()=>input.setCustomValidity(''));
-  $('clear-button').addEventListener('click',()=>{
-    ++requestVersion;section.hidden=true;panel.hidden=true;list.hidden=false;list.replaceChildren();panel.replaceChildren();
-    input.value='';markBusy(false);$('search-card').scrollIntoView({behavior:'smooth',block:'center'});input.focus({preventScroll:true});
+  input.addEventListener("input", () => input.setCustomValidity(""));
+  $("suburb-filter").addEventListener("input", drawRows);
+  $("back-button").addEventListener("click", () => {
+    begin();
+    activeDetails = null;
+    activeRecord = null;
+    report = "";
+    clearSaved();
+    showRows();
+  });
+  $("clear-button").addEventListener("click", () => {
+    begin();
+    clearSaved();
+    records = [];
+    report = "";
+    activeDetails = null;
+    activeRecord = null;
+    section.hidden = true;
+    list.replaceChildren();
+    detail.replaceChildren();
+    input.value = "";
+    busy(false);
+    scrollTo($("search"));
+    input.focus({ preventScroll: true });
+  });
+
+  // Motion remains optional and never blocks access to content.
+  document.documentElement.classList.add("enhanced");
+  function syncMotion() {
+    document.documentElement.classList.toggle("motion-paused", reduced());
+    $("motion-toggle").textContent = reduced() ? "Motion off" : "Pause motion";
+    $("motion-toggle").setAttribute("aria-pressed", String(reduced()));
+  }
+  $("motion-toggle").addEventListener("click", () => {
+    paused = !paused;
+    syncMotion();
+  });
+  motionPreference.addEventListener?.("change", syncMotion);
+  syncMotion();
+  // Reversible, section-specific reveals: the same section responds when
+  // scrolling back up. Remove only after it is completely out of view, so
+  // nothing disappears while the visitor is still reading it.
+  function makeRevealObserver(threshold, rootMargin) {
+    return new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.intersectionRatio >= threshold) {
+            entry.target.classList.add("visible");
+          } else if (!entry.isIntersecting) {
+            entry.target.classList.remove("visible");
+          }
+        }
+      },
+      { threshold: [0, threshold], rootMargin },
+    );
+  }
+  const canObserve = !reduced() && "IntersectionObserver" in window;
+  const observer = canObserve
+    ? makeRevealObserver(0.08, "0px 0px -10% 0px")
+    : null;
+  // The large editorial cards should not animate until the reader has
+  // actually reached that section, in either scrolling direction.
+  const editorialObserver = canObserve
+    ? makeRevealObserver(0.28, "0px 0px -18% 0px")
+    : null;
+  for (const node of document.querySelectorAll("[data-reveal]")) {
+    if (node.matches(".question-card")) {
+      if (editorialObserver) editorialObserver.observe(node);
+      else node.classList.add("visible");
+    } else if (observer) observer.observe(node);
+    else node.classList.add("visible");
+  }
+  let scrollFrame = 0;
+  let previousScrollY = window.scrollY || 0;
+  function updateScroll() {
+    scrollFrame = 0;
+    const y = window.scrollY || 0,
+      max = document.documentElement.scrollHeight - innerHeight;
+    if (Math.abs(y - previousScrollY) > 3) {
+      document.documentElement.dataset.scrollDirection =
+        y < previousScrollY ? "up" : "down";
+    }
+    previousScrollY = y;
+    $("reading-progress").style.width =
+      `${Math.max(0, Math.min(100, max ? (y / max) * 100 : 0))}%`;
+    $("site-header").classList.toggle("is-scrolled", y > 60);
+  }
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll);
+    },
+    { passive: true },
+  );
+  updateScroll();
+  if (window.matchMedia("(pointer:fine)").matches) {
+    const hero = $("search");
+    let frame = 0;
+    hero.addEventListener(
+      "pointermove",
+      (event) => {
+        if (reduced() || frame) return;
+        frame = requestAnimationFrame(() => {
+          const rect = hero.getBoundingClientRect();
+          hero.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+          hero.style.setProperty("--my", `${event.clientY - rect.top}px`);
+          const ox = (event.clientX - rect.left - rect.width / 2) / rect.width,
+            oy = (event.clientY - rect.top - rect.height / 2) / rect.height;
+          hero.querySelector(".hero-photo").style.transform =
+            `scale(1.04) translate(${(-ox * 8).toFixed(1)}px,${(-oy * 5).toFixed(1)}px)`;
+          frame = 0;
+        });
+      },
+      { passive: true },
+    );
+  }
+  const menu = $("menu-toggle"),
+    mobile = $("mobile-nav");
+  function closeMenu(returnFocus = false) {
+    mobile.hidden = true;
+    menu.setAttribute("aria-expanded", "false");
+    menu.setAttribute("aria-label", "Open menu");
+    if (returnFocus) menu.focus();
+  }
+  menu.addEventListener("click", () => {
+    const open = menu.getAttribute("aria-expanded") !== "true";
+    menu.setAttribute("aria-expanded", String(open));
+    menu.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    mobile.hidden = !open;
+  });
+  for (const link of mobile.querySelectorAll("a"))
+    link.addEventListener("click", () => closeMenu());
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !mobile.hidden) closeMenu(true);
+  });
+  for (const [i, button] of [
+    ...document.querySelectorAll(".question-toggle"),
+  ].entries()) {
+    const answer = button.nextElementSibling;
+    answer.id = `question-answer-${i}`;
+    button.setAttribute("aria-controls", answer.id);
+    button.addEventListener("click", () => {
+      const open = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!open));
+      answer.hidden = open;
+    });
+  }
+  function restoreJourney() {
+    try {
+      const text = sessionStorage.getItem(RESUME);
+      if (!text) return;
+      if (text.length > 20000) throw new Error("Oversized saved record");
+      const saved = JSON.parse(text),
+        age = Date.now() - saved.created;
+      if (
+        saved.version !== 1 ||
+        !Number.isFinite(age) ||
+        age < 0 ||
+        age > 30 * 60 * 1000 ||
+        !saved.record ||
+        !/^[\w-]{1,50}$/.test(saved.record.licenceID) ||
+        !detailsValid(saved.details) ||
+        !time(saved.checkedAt)
+      )
+        throw new Error("Invalid saved record");
+      begin();
+      records = [];
+      activeRecord = saved.record;
+      activeDetails = saved.details;
+      activeCheckedAt = saved.checkedAt;
+      report = ["found", "none", "unsure"].includes(saved.report)
+        ? saved.report
+        : "";
+      section.hidden = false;
+      list.hidden = true;
+      detail.hidden = false;
+      $("results-tools").hidden = true;
+      $("back-button").hidden = true;
+      detail.replaceChildren(
+        profile(activeRecord, activeDetails, activeCheckedAt),
+      );
+      $("results-kicker").textContent = "YOUR TWO SEPARATE CHECKS";
+      $("results-title").textContent = "Welcome back. Finish your check.";
+      $("results-subtitle").textContent =
+        "Your earlier licence lookup is restored. The time checked appears below; refresh it if you need an updated record.";
+      notify(
+        "This is your saved licence lookup, not a new government verification.",
+      );
+      busy(false);
+      requestAnimationFrame(() => {
+        scrollTo(section);
+        focus($("results-title"));
+      });
+    } catch {
+      clearSaved();
+    }
+  }
+  restoreJourney();
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) restoreJourney();
   });
 })();

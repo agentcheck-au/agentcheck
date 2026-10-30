@@ -1,34 +1,66 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
-import {normalizeDetails} from '../lib/nsw-worker.js';
-const html=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
-const js=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
-const css=readFileSync(new URL('../public/styles.css',import.meta.url),'utf8');
-test('premium AgentCheck interface keeps independent NSW attribution',()=>{
-  assert.match(html,/Know your agent/);
-  assert.match(html,/Check the facts/);
-  assert.match(html,/Independent NSW agent verification/);
-  assert.doesNotMatch(html,/NSW Property API/);
-  assert.match(css,/prefers-reduced-motion/);
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { normalizeDetails } from "../lib/nsw-worker.js";
+const html = readFileSync(
+  new URL("../public/index.html", import.meta.url),
+  "utf8",
+).replace(/\s+/g, " ");
+const js = readFileSync(new URL("../public/app.js", import.meta.url), "utf8");
+const css = readFileSync(
+  new URL("../public/styles.css", import.meta.url),
+  "utf8",
+);
+test("editorial identity retains an accurate public source description", () => {
+  assert.match(html, /The facts speak louder/);
+  assert.match(html, /INDEPENDENT NSW AGENT VERIFICATION/);
+  assert.match(
+    html,
+    /Not affiliated with, approved by or endorsed by the NSW Government/,
+  );
+  assert.doesNotMatch(html, /NSW Property API/);
+  assert.match(css, /prefers-reduced-motion/);
 });
-test('API lookup and secure two-step handoff remain available',()=>{
-  assert.match(html,/id="search-form"/);
-  assert.match(js,/\/api\/search\?q=/);
-  assert.match(js,/\/api\/details\?id=/);
-  assert.match(js,/syncCopy\(number\)/);
-  assert.match(js,/window\.open\(REGISTRY_URL/);
-  assert.match(js,/window\.location\.assign\(REGISTRY_URL\)/);
+test("government endpoints and same-tab clipboard-first handoff remain available", () => {
+  assert.match(html, /id="search-form"/);
+  assert.match(js, /\/api\/search\?q=/);
+  assert.match(js, /\/api\/details\?id=/);
+  assert.match(js, /await copyLicence\(number\)/);
+  assert.match(js, /window\.location\.assign\(REGISTER\)/);
+  assert.doesNotMatch(js, /window\.open\(REGISTER/);
 });
-test('red flag is only displayed after a visitor reports a matching action',()=>{
-  assert.match(js,/setOutcome\('found'\)/);
-  assert.match(js,/not independently confirmed by AgentCheck/);
-  assert.match(js,/This is not an official declaration of a clean disciplinary history/);
-  assert.doesNotMatch(html+js,/Zero records here does NOT mean/);
+test("a red flag can only follow an explicit user-reported match", () => {
+  assert.match(js, /setOutcome\(type, true\)/);
+  assert.match(js, /not a finding independently verified by AgentCheck/);
+  assert.match(js, /not an official all-clear/);
+  assert.doesNotMatch(html + js, /Zero records here does NOT mean/);
 });
-test('details only use public premises and conditions',()=>{
-  const data=normalizeDetails({licenceDetail:{licenceName:'Example'},premises:[{businessAddress:'Shop 1 Test Street',secret:'hidden'}],conditions:[{description:'CPD required',isActive:'True'}],licenseeBirthDate:'private'});
-  assert.deepEqual(data.premises,['Shop 1 Test Street']);
-  assert.deepEqual(data.conditions,['CPD required']);
-  assert.equal(JSON.stringify(data).includes('private'),false);
+test("licence data excludes private fields", () => {
+  const details = normalizeDetails({
+    licenceDetail: { licenceName: "Example" },
+    premises: [{ businessAddress: "Shop 1 Test Street", secret: "not public" }],
+    conditions: [{ description: "CPD required", isActive: "True" }],
+    licenseeBirthDate: "private",
+  });
+  assert.deepEqual(details.premises, ["Shop 1 Test Street"]);
+  assert.deepEqual(details.conditions, ["CPD required"]);
+  assert.equal(JSON.stringify(details).includes("not public"), false);
+});
+
+test("green shield retains blue wordmark and editorial questions explain referral incentives", () => {
+  assert.match(css, /--brand-green: #47e5ae/);
+  assert.doesNotMatch(css, /\.brand-name span, \.footer-brand span,\s*\.brand-name b, \.footer-brand b \{ color: var\(--brand-green\); \}/);
+  assert.match(css, /background: #1e61cb/);
+  assert.match(html, /Are non-subscribers considered on equal terms/);
+  assert.match(html, /Can agents pay to enter/);
+  assert.match(html, /REFERRAL WEBSITE/);
+  assert.match(html, /Agent A/);
+  assert.match(html, /Agent B/);
+  assert.match(html, /FEE TO WEBSITE/);
+  assert.match(html, /Who benefits financially from this referral/);
+  assert.doesNotMatch(html, /<div class="hero-proof">/);
+  assert.match(html, /<p class="footer-service-note">Free to use · No sign-up required<\/p>/);
+  assert.match(html, /Not affiliated with, approved by or endorsed by the NSW Government/);
+  assert.match(css, /\.enhanced \.question-card\.visible \.ranking-line i/);
+  assert.match(js, /IntersectionObserver/);
 });
