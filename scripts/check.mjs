@@ -5,8 +5,10 @@ const publicFiles = await readdir("public");
 const allowed = new Set([
   "index.html",
   "app.js",
+  "app-20261031-mobile-v3.js",
   "app-20261031-mobile-v4.js",
   "styles.css",
+  "styles-20261031-mobile-v4.css",
   "styles-20261031-mobile-v5.css",
   "_headers",
   "_routes.json",
