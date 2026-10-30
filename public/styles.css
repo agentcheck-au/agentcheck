@@ -3148,3 +3148,22 @@ html, body { overflow-x: clip; }
   .site-map-footer .footer-group a { font-size:12px; }
   .site-map-footer .footer-brand { font-size:26px; }
 }
+
+/* Two separate NSW registers — restrained editorial cards. */
+.two-registers{background:#f4f7fb;color:#0a1a31;padding:clamp(48px,6vw,90px) 0}
+.two-registers-intro{max-width:850px;margin:0 auto 30px;text-align:center}
+.two-registers-intro h2{font-size:clamp(28px,4.2vw,50px);line-height:1.14;letter-spacing:-.035em;margin:14px 0 16px;color:#091b33}
+.two-registers-intro p{font-size:clamp(16px,1.6vw,19px);line-height:1.65;color:#41536b;margin:0}
+.two-registers-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.two-register-card{border:1px solid #d9e3eb;border-radius:22px;background:#fff;padding:clamp(24px,3vw,40px);box-shadow:0 12px 35px rgba(9,27,51,.045);display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.two-register-card-contrast{background:#0b213b;color:#fff;border-color:#0b213b}
+.two-register-number{font-size:12px;font-weight:800;letter-spacing:.14em;color:#237f76}
+.two-register-card-contrast .two-register-number{color:#6ce4c7}
+.two-register-card h3{font-size:clamp(22px,2.5vw,31px);line-height:1.2;letter-spacing:-.02em;margin:17px 0 13px;color:inherit}
+.two-register-card p{font-size:16px;line-height:1.65;color:#4c5d71;margin:0 0 26px}
+.two-register-card-contrast p{color:#d6e4ef}
+.two-register-card a{font-weight:750;color:#116f69;margin-top:auto;text-decoration:underline;text-underline-offset:5px;line-height:1.5}
+.two-register-card-contrast a{color:#79edce}
+.two-register-card a:focus-visible{outline:3px solid #46cdb6;outline-offset:5px}
+.two-registers-disclaimer{font-size:14px;line-height:1.65;color:#526479;max-width:980px;margin:20px auto 0;text-align:center}
+@media(max-width:700px){.two-registers{padding:48px 0}.two-registers-grid{grid-template-columns:1fr;gap:14px}.two-register-card{border-radius:18px;padding:25px}.two-registers-intro{text-align:left}.two-registers-disclaimer{text-align:left}}
