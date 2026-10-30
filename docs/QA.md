@@ -38,3 +38,21 @@ The tests cover fixed OneGov endpoints, token sharing/refresh, errors/429/503, r
 Preview credential availability must be resolved through a separately authorised AgentCheck-only configuration step before live licence acceptance. Distributed quota protection, historical credential-rotation confirmation and current government data-use terms remain open. Production merge/deployment requires explicit owner approval.
 
 Valdero was outside scope. No database, Vercel project, DNS, account-wide, production-secret or production-branch changes were made.
+# Readability pass — 31 October 2026
+
+- Homepage copy reduced from 1,058 to 589 words (about 44%, counting text outside scripts/styles).
+- Combined the repeated marketing-claims sections; removed duplicate two-check explanations and reduced footer links. Supporting award/ranking/referral questions remain expandable.
+- Main reading text uses 17–20px with wider line spacing, larger section gaps and shorter line lengths. About and Privacy use a single reading column.
+- Local Chromium review: desktop hero, 390px mobile hero and licence journey, expanded award details, and 320px homepage/About layouts. The narrow pages fit their viewport without horizontal document overflow.
+- Local search and detail checks used the explicitly labelled simulated QA server; this pass does not reverify live government data or real-device Safari clipboard behavior.
+- `npm test`: 67/67 passed. `npm run check` and `git diff --check`: passed.
+- New versioned JS/CSS assets match canonical sources; previous asset URLs retained for open tabs.
+
+# Approved shield-and-tick logo — 31 October 2026
+
+- Owner approved the corrected logo: the tick remains inside the shield; the complete mark is small and raised at the right of the AgentCheck wordmark.
+- Applied outlined SVG wordmarks to the homepage header/footer and About/Privacy headers. Small-display strokes stay legible without changing the approved proportions.
+- Updated Open Graph/Twitter artwork to a new 1200×630 URL, structured-data logo, 96px PNG favicon, ICO fallbacks and 180px Apple touch icon. Legacy direct badge/share URLs also use the current identity.
+- 67/67 tests and static checks pass. Exported PNG dimensions/signatures and each public page's logo/icon/share references are checked. Desktop and 320px mobile header reviewed; no horizontal document overflow.
+- User explicitly approved applying the corrected logo and merging it with the readability changes into main. Pre-release main: `2010fd02038f3feb844fd60d067389f36b944591`; pre-logo review: `3be074967f6970739220a51952dc1f4aa9038ae1`.
+

@@ -4,6 +4,8 @@
     "https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register";
   const LICENCES = "https://verify.licence.nsw.gov.au/home/Property";
   const RESUME = "agentcheck:resume";
+  const MIN_SEARCH_DISPLAY_MS = 1150;
+  const MIN_RECORD_DISPLAY_MS = 1900;
   const $ = (id) => document.getElementById(id);
   const el = (tag, css = "", text) => {
     const node = document.createElement(tag);
@@ -224,6 +226,24 @@
       signal.removeEventListener("abort", stop);
     }
   }
+  // Keep the existing verification animation visible when government responses
+  // are very fast. Slow responses add no extra delay; cancellation is immediate.
+  // Respect reduced-motion preferences and the site's Pause motion control.
+  function waitForMinimum(startedAt, minimumMs, signal) {
+    if (reduced() || signal.aborted) return Promise.resolve();
+    const remaining = Math.max(0, minimumMs - (Date.now() - startedAt));
+    if (!remaining) return Promise.resolve();
+    return new Promise((resolve) => {
+      let timer;
+      const finish = () => {
+        clearTimeout(timer);
+        signal.removeEventListener("abort", finish);
+        resolve();
+      };
+      signal.addEventListener("abort", finish, { once: true });
+      timer = setTimeout(finish, remaining);
+    });
+  }
   function begin() {
     controller?.abort();
     controller = new AbortController();
@@ -306,6 +326,13 @@
       focus($("results-title"));
     }
   }
+  function searchLoading() {
+    const wrap = el("div", "loading-stage");
+    add(wrap, "div", "loading-crest").append(icon("shield"));
+    add(wrap, "h3", "", "Checking NSW licence records");
+    add(wrap, "p", "", "Looking for matching records in the official NSW licence register…");
+    return wrap;
+  }
   function loading(record) {
     const wrap = el("div", "loading-stage");
     add(wrap, "div", "loading-crest").append(icon("shield"));
@@ -356,13 +383,13 @@
       "p",
       "",
       current
-        ? "Licence status only. Regulatory history is a separate check."
+        ? "Licence status only. The Name and Shame Register is a separate check."
         : "A current licence has not been confirmed. Review the official record before proceeding.",
     );
     const steps = add(part, "div", "progress-steps");
     for (const [name, pending] of [
       ["01 · LICENCE RECORD", false],
-      ["02 · REGULATORY", true],
+      ["02 · NAME AND SHAME REGISTER", true],
     ]) {
       const step = add(
         steps,
@@ -480,7 +507,7 @@
     });
     officialLink(
       box,
-      "Continue to the official NSW register ↗",
+      "Continue to the Name and Shame Register ↗",
       REGISTER,
       true,
     );
@@ -492,16 +519,16 @@
     // Never substitute an identity/status from another source for missing detailed data.
     const number = value(info.licenceNumber, "");
     const card = add(parent, "section", "regulatory-card");
-    card.setAttribute("aria-label", "Check two: regulatory register");
+    card.setAttribute("aria-label", "Check two: Name and Shame Register");
     card.id = "regulatory-check";
     const content = add(card, "div", "regulatory-content");
-    add(content, "div", "regulatory-kicker", "CHECK 02 / 02 · DO THIS NEXT");
-    add(content, "h3", "", "A licence is only half the story.");
+    add(content, "div", "regulatory-kicker", "STEP 2 / 2 · NAME AND SHAME REGISTER");
+    add(content, "h3", "", "Check the Name and Shame Register.");
     add(
       content,
       "p",
       "",
-      "Search the official NSW Fair Trading Name and Shame Register for published regulatory action. This separate check matters even when a licence is current.",
+      "A current licence does not rule out regulatory action. Check this separate official register yourself.",
     );
     const action = add(card, "div", "regulatory-action");
     const licence = add(action, "div", "licence-to-copy");
@@ -511,7 +538,7 @@
       action,
       "button",
       "btn btn-primary regulatory-cta",
-      "Copy licence & check register ↗",
+      "Copy licence & open Name and Shame Register ↗",
     );
     button.type = "button";
     button.disabled = !number;
@@ -519,12 +546,12 @@
       action,
       "p",
       "regulatory-hint",
-      "Copies the number and opens the official site in this tab. Paste it into the register’s search field, then use Back to return. AgentCheck does not search this register.",
+      "Search the official site using the copied number or the agent’s name. Use Back to return. AgentCheck does not search this register.",
     );
     const savedNotice = add(action, "p", "regulatory-hint");
     officialLink(
       action,
-      "Open official register without copying ↗",
+      "Open Name and Shame Register without copying ↗",
       REGISTER,
       true,
     );
@@ -558,7 +585,7 @@
         return;
       }
       if (copied) {
-        toast("Licence number copied. Paste it into the NSW register.");
+        toast("Licence number copied. Use it to check the Name and Shame Register.");
         window.location.assign(REGISTER);
       } else {
         fallbackCopy(fallback, number);
@@ -574,19 +601,19 @@
     );
     const header = add(follow, "div", "followup-header"),
       words = add(header, "div");
-    add(words, "h3", "", "What did the official register show?");
+    add(words, "h3", "", "Did you find this agent on the Name and Shame Register?");
     add(
       words,
       "p",
       "",
-      "After checking the licence number and name on the official site, record what you found. Your selection stays in this browser tab only.",
+      "After checking the official register, select what you found. Confirm the name, licence number and notice. AgentCheck cannot verify your answer.",
     );
     const buttons = add(follow, "div", "answer-buttons");
     const answer = add(follow, "div", "register-conclusion");
     answer.hidden = true;
     const options = [
-      ["found", "I found a matching regulatory action"],
-      ["none", "I found no matching entry"],
+      ["found", "Yes — I found a matching entry"],
+      ["none", "No matching entry found"],
       ["unsure", "I am not sure"],
     ];
     const controls = options.map(([type, label]) => {
@@ -624,7 +651,7 @@
           ? "RED FLAG · Matching action selected"
           : type === "none"
             ? "No matching entry · Selection recorded"
-            : "Regulatory check still uncertain",
+            : "Name and Shame check still uncertain",
       );
       add(
         answer,
@@ -649,7 +676,7 @@
           "",
           "A published infringement does not automatically mean a licence is suspended. Read the actual regulatory outcome.",
         );
-      officialLink(answer, "Review the official register again ↗");
+      officialLink(answer, "Review the Name and Shame Register again ↗");
       if (moveFocus) {
         scrollTo(answer, "nearest");
         focus(answer);
@@ -764,7 +791,7 @@
       card,
       "a",
       "btn btn-primary next-regulatory-step",
-      "Continue to Step 2 · Check regulatory history ↓",
+      "Continue to Step 2 · Name and Shame Register ↓",
     );
     nextStep.href = "#regulatory-check";
     regulatoryStep(wrapper, record, info);
@@ -809,6 +836,7 @@
   }
   async function selectRecord(record, preserveReport = false) {
     const { id, signal } = begin();
+    const startedAt = Date.now();
     activeRecord = record;
     activeDetails = null;
     if (!preserveReport) report = "";
@@ -821,7 +849,7 @@
     $("results-kicker").textContent = "YOUR TWO SEPARATE CHECKS";
     $("results-title").textContent = "Behind the name. The facts.";
     $("results-subtitle").textContent =
-      "First: retrieve the licence record. Next: visit the separate regulatory register.";
+      "Step 1: licence register. Step 2: separately search the NSW Fair Trading Name and Shame Register.";
     notify();
     busy(true);
     if (!isMobileViewport()) {
@@ -843,6 +871,8 @@
         throw new Error(
           "The licence service returned an incomplete record. Please try again.",
         );
+      await waitForMinimum(startedAt, MIN_RECORD_DISPLAY_MS, signal);
+      if (id !== revision || signal.aborted) return;
       activeDetails = data.detail;
       activeCheckedAt = data.checkedAt;
       detail.replaceChildren(profile(record, data.detail, data.checkedAt));
@@ -869,13 +899,14 @@
         "No licence verification has been completed. You can still use the official government registers.",
       );
       officialLink(box, "Open official licence register ↗", LICENCES);
-      officialLink(box, "Open NSW Fair Trading register ↗");
+      officialLink(box, "Open Name and Shame Register ↗");
     } finally {
       if (id === revision) busy(false);
     }
   }
   async function search(q) {
     const { id, signal } = begin();
+    const startedAt = Date.now();
     clearSaved();
     report = "";
     activeDetails = null;
@@ -886,7 +917,7 @@
     section.hidden = false;
     list.hidden = false;
     detail.hidden = true;
-    list.replaceChildren();
+    list.replaceChildren(searchLoading());
     detail.replaceChildren();
     $("results-tools").hidden = true;
     $("back-button").hidden = true;
@@ -909,6 +940,8 @@
         throw new Error(
           "The licence service returned an unreadable result list. Please try again.",
         );
+      await waitForMinimum(startedAt, MIN_SEARCH_DISPLAY_MS, signal);
+      if (id !== revision || signal.aborted) return;
       records = data.results.filter(
         (r) =>
           r &&
@@ -926,6 +959,7 @@
       $("results-subtitle").textContent =
         "Please try again, or use the official property licence register.";
       notify(error.message, true);
+      list.replaceChildren();
       officialLink(
         list,
         "Search the official NSW licence register ↗",

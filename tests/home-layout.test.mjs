@@ -7,14 +7,13 @@ const css = readFileSync(new URL("../public/styles.css", import.meta.url), "utf8
 const app = readFileSync(new URL("../public/app.js", import.meta.url), "utf8");
 const referral = readFileSync(new URL("../public/referral-motion.js", import.meta.url), "utf8");
 
-test("hero and editorial headlines are swapped without losing either message", () => {
+test("hero keeps its identity and questions have a short introduction", () => {
   const hero = html.slice(html.indexOf('<h1 id="hero-title">'), html.indexOf("</h1>", html.indexOf('<h1 id="hero-title">')));
   const editorial = html.slice(html.indexOf('<h2 id="questions-title">'), html.indexOf("</h2>", html.indexOf('<h2 id="questions-title">')));
   assert.match(hero, /Look past the <em>polish/);
   assert.match(hero, /Find the <em>proof/);
   assert.doesNotMatch(hero, /The claims are loud/);
-  assert.match(editorial, /The claims are loud/);
-  assert.match(editorial, /The facts speak louder/);
+  assert.match(editorial, /Look beyond <em>the badge/);
 });
 
 test("verification stages and NSW source attribution are outside the search card", () => {
@@ -26,9 +25,9 @@ test("verification stages and NSW source attribution are outside the search card
   assert.match(panel, /id="search-input"/);
   assert.match(panel, /id="search-button"/);
   assert.doesNotMatch(panel, /01 \/ Licence status/);
-  assert.doesNotMatch(panel, /02 \/ Regulatory register/);
+  assert.doesNotMatch(panel, /02 \/ Name and Shame Register/);
   assert.match(html.slice(panelEnd, html.indexOf('<div class="hero-bottom"', panelEnd)), /01 \/ Licence status/);
-  assert.match(html.slice(panelEnd, html.indexOf('<div class="hero-bottom"', panelEnd)), /02 \/ Regulatory register/);
+  assert.match(html.slice(panelEnd, html.indexOf('<div class="hero-bottom"', panelEnd)), /02 \/ Name and Shame Register/);
   assert.match(html.slice(panelEnd, html.indexOf('<div class="hero-bottom"', panelEnd)), /Licence lookup from NSW Government records/);
   assert.match(css, /width: min\(650px, 100%\)/);
 });

@@ -37,3 +37,15 @@
 
 /styles-20261031-mobile-v4.css
   Cache-Control: no-cache, must-revalidate
+
+/favicon.png
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/favicon.ico
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/styles-20261031-brand-v8.css
+  Cache-Control: no-cache, must-revalidate

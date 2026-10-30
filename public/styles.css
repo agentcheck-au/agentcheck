@@ -3148,3 +3148,275 @@ html, body { overflow-x: clip; }
   .site-map-footer .footer-group a { font-size:12px; }
   .site-map-footer .footer-brand { font-size:26px; }
 }
+
+/* Two separate NSW registers — restrained editorial cards. */
+.two-registers{background:#f4f7fb;color:#0a1a31;padding:clamp(48px,6vw,90px) 0}
+.two-registers-intro{max-width:850px;margin:0 auto 30px;text-align:center}
+.two-registers-intro h2{font-size:clamp(28px,4.2vw,50px);line-height:1.14;letter-spacing:-.035em;margin:14px 0 16px;color:#091b33}
+.two-registers-intro p{font-size:clamp(16px,1.6vw,19px);line-height:1.65;color:#41536b;margin:0}
+.two-registers-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.two-register-card{border:1px solid #d9e3eb;border-radius:22px;background:#fff;padding:clamp(24px,3vw,40px);box-shadow:0 12px 35px rgba(9,27,51,.045);display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.two-register-card-contrast{background:#0b213b;color:#fff;border-color:#0b213b}
+.two-register-number{font-size:12px;font-weight:800;letter-spacing:.14em;color:#237f76}
+.two-register-card-contrast .two-register-number{color:#6ce4c7}
+.two-register-card h3{font-size:clamp(22px,2.5vw,31px);line-height:1.2;letter-spacing:-.02em;margin:17px 0 13px;color:inherit}
+.two-register-card p{font-size:16px;line-height:1.65;color:#4c5d71;margin:0 0 26px}
+.two-register-card-contrast p{color:#d6e4ef}
+.two-register-card a{font-weight:750;color:#116f69;margin-top:auto;text-decoration:underline;text-underline-offset:5px;line-height:1.5}
+.two-register-card-contrast a{color:#79edce}
+.two-register-card a:focus-visible{outline:3px solid #46cdb6;outline-offset:5px}
+.two-registers-disclaimer{font-size:14px;line-height:1.65;color:#526479;max-width:980px;margin:20px auto 0;text-align:center}
+@media(max-width:700px){.two-registers{padding:48px 0}.two-registers-grid{grid-template-columns:1fr;gap:14px}.two-register-card{border-radius:18px;padding:25px}.two-registers-intro{text-align:left}.two-registers-disclaimer{text-align:left}}
+
+/* Release polish: readable hero rhythm, compact CTA and distinct check steps. */
+.hero-shell {
+  justify-content: flex-start;
+  padding-top: 116px;
+}
+.hero-copy .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-copy .eyebrow-line { flex: 0 0 27px; margin-right: 0; }
+.hero h1 { margin-top: 24px; }
+.search-panel { margin-top: 48px; }
+.hero-verification-steps {
+  margin-top: 26px;
+  padding-top: 22px;
+}
+.hero-verification-steps .two-check-note {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  column-gap: 28px;
+  row-gap: 14px;
+}
+.hero-verification-steps .two-check-note span {
+  display: block;
+  min-width: 0;
+  line-height: 1.55;
+}
+.hero-verification-steps .two-check-note strong {
+  grid-column: 1 / -1;
+  margin: 0;
+  width: auto;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.hero-verification-steps .search-panel-foot { margin-top: 16px; }
+
+/* Context-first explanation of awards, rankings and referrals. */
+.manifesto {
+  padding: clamp(64px, 7vw, 104px) 0;
+  background: #07162f;
+}
+.manifesto-shell { display: block; }
+.manifesto-intro { max-width: 850px; }
+.manifesto h2 {
+  max-width: 850px;
+  font-size: clamp(38px, 4.8vw, 62px);
+  line-height: 1.12;
+  margin: 22px 0 18px;
+}
+.manifesto-intro p {
+  max-width: 760px;
+  font-size: 16px;
+  line-height: 1.72;
+  margin: 0;
+}
+.manifesto-intro p strong { color: #f4f8ff; }
+.manifesto-points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 36px;
+  border: 0;
+}
+.manifesto-points > div {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid rgba(139, 181, 239, .22);
+  border-radius: 15px;
+  background: rgba(22, 56, 99, .46);
+  gap: 10px;
+}
+.manifesto-points span { color: #96bdf3; }
+.manifesto-points strong { font-size: 19px; line-height: 1.3; }
+.manifesto-points p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #b7cbe6;
+}
+.manifesto-link { margin-top: 20px; }
+
+@media (max-width: 760px) {
+  .hero-shell {
+    padding-top: 96px;
+    padding-bottom: 58px;
+  }
+  .hero h1 { margin-top: 22px; }
+  .search-panel { margin-top: 43px; }
+  .search-panel .search-controls { align-items: stretch; }
+  .search-panel .btn-search {
+    align-self: center;
+    width: min(204px, 100%);
+    min-width: 0;
+    padding-inline: 20px;
+  }
+  .hero-verification-steps {
+    margin-top: 26px;
+    padding: 22px 2px 0;
+  }
+  .hero-verification-steps .two-check-note {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 14px;
+    font-size: 12px;
+  }
+  .hero-verification-steps .two-check-note span {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .hero-verification-steps .two-check-note strong {
+    grid-column: 1 / -1;
+    flex-basis: auto;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .hero-verification-steps .search-panel-foot {
+    margin-top: 15px;
+    font-size: 11px;
+  }
+  .manifesto { padding: 64px 0 70px; }
+  .manifesto h2 {
+    font-size: clamp(33px, 8.3vw, 44px);
+    margin: 18px 0 16px;
+  }
+  .manifesto-intro p { font-size: 15px; line-height: 1.65; }
+  .manifesto-points {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .manifesto-points > div {
+    padding: 18px 20px;
+    gap: 6px;
+  }
+  .manifesto-points strong { font-size: 18px; }
+  .manifesto-points p { font-size: 13px; }
+  .manifesto-link { margin-top: 16px; }
+}
+@media (max-width: 370px) {
+  .hero-verification-steps .two-check-note { column-gap: 12px; }
+  .hero-verification-steps .two-check-note span { font-size: 11px; }
+}
+
+/* Site-wide reading rhythm: one message per section, generous readable copy. */
+body { font-size: 17px; }
+.nav-links { font-size: 15px; }
+.hero-shell { padding-top: 124px; padding-bottom: 80px; }
+.hero-copy > p { max-width: 32em; font-size: 20px; line-height: 1.65; }
+.hero h1 { margin-bottom: 26px; }
+.search-panel { padding: 32px; margin-top: 48px; }
+.search-panel h2 { font-size: 24px; margin: 0 0 24px; }
+.search-panel label { font-size: 16px; line-height: 1.5; margin-bottom: 14px; }
+.search-panel .search-input-wrap input { font-size: 17px; height: 56px; }
+.search-panel .btn-search { min-height: 56px; height: auto; font-size: 17px; }
+.hero-verification-steps { padding-top: 26px; margin-top: 32px; }
+.hero-verification-steps .two-check-note span { font-size: 15px; line-height: 1.65; }
+.hero-verification-steps .search-panel-foot { font-size: 14px; margin-top: 22px; }
+.hero-bottom { margin-top: 28px; font-size: 15px; color: #d5e4fa; }
+.two-registers, .editorial, .about-home, .closing { padding-block: clamp(88px, 9vw, 144px); }
+.two-registers-intro { max-width: 760px; margin-bottom: 56px; }
+.two-registers-intro h2 { margin-bottom: 24px; }
+.two-registers-intro p { font-size: 20px; }
+.two-registers-grid { gap: 32px; }
+.two-register-card { padding: 40px; box-shadow: none; }
+.two-register-card h3 { margin-block: 24px; }
+.two-register-card p { font-size: 18px; line-height: 1.7; margin-bottom: 32px; max-width: 36em; }
+.two-register-card a { font-size: 17px; }
+.two-registers-disclaimer { max-width: 760px; font-size: 16px; line-height: 1.75; margin-top: 36px; }
+.editorial { background: #fff; }
+.editorial-top { display: block; max-width: 760px; margin-bottom: 64px; }
+.editorial-top h2 { margin-bottom: 28px; font-size: clamp(36px, 4.8vw, 64px); }
+.editorial-top p { max-width: 36em; font-size: 20px; line-height: 1.7; color: #4d6078; }
+#the-standard, #questions { scroll-margin-top: 110px; }
+.editorial-rows { border-top: 0; gap: 64px; }
+.editorial-rows .question-card { gap: 64px; padding: 0 0 64px; }
+.editorial-rows .question-body { padding-block: 8px; }
+.editorial-rows .question-body h3 { margin: 20px 0; font-size: 34px; }
+.editorial-rows .question-body > p { font-size: 18px; line-height: 1.75; margin-bottom: 28px; max-width: 36em; }
+.editorial-rows .question-toggle { background: transparent; border-radius: 0; border-width: 1px 0 0; padding: 20px 0; font-size: 18px; gap: 20px; }
+.editorial-rows .question-answer { padding: 24px; font-size: 17px; line-height: 1.75; }
+.question-index, .two-register-number, .eyebrow { font-size: 13px; line-height: 1.6; }
+.about-home-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: center; }
+.about-home p { font-size: 18px; line-height: 1.75; max-width: 36em; margin-bottom: 0; }
+.about-home-link { font-size: 18px; }
+.closing h2 { margin-bottom: 40px; }
+.site-map-footer .footer-sitemap { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; padding-block: 56px; }
+.site-map-footer .footer-group h2 { font-size: 17px; margin-bottom: 24px; }
+.site-map-footer .footer-group a { font-size: 16px; margin-bottom: 18px; line-height: 1.7; }
+.site-map-footer .footer-feature p { font-size: 16px; line-height: 1.7; }
+.site-map-footer .footer-disclaimer { font-size: 15px; line-height: 1.8; max-width: 70ch; padding-block: 32px; }
+.site-map-footer .footer-bottom { font-size: 15px; }
+.results-heading p, .results-tools label { font-size: 17px; line-height: 1.7; }
+.result-name { font-size: 22px; }
+.result-meta, .row-button, .profile-subtitle, .field-value { font-size: 17px; line-height: 1.65; }
+.profile-grid { gap: 32px; }
+.field-label { font-size: 13px; color: #52647d; line-height: 1.5; }
+.profile-bottom, .checked-at, .conditions-disclosure summary { font-size: 15px; line-height: 1.7; }
+.regulatory-content > p, .followup-header p, .register-conclusion p { font-size: 17px; line-height: 1.75; }
+.regulatory-hint, .register-conclusion small { font-size: 15px; line-height: 1.75; }
+.regulatory-kicker, .followup-overline { font-size: 13px; line-height: 1.6; }
+.regulatory-card, .register-followup { margin-top: 48px; }
+.regulatory-cta, .answer-button { font-size: 17px; white-space: normal; line-height: 1.5; }
+
+@media (max-width: 760px) {
+  .shell { width: calc(100% - 40px); }
+  .hero-shell { padding-top: 104px; padding-bottom: 72px; }
+  .hero-copy > p { font-size: 18px; line-height: 1.65; max-width: 30em; }
+  .hero h1 { font-size: clamp(36px, 9vw, 56px); line-height: 1.13; }
+  .hero-copy .eyebrow { font-size: 11px; letter-spacing: .1em; }
+  .search-panel { padding: 26px 22px; margin-top: 40px; }
+  .search-panel h2 { font-size: 23px; margin-bottom: 24px; }
+  .search-panel label { font-size: 16px; }
+  .search-panel .search-controls { gap: 20px; }
+  .search-panel .search-input-wrap input { font-size: 16px; }
+  .search-panel .btn-search { width: min(204px, 100%); }
+  .hero-verification-steps .two-check-note { column-gap: 24px; }
+  .hero-verification-steps .two-check-note span { font-size: 14px; }
+  .hero-verification-steps .search-panel-foot { font-size: 13px; line-height: 1.7; }
+  .two-registers, .editorial, .about-home, .closing { padding-block: 80px; }
+  .two-registers-intro, .editorial-top { margin-bottom: 40px; }
+  .two-registers-intro p, .editorial-top p { font-size: 18px; }
+  .two-registers-grid { grid-template-columns: 1fr; gap: 28px; }
+  .two-register-card { padding: 30px 26px; }
+  .two-register-card h3 { font-size: 28px; }
+  .two-register-card p, .editorial-rows .question-body > p { font-size: 17px; }
+  .two-registers-disclaimer { text-align: left; font-size: 16px; }
+  .editorial-rows { gap: 48px; }
+  .editorial-rows .question-card { grid-template-columns: 1fr; gap: 28px; padding-bottom: 48px; }
+  .editorial-rows .question-visual { border-radius: 16px; }
+  .editorial-rows .question-body h3 { font-size: 30px; }
+  .editorial-rows .question-toggle { font-size: 17px; }
+  .about-home-grid { grid-template-columns: 1fr; gap: 28px; }
+  .about-home h2 { font-size: 34px; }
+  .site-map-footer .footer-sitemap { grid-template-columns: 1fr; gap: 32px; }
+  .site-map-footer .footer-feature { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .profile-card, .regulatory-card, .register-followup { padding: 28px 22px; }
+  .profile-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
+  .field-value { font-size: 16px; }
+  .regulatory-card { gap: 32px; }
+  .regulatory-cta { font-size: 16px; padding: 18px; }
+}
+
+
+/* Approved brand: a small raised shield-and-tick beside the wordmark. */
+.brand { gap: 0; min-width: 0; }
+.brand .logo-wordmark { display: block; width: 176px; height: auto; max-width: 100%; }
+.site-map-footer .footer-identity .logo-wordmark { width: 240px; height: auto; border-radius: 0; }
+@media (max-width: 370px) {
+  .brand .logo-wordmark { width: 140px; }
+}

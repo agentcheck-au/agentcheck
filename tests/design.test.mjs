@@ -12,7 +12,7 @@ const css = readFileSync(
   "utf8",
 );
 test("editorial identity retains an accurate public source description", () => {
-  assert.match(html, /The facts speak louder/);
+  assert.match(html, /Look beyond/);
   assert.match(html, /INDEPENDENT NSW AGENT VERIFICATION/);
   assert.match(
     html,
@@ -57,7 +57,7 @@ test("green shield retains blue wordmark and editorial questions explain referra
   assert.match(html, /Agent A/);
   assert.match(html, /Agent B/);
   assert.match(html, /FEE TO WEBSITE/);
-  assert.match(html, /Who benefits financially from this referral/);
+  assert.match(html, /Who benefits from the referral/);
   assert.doesNotMatch(html, /<div class="hero-proof">/);
   assert.match(html, /<p class="footer-service-note">Free to use · No sign-up required<\/p>/);
   assert.match(html, /Not affiliated with, approved by or endorsed by the NSW Government/);
