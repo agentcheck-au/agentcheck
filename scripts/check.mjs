@@ -1,9 +1,17 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import assert from "node:assert/strict";
+import { parseHTML } from "linkedom";
+import { resolve } from "node:path";
 const publicFiles = await readdir("public");
 const allowed = new Set([
   "index.html",
+  "app-20261031-seo-v8.js",
+  "styles-20261031-seo-v10.css",
+  "guides-20261031.css",
+  "check-nsw-real-estate-agent",
+  "check-nsw-real-estate-agency",
+  "nsw-name-and-shame-register",
   "app.js",
   "app-20261031-mobile-v3.js",
   "app-20261031-mobile-v4.js",
@@ -56,8 +64,8 @@ for (const file of [
   execFileSync(process.execPath, ["--check", file]);
 // The deployed cache-busting copies must exactly match canonical sources.
 for (const [source, deployed] of [
-  ["public/app.js", "public/app-20261031-journey-v7.js"],
-  ["public/styles.css", "public/styles-20261031-journey-v9.css"],
+  ["public/app.js", "public/app-20261031-seo-v8.js"],
+  ["public/styles.css", "public/styles-20261031-seo-v10.css"],
 ]) {
   assert.equal(await readFile(deployed, "utf8"), await readFile(source, "utf8"),
     `Deployed asset out of sync: ${deployed}`);
@@ -117,3 +125,38 @@ assert.ok(
 console.log(
   "PASS: JavaScript syntax, static output allowlist, HTML IDs/anchors/assets and asset budgets.",
 );
+
+// Validate the public documents crawlers actually receive, including guide discovery.
+const pagePaths = ["", "about/", "privacy/", "check-nsw-real-estate-agent/", "check-nsw-real-estate-agency/", "nsw-name-and-shame-register/"];
+const titles = new Set();
+const descriptions = new Set();
+const sitemap = await readFile("public/sitemap.xml", "utf8");
+for (const path of pagePaths) {
+  const source = await readFile(`public/${path}index.html`, "utf8");
+  const { document } = parseHTML(source);
+  const canonical = `https://agentcheck.au/${path}`;
+  assert.equal(document.querySelector('link[rel="canonical"]').getAttribute("href"), canonical);
+  assert.equal(document.querySelectorAll("h1").length, 1, `${path}: one main heading`);
+  assert.ok(sitemap.includes(`<loc>${canonical}</loc>`), `${path}: sitemap discovery`);
+  assert.ok(!document.querySelector('meta[name="robots"]').content.includes("noindex"));
+  const title = document.querySelector("title").textContent;
+  const description = document.querySelector('meta[name="description"]').content;
+  assert.ok(!titles.has(title) && !descriptions.has(description), `${path}: unique metadata`);
+  titles.add(title); descriptions.add(description);
+  for (const script of document.querySelectorAll('script[type="application/ld+json"]')) JSON.parse(script.textContent);
+  for (const node of document.querySelectorAll("a[href],link[href],img[src],script[src]")) {
+    const href = node.getAttribute("href") || node.getAttribute("src");
+    if (href.startsWith("#")) assert.ok(document.getElementById(href.slice(1)), `${path}: ${href}`);
+    if (!href.startsWith("/") || href.startsWith("//")) continue;
+    const pathname = href.split("#")[0];
+    const localPath = resolve("public", "." + pathname);
+    const target = await stat(localPath);
+    if (target.isDirectory()) await stat(resolve(localPath, "index.html"));
+    else assert.ok(target.isFile(), `${path}: ${href}`);
+    if (href.includes("#")) {
+      const linked = parseHTML(await readFile(target.isDirectory() ? resolve(localPath, "index.html") : localPath, "utf8")).document;
+      assert.ok(linked.getElementById(href.split("#")[1]), `${path}: ${href}`);
+    }
+  }
+}
+console.log("PASS: six crawlable pages, unique metadata, structured data, sitemap and internal links.");

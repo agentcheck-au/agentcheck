@@ -26,7 +26,7 @@ test("mobile search dismisses keyboard and delays scrolling until viewport settl
 });
 
 test("hero and education section explain the purpose of the two checks", () => {
-  assert.match(html, /Check their NSW licence. Then check published regulatory actions./);
+  assert.match(html, /One clear place to start. Check licence details, then follow a guided check for published regulatory action./);
   assert.match(html, /Awards, rankings and referrals are marketing claims, not official checks/);
 });
 
@@ -36,10 +36,10 @@ test("result cards invite visitors to view a record without claiming verificatio
 });
 
 test("HTML loads new asset paths so cached pre-release JavaScript cannot run", () => {
-  assert.match(html, /src="\/app-20261031-journey-v7\.js"/);
-  assert.match(html, /href="\/styles-20261031-journey-v9\.css"/);
-  const deployedApp = readFileSync(new URL("../public/app-20261031-journey-v7.js", import.meta.url), "utf8");
-  const deployedCss = readFileSync(new URL("../public/styles-20261031-journey-v9.css", import.meta.url), "utf8");
+  assert.match(html, /src="\/app-20261031-seo-v8\.js"/);
+  assert.match(html, /href="\/styles-20261031-seo-v10\.css"/);
+  const deployedApp = readFileSync(new URL("../public/app-20261031-seo-v8.js", import.meta.url), "utf8");
+  const deployedCss = readFileSync(new URL("../public/styles-20261031-seo-v10.css", import.meta.url), "utf8");
   assert.equal(deployedApp, app);
   assert.equal(deployedCss, css);
 });
@@ -70,7 +70,7 @@ test("the two official registers are clearly named and independently checked", (
   assert.match(html, /01 \/ LICENCE REGISTER/);
   assert.match(html, /02 \/ NAME AND SHAME REGISTER/);
   assert.match(html, /does not automatically search the Name and Shame Register/);
-  assert.match(app, /Did you find this agent on the Name and Shame Register/);
+  assert.match(app, /Did you find this person or company on the Name and Shame Register/);
   assert.match(app, /STEP 2 \/ 2 · NAME AND SHAME REGISTER/);
 });
 

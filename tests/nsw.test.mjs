@@ -19,6 +19,15 @@ test("browse includes only public necessary fields", () => {
   assert.equal(r.licenceID, "9099589");
   assert.equal("licenseeBirthDate" in r, false);
 });
+test("corporation records use the existing public-field adapter without losing company identity", () => {
+  const company = { licenceID: "company-1", licensee: "Example Property Pty Ltd", licenceNumber: "CORP123", licenceType: "Property - Corporation", status: "Current" };
+  const result = normalizeBrowseRecord(company);
+  const detail = normalizeDetails({ licenceDetail: company });
+  assert.equal(result.licenceName, company.licensee);
+  assert.equal(detail.licenceName, company.licensee);
+  assert.equal(detail.licenceType, result.licenceType);
+  assert.equal(detail.licenceNumber, result.licenceNumber);
+});
 test("details empty compliance does not imply clean history", () => {
   const r = normalizeDetails({
     licenceDetail: { status: "Current" },
