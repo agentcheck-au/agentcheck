@@ -26,6 +26,6 @@ test("referral animation respects viewport, visibility and reduced motion", () =
 });
 test("editorial scroll reveal uses a separate, later viewport threshold", () => {
   const app = readFileSync(new URL("../public/app.js", import.meta.url), "utf8");
-  assert.match(app, /threshold: 0.28, rootMargin: "0px 0px -18% 0px"/);
+  assert.match(app, /makeRevealObserver\(0\.28, "0px 0px -18% 0px"\)/);
   assert.match(app, /node.matches\("\.question-card"\)/);
 });
