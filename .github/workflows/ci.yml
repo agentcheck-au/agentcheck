@@ -24,7 +24,7 @@ jobs:
       - name: Inspect AgentCheck preview-only OneGov fetch diagnostics
         run: |
           node --input-type=module <<'EOF'
-          const url = "https://diagnose-nsw-oauth-connectivity.agentcheck-3o4.pages.dev/api/diagnostic-onegov";
+          const url = "https://diagnose-nsw-oauth-connectiv.agentcheck-3o4.pages.dev/api/diagnostic-onegov";
           try {
             const r = await fetch(url, { signal: AbortSignal.timeout(15000) });
             console.log("preview_probe_status", r.status);
