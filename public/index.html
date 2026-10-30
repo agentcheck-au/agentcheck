@@ -1,67 +1,88 @@
 <!doctype html>
 <html lang="en-AU">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Check a NSW property agent's licence and find the official NSW Fair Trading Name and Shame Register. Independent, free and no sign-up." />
-  <meta name="theme-color" content="#f6f8fb" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071630">
+  <meta name="description" content="AgentCheck helps you verify NSW property-agent licences and check the official NSW Fair Trading regulatory register. Free, independent and no sign-up needed.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AgentCheck — Know your agent. Check the facts.">
+  <meta property="og:description" content="Verify licence details. Then check the official regulatory register. Free and independent.">
   <title>AgentCheck — Know your agent. Check the facts.</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/sydney-harbour.webp" as="image" type="image/webp">
+  <link rel="stylesheet" href="/styles.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to search</a>
-  <header class="topbar">
-    <div class="container header-inner">
-      <a class="brand" href="/" aria-label="AgentCheck home">
-        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 3L27 8v8.5c0 7-5 11-11 13C10 27.5 5 23.5 5 16.5V8L16 3Z" stroke="currentColor" stroke-width="2.5"/><path d="m11 16 3.5 3.5L21.5 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span>Agent<span class="brand-accent">Check</span><span class="brand-dot">.</span></span>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-content">
+      <a href="/" class="brand" aria-label="AgentCheck — home">
+        <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 2.8 27.3 7.3v9c0 7.2-5.4 11.8-11.3 14-5.9-2.2-11.3-6.8-11.3-14v-9L16 2.8Z" stroke="currentColor" stroke-width="1.9"/><path d="m10.5 16.2 3.8 3.8 7.1-7.2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>Agent<span>Check.</span></span>
       </a>
-      <span class="top-right"><span class="little-dot" aria-hidden="true"></span> Independent NSW agent verification</span>
+      <nav class="top-nav" aria-label="Primary navigation">
+        <a href="#search-card">Search an agent</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#official-sources">Sources</a>
+      </nav>
+      <div class="trust-signal"><span class="online-indicator"></span> Independent NSW agent verification</div>
     </div>
   </header>
 
   <main id="main">
-    <section class="hero">
-      <div class="hero-orb hero-orb-one"></div><div class="hero-orb hero-orb-two"></div>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-photo" aria-hidden="true"></div>
       <div class="container hero-content">
-        <div class="eyebrow"><span aria-hidden="true">✦</span> BEFORE YOU APPOINT AN AGENT</div>
-        <h1>Know your agent.<br/><span>Check the facts.</span></h1>
-        <p class="hero-subtitle">Awards and reviews only tell part of the story. Check a property agent's licence against NSW Government records, then check the official regulatory register.</p>
-        <div class="search-panel" id="search-panel">
-          <div class="search-heading"><h2>Check a NSW property agent</h2><span class="free-pill">Free · No sign-up</span></div>
-          <form id="search-form" novalidate>
+        <div class="eyebrow hero-eyebrow">TRUSTED SOURCES. INFORMED DECISIONS.</div>
+        <h1 id="page-title">Know your agent.<br><span>Check the facts.</span></h1>
+        <p class="hero-intro">Before you appoint a real estate agent, check their NSW licence and then check the official regulatory register.</p>
+        <div class="search-card" id="search-card">
+          <div class="search-top"><strong>Check a NSW property agent</strong><span class="free-label">Free · No sign-up</span></div>
+          <form id="search-form" role="search" novalidate>
             <label for="search-input">Agent name or licence number</label>
             <div class="search-row">
-              <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.6" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.7 4.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-              <input id="search-input" name="name" type="search" autocomplete="off" inputmode="search" minlength="2" maxlength="80" placeholder="Enter an agent's name or licence number" required />
-              <button type="submit" id="search-button">Check agent <span aria-hidden="true">→</span></button>
+              <div class="input-wrap"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.9"/><path d="m15.6 15.6 5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><input id="search-input" name="q" type="search" minlength="2" maxlength="80" autocomplete="off" spellcheck="false" placeholder="Enter agent's name or licence number" required></div>
+              <button class="button button-primary" id="search-button" type="submit">Check agent <span aria-hidden="true">→</span></button>
             </div>
-            <p class="search-note">Information from the NSW Property API. A current licence does not establish an absence of regulatory action.</p>
           </form>
         </div>
-        <div class="hero-steps"><div><span>01</span> Search an agent</div><div class="step-divider"></div><div><span>02</span> View licence</div><div class="step-divider"></div><div><span>03</span> Check regulatory actions</div></div>
+        <div class="steps-line" aria-label="How AgentCheck works">
+          <div><span class="step-no">01</span><span>Search an agent</span></div><span class="step-rule"></span>
+          <div><span class="step-no">02</span><span>View licence</span></div><span class="step-rule"></span>
+          <div><span class="step-no">03</span><span>Check regulatory actions</span></div>
+        </div>
       </div>
     </section>
 
-    <section class="results-section container" id="results-section" hidden aria-live="polite">
-      <div class="section-heading"><div><div class="small-label">SEARCH RESULTS</div><h2 id="results-title">Matching licence records</h2></div><button class="text-button" id="clear-button" type="button">New search ↗</button></div>
-      <div id="status-message" class="status-message" role="status" hidden></div>
-      <div id="results-list" class="results-list"></div>
-      <div id="detail-panel" hidden></div>
+    <section class="results-section" id="results-section" hidden aria-busy="false" aria-live="polite">
+      <div class="container results-wrap">
+        <div class="results-heading">
+          <div><span class="eyebrow section-eyebrow" id="results-kicker">NSW GOVERNMENT RECORDS</span><h2 id="results-title">Search results</h2><p id="results-subtitle">Choose the correct agent using their name, suburb and licence number.</p></div>
+          <button class="quiet-button" id="clear-button" type="button">← New search</button>
+        </div>
+        <div id="status-message" class="status-message" role="status" hidden></div>
+        <div class="results-list" id="results-list"></div>
+        <div class="detail-panel" id="detail-panel" hidden></div>
+      </div>
     </section>
 
-    <section class="info-section container">
-      <div class="small-label">KNOW WHAT TO CHECK</div>
-      <h2>More than a name. <span>Make an informed choice.</span></h2>
-      <div class="info-grid">
-        <article class="info-card"><div class="info-icon">01</div><h3>Check their licence</h3><p>Confirm the name, current status, expiry date and authorised property activities.</p></article>
-        <article class="info-card"><div class="info-icon">02</div><h3>Check the official register</h3><p>Use the separate NSW Fair Trading Name and Shame Register to search published regulatory actions.</p></article>
-        <article class="info-card"><div class="info-icon">03</div><h3>Ask better questions</h3><p>Don't rely on awards or marketing alone. Ask about credentials, experience, fees and any concerns you discover.</p></article>
+    <section class="education-section" id="how-it-works" aria-labelledby="education-heading">
+      <div class="container">
+        <div class="education-heading"><div><span class="eyebrow section-eyebrow">BEFORE YOU APPOINT</span><h2 id="education-heading">Two important checks.<br><span>One better decision.</span></h2></div><p>A current licence is only part of the picture. Checking published regulatory actions can reveal information worth discussing before you sign.</p></div>
+        <div class="education-grid">
+          <article class="education-card"><div class="ed-icon ed-blue" aria-hidden="true">01</div><h3>Confirm the licence</h3><p>Check who the agent is, their licence status, the authorised activities and their listed location.</p></article>
+          <article class="education-card"><div class="ed-icon ed-amber" aria-hidden="true">02</div><h3>Check regulatory actions</h3><p>Search the separate NSW Fair Trading Name and Shame Register before making your decision.</p></article>
+        </div>
       </div>
-      <div class="official-link"><div><strong>Prefer to search NSW Fair Trading directly?</strong><p>The official register is managed and updated by the NSW Government.</p></div><a href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register" target="_blank" rel="noopener noreferrer">Open official register <span aria-hidden="true">↗</span></a></div>
+    </section>
+
+    <section class="sources-section" id="official-sources" aria-labelledby="sources-heading">
+      <div class="container sources-content"><div><span class="eyebrow section-eyebrow">KNOW THE SOURCE</span><h2 id="sources-heading">Government records. Independent service.</h2><p>Licence information is retrieved from NSW Government records. The regulatory register is separate and should be checked directly.</p></div><div class="source-actions"><a href="https://verify.licence.nsw.gov.au/home/Property" target="_blank" rel="noopener noreferrer">NSW property licence register <span aria-hidden="true">↗</span></a><a href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register" target="_blank" rel="noopener noreferrer">NSW Fair Trading Name and Shame Register <span aria-hidden="true">↗</span></a></div></div>
     </section>
   </main>
-  <footer class="footer"><div class="container footer-inner"><div><strong>AgentCheck<span class="brand-dot">.</span></strong><p>Independent public-information tool. Not affiliated with or endorsed by the NSW Government.</p></div><div class="footer-small">Licence information is subject to publication and update limitations. The NSW Property API is not a complete Name and Shame Register feed. Always consult official NSW sources before drawing conclusions about an agent. No accounts or search history are stored by this website.</div></div></footer>
+  <footer class="footer"><div class="container footer-content"><div><strong>AgentCheck.</strong><p>Independent consumer information service. Not affiliated with or endorsed by the NSW Government.</p></div><div class="footer-meta">NSW licence records are checked live. Regulatory findings are not checked automatically.<br>© <span id="year">2026</span> AgentCheck · Australia</div></div></footer>
+  <div class="toast" role="status" aria-live="polite" id="toast" hidden></div>
 </body>
 </html>
