@@ -10,11 +10,14 @@ const allowed = new Set([
   "_routes.json",
   "favicon.svg",
   "sydney-harbour.webp",
+  "referral-motion.css",
+  "referral-motion.js",
 ]);
 for (const file of publicFiles)
   assert.ok(allowed.has(file), `Unexpected public artifact: ${file}`);
 for (const file of [
   "public/app.js",
+  "public/referral-motion.js",
   "lib/nsw-worker.js",
   "scripts/dev-server.mjs",
   "functions/api/search.js",

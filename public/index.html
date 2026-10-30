@@ -26,7 +26,9 @@
       type="image/webp"
     />
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/referral-motion.css" />
     <script src="/app.js" defer></script>
+    <script src="/referral-motion.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -383,28 +385,22 @@
               </div>
             </article>
             <article class="question-card" data-reveal>
-              <div class="question-visual referral-visual" aria-hidden="true">
-                <div class="referral-flow">
-                  <div class="referral-person">
-                    <span class="referral-person-box">YOU</span>
-                    <span class="referral-role">Looking for an agent</span>
+              <div class="question-visual referral-visual" role="img" aria-label="Illustrative example: a referral website displays three agents, recommends Agent B to a consumer, and receives a referral fee paid by Agent B. Not every referral platform charges fees.">
+                <div class="referral-stage" aria-hidden="true">
+                  <div class="referral-browser">
+                    <div class="referral-browser-top"><span class="referral-window-dots"><i></i><i></i><i></i></span><span class="referral-browser-title">REFERRAL WEBSITE</span><span class="referral-browser-tag">AGENT MATCH</span></div>
+                    <div class="referral-browser-subtitle">Compare agents in your area</div>
+                    <div class="referral-agent-list">
+                      <div class="referral-agent-card"><span class="referral-agent-avatar">A</span><strong>Agent A</strong></div>
+                      <div class="referral-agent-card is-selected"><span class="referral-agent-avatar">B</span><strong>Agent B</strong></div>
+                      <div class="referral-agent-card"><span class="referral-agent-avatar">C</span><strong>Agent C</strong></div>
+                    </div>
                   </div>
-                  <span class="referral-flow-arrow">→</span>
-                  <div class="referral-person">
-                    <span class="referral-person-box referral-platform-box">REFERRAL<br />PLATFORM</span>
-                    <span class="referral-role">Introduces you</span>
-                  </div>
-                  <span class="referral-flow-arrow">→</span>
-                  <div class="referral-person">
-                    <span class="referral-person-box referral-agent-box">AGENT</span>
-                    <span class="referral-role">Receives the lead</span>
-                  </div>
+                  <div class="referral-flow referral-flow--recommendation"><span class="referral-track"></span><span class="referral-flow-label">RECOMMENDATION</span><span class="referral-token"></span></div>
+                  <div class="referral-flow referral-flow--fee"><span class="referral-track"></span><span class="referral-flow-label">REFERRAL FEE</span><span class="referral-token">$</span></div>
+                  <div class="referral-participants"><div class="referral-person"><strong>YOU</strong><small>Consumer</small></div><div class="referral-person referral-person--agent"><strong>AGENT B</strong><small>Selected agent</small></div></div>
+                  <span class="referral-annotation">ILLUSTRATIVE EXAMPLE · NOT ALL PLATFORMS CHARGE FEES</span>
                 </div>
-                <div class="referral-fee-path">
-                  <span class="fee-label">POSSIBLE REFERRAL FEE</span>
-                  <span class="fee-flow">PLATFORM <span>←── $ ──</span> AGENT</span>
-                </div>
-                <span class="visual-annotation">FOLLOW THE MONEY</span>
               </div>
               <div class="question-body">
                 <span class="question-index">03 / REFERRALS</span>
