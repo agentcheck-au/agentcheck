@@ -5,7 +5,7 @@ const html = readFileSync(new URL("../public/index.html", import.meta.url), "utf
 const css = readFileSync(new URL("../public/referral-motion.css", import.meta.url), "utf8");
 const js = readFileSync(new URL("../public/referral-motion.js", import.meta.url), "utf8");
 test("referral animation shows three agents, a recommendation and a reverse fee flow", () => {
-  for (const label of ["REFERRAL WEBSITE", "Agent A", "Agent B", "Agent C", "RECOMMENDATION", "REFERRAL FEE", "YOU", "NOT ALL PLATFORMS CHARGE FEES"]) assert.ok(html.includes(label), label);
+  for (const label of ["REFERRAL WEBSITE", "Agent A", "Agent B", "Agent C", "RECOMMENDATION", "FEE TO WEBSITE", "YOU", "NOT ALL PLATFORMS CHARGE FEES"]) assert.ok(html.includes(label), label);
   assert.match(html, /referral-visual" role="img" aria-label=/);
   assert.match(css, /ac-recommend/);
   assert.match(css, /ac-fee/);
@@ -22,7 +22,7 @@ test("referral animation respects viewport, visibility and reduced motion", () =
   assert.match(js, /threshold: 0.55, rootMargin: "0px 0px -12% 0px"/);
   assert.match(js, /setCurrentTime\?\.\(0\)/);
   assert.match(js, /pauseAnimations/);
-  assert.match(css, /@media \(prefers-reduced-motion:reduce\)/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 });
 test("editorial scroll reveal uses a separate, later viewport threshold", () => {
   const app = readFileSync(new URL("../public/app.js", import.meta.url), "utf8");

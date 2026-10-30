@@ -56,7 +56,7 @@ test("green shield retains blue wordmark and editorial questions explain referra
   assert.match(html, /REFERRAL WEBSITE/);
   assert.match(html, /Agent A/);
   assert.match(html, /Agent B/);
-  assert.match(html, /REFERRAL FEE/);
+  assert.match(html, /FEE TO WEBSITE/);
   assert.match(html, /Who benefits financially from this referral/);
   assert.doesNotMatch(html, /<div class="hero-proof">/);
   assert.match(html, /<p class="footer-service-note">Free to use · No sign-up required<\/p>/);
