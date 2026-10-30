@@ -43,17 +43,23 @@
     let top = rect.top + window.scrollY - offset;
     if (block === "nearest") {
       if (rect.top >= offset && rect.bottom <= window.innerHeight) {
-        window.scrollTo({ left: 0, top: window.scrollY, behavior: "auto" });
+        if (typeof window.scrollTo === "function")
+          window.scrollTo({ left: 0, top: window.scrollY, behavior: "auto" });
         return;
       }
       if (rect.top < offset) top = rect.top + window.scrollY - offset;
       else top = rect.bottom + window.scrollY - window.innerHeight + 12;
     }
-    window.scrollTo({
-      top: Math.max(0, top),
-      left: 0,
-      behavior: reduced() ? "auto" : "smooth",
-    });
+    if (typeof window.scrollTo === "function") {
+      window.scrollTo({
+        top: Math.max(0, top),
+        left: 0,
+        behavior: reduced() ? "auto" : "smooth",
+      });
+    } else {
+      // Test DOMs and older browsers without window.scrollTo support.
+      node.scrollIntoView?.({ behavior: "auto", block, inline: "nearest" });
+    }
   };
   const focus = (node) => {
     node.tabIndex = -1;
