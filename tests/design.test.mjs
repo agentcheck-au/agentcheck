@@ -51,8 +51,10 @@ test("green brand and editorial questions explain eligibility and referral incen
   assert.match(css, /--brand-green: #47e5ae/);
   assert.match(html, /Are non-subscribers considered on equal terms/);
   assert.match(html, /Can agents pay to enter/);
-  assert.match(html, /REFERRAL<br \/>PLATFORM/);
-  assert.match(html, /POSSIBLE REFERRAL FEE/);
+  assert.match(html, /REFERRAL WEBSITE/);
+  assert.match(html, /Agent A/);
+  assert.match(html, /Agent B/);
+  assert.match(html, /REFERRAL FEE/);
   assert.match(html, /Who benefits financially from this referral/);
   assert.match(css, /\.enhanced \.question-card\.visible \.ranking-line i/);
   assert.match(js, /IntersectionObserver/);
