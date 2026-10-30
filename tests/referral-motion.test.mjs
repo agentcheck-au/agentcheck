@@ -9,11 +9,23 @@ test("referral animation shows three agents, a recommendation and a reverse fee 
   assert.match(html, /referral-visual" role="img" aria-label=/);
   assert.match(css, /ac-recommend/);
   assert.match(css, /ac-fee/);
+  assert.match(html, /d="M270 236 V182 H180 V160" marker-end="url\(#referral-fee-arrow\)"/);
+  assert.match(html, /d="M180 160 V182 H90 V236" marker-end="url\(#referral-recommend-arrow\)"/);
+  assert.match(html, /<strong>AGENT B<\/strong><small>Pays referral fee<\/small>/);
+  assert.match(css, /background: #1b4c80/);
 });
 test("referral animation respects viewport, visibility and reduced motion", () => {
   assert.match(js, /IntersectionObserver/);
   assert.match(js, /prefers-reduced-motion: reduce/);
   assert.match(js, /visibilitychange/);
   assert.match(js, /motion-paused/);
+  assert.match(js, /threshold: 0.55, rootMargin: "0px 0px -12% 0px"/);
+  assert.match(js, /setCurrentTime\?\.\(0\)/);
+  assert.match(js, /pauseAnimations/);
   assert.match(css, /@media \(prefers-reduced-motion:reduce\)/);
+});
+test("editorial scroll reveal uses a separate, later viewport threshold", () => {
+  const app = readFileSync(new URL("../public/app.js", import.meta.url), "utf8");
+  assert.match(app, /threshold: 0.28, rootMargin: "0px 0px -18% 0px"/);
+  assert.match(app, /node.matches\("\.question-card"\)/);
 });

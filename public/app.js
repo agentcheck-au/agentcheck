@@ -914,8 +914,26 @@
           { threshold: 0.08 },
         )
       : null;
+  // Editorial cards should not animate as soon as a few pixels appear at
+  // the bottom of the screen. Each card reveals when it is being read.
+  const editorialObserver =
+    !reduced() && "IntersectionObserver" in window
+      ? new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries)
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                editorialObserver.unobserve(entry.target);
+              }
+          },
+          { threshold: 0.28, rootMargin: "0px 0px -18% 0px" },
+        )
+      : null;
   for (const node of document.querySelectorAll("[data-reveal]")) {
-    if (observer) observer.observe(node);
+    if (node.matches(".question-card")) {
+      if (editorialObserver) editorialObserver.observe(node);
+      else node.classList.add("visible");
+    } else if (observer) observer.observe(node);
     else node.classList.add("visible");
   }
   let scrollFrame = 0;

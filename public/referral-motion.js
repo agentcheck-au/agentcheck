@@ -2,33 +2,50 @@
 (() => {
   const scene = document.querySelector(".referral-visual");
   if (!scene) return;
+
+  const svg = scene.querySelector(".referral-routes");
   const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
   const html = document.documentElement;
   let inView = false;
+  let playing = false;
+
+  // The SVG timeline is paused until this exact illustration is substantially
+  // on screen. Resetting on re-entry gives every visitor the complete story.
+  svg?.pauseAnimations?.();
   const update = () => {
-    scene.classList.toggle(
-      "is-playing",
-      inView && !preference.matches && !html.classList.contains("motion-paused"),
-    );
+    const shouldPlay =
+      inView &&
+      !document.hidden &&
+      !preference.matches &&
+      !html.classList.contains("motion-paused");
+    if (shouldPlay === playing) return;
+    if (shouldPlay) {
+      svg?.setCurrentTime?.(0);
+      svg?.unpauseAnimations?.();
+    } else {
+      svg?.pauseAnimations?.();
+    }
+    scene.classList.toggle("is-playing", shouldPlay);
+    playing = shouldPlay;
   };
+
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
       (entries) => {
         inView = entries.some((entry) => entry.isIntersecting);
         update();
       },
-      { threshold: 0.2 },
+      { threshold: 0.55, rootMargin: "0px 0px -12% 0px" },
     );
     observer.observe(scene);
   } else {
-    inView = true;
-    update();
+    // Without intersection support, keep the diagram readable and static.
+    inView = false;
   }
+
   preference.addEventListener?.("change", update);
   document.getElementById("motion-toggle")?.addEventListener("click", () => {
     queueMicrotask(update);
   });
-  document.addEventListener("visibilitychange", () => {
-    scene.classList.toggle("is-playing", !document.hidden && inView && !preference.matches && !html.classList.contains("motion-paused"));
-  });
+  document.addEventListener("visibilitychange", update);
 })();

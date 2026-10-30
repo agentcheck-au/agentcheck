@@ -138,7 +138,6 @@
                 <span class="panel-kicker">START HERE</span>
                 <h2>Know your agent. <span>Check the facts.</span></h2>
               </div>
-              <span class="free-chip"><span></span> Free · No sign-up</span>
             </div>
             <form id="search-form" novalidate role="search">
               <label for="search-input"
@@ -200,11 +199,7 @@
               ><span class="scroll-mouse"></span> SCROLL TO SEE WHAT
               MATTERS</span
             >
-            <div class="hero-proof">
-              <span class="hero-proof-icon" aria-hidden="true">◎</span> An
-              independent consumer information service. Not a government
-              website.
-            </div>
+            
           </div>
         </div>
         <div class="hero-bottom-fade" aria-hidden="true"></div>
@@ -385,10 +380,14 @@
               </div>
             </article>
             <article class="question-card" data-reveal>
-              <div class="question-visual referral-visual" role="img" aria-label="Illustrative example: a referral website displays three agents, recommends Agent B to a consumer, and receives a referral fee paid by Agent B. Not every referral platform charges fees.">
+              <div class="question-visual referral-visual" role="img" aria-label="Illustrative referral arrangement: a website lists Agent A, Agent B and Agent C. Agent B is selected. The website recommends Agent B to the consumer, and Agent B pays a referral fee back to that same website. Not all referral platforms charge fees.">
                 <div class="referral-stage" aria-hidden="true">
                   <div class="referral-browser">
-                    <div class="referral-browser-top"><span class="referral-window-dots"><i></i><i></i><i></i></span><span class="referral-browser-title">REFERRAL WEBSITE</span><span class="referral-browser-tag">AGENT MATCH</span></div>
+                    <div class="referral-browser-top">
+                      <span class="referral-window-dots"><i></i><i></i><i></i></span>
+                      <span class="referral-browser-title">REFERRAL WEBSITE</span>
+                      <span class="referral-browser-tag">AGENT MATCH</span>
+                    </div>
                     <div class="referral-browser-subtitle">Compare agents in your area</div>
                     <div class="referral-agent-list">
                       <div class="referral-agent-card"><span class="referral-agent-avatar">A</span><strong>Agent A</strong></div>
@@ -396,9 +395,28 @@
                       <div class="referral-agent-card"><span class="referral-agent-avatar">C</span><strong>Agent C</strong></div>
                     </div>
                   </div>
-                  <div class="referral-flow referral-flow--recommendation"><span class="referral-track"></span><span class="referral-flow-label">RECOMMENDATION</span><span class="referral-token"></span></div>
-                  <div class="referral-flow referral-flow--fee"><span class="referral-track"></span><span class="referral-flow-label">REFERRAL FEE</span><span class="referral-token">$</span></div>
-                  <div class="referral-participants"><div class="referral-person"><strong>YOU</strong><small>Consumer</small></div><div class="referral-person referral-person--agent"><strong>AGENT B</strong><small>Selected agent</small></div></div>
+                  <svg class="referral-routes" viewBox="0 0 360 316" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <marker id="referral-recommend-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#85b9ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                      <marker id="referral-fee-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1 L7 4 L1 7" fill="none" stroke="#f4ca83" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                    </defs>
+                    <path class="referral-route referral-route--recommend" d="M180 160 V182 H90 V236" marker-end="url(#referral-recommend-arrow)"/>
+                    <path class="referral-route referral-route--fee" d="M270 236 V182 H180 V160" marker-end="url(#referral-fee-arrow)"/>
+                    <circle class="referral-traveller referral-traveller--recommend" r="5" cx="0" cy="0">
+                      <animateMotion dur="9s" repeatCount="indefinite" calcMode="linear" keyTimes="0;0.30;0.53;1" keyPoints="0;0;1;1" rotate="0" path="M180 160 V182 H90 V236"/>
+                    </circle>
+                    <g class="referral-traveller referral-traveller--fee">
+                      <circle r="11" cx="0" cy="0"/>
+                      <text x="0" y="4" text-anchor="middle">$</text>
+                      <animateMotion dur="9s" repeatCount="indefinite" calcMode="linear" keyTimes="0;0.60;0.84;1" keyPoints="0;0;1;1" rotate="0" path="M270 236 V182 H180 V160"/>
+                    </g>
+                  </svg>
+                  <span class="referral-flow-label referral-flow-label--recommend">RECOMMENDATION</span>
+                  <span class="referral-flow-label referral-flow-label--fee">FEE TO WEBSITE</span>
+                  <div class="referral-participants">
+                    <div class="referral-person"><strong>YOU</strong><small>Consumer</small></div>
+                    <div class="referral-person referral-person--agent"><strong>AGENT B</strong><small>Pays referral fee</small></div>
+                  </div>
                   <span class="referral-annotation">ILLUSTRATIVE EXAMPLE · NOT ALL PLATFORMS CHARGE FEES</span>
                 </div>
               </div>
@@ -455,6 +473,7 @@
         <div>
           <div class="footer-brand">Agent<span>Check</span><b>.</b></div>
           <p>Know your agent. Check the facts.</p>
+          <p class="footer-service-note">Free to use · No sign-up required</p>
         </div>
         <div>
           <strong>Official resources</strong

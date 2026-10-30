@@ -47,8 +47,10 @@ test("licence data excludes private fields", () => {
   assert.equal(JSON.stringify(details).includes("not public"), false);
 });
 
-test("green brand and editorial questions explain eligibility and referral incentives", () => {
+test("green shield retains blue wordmark and editorial questions explain referral incentives", () => {
   assert.match(css, /--brand-green: #47e5ae/);
+  assert.doesNotMatch(css, /\.brand-name span, \.footer-brand span,\s*\.brand-name b, \.footer-brand b \{ color: var\(--brand-green\); \}/);
+  assert.match(css, /background: #1e61cb/);
   assert.match(html, /Are non-subscribers considered on equal terms/);
   assert.match(html, /Can agents pay to enter/);
   assert.match(html, /REFERRAL WEBSITE/);
@@ -56,6 +58,9 @@ test("green brand and editorial questions explain eligibility and referral incen
   assert.match(html, /Agent B/);
   assert.match(html, /REFERRAL FEE/);
   assert.match(html, /Who benefits financially from this referral/);
+  assert.doesNotMatch(html, /<div class="hero-proof">/);
+  assert.match(html, /<p class="footer-service-note">Free to use · No sign-up required<\/p>/);
+  assert.match(html, /Not affiliated with, approved by or endorsed by the NSW Government/);
   assert.match(css, /\.enhanced \.question-card\.visible \.ranking-line i/);
   assert.match(js, /IntersectionObserver/);
 });

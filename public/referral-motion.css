@@ -1,1 +1,246 @@
-.question-visual.referral-visual,.editorial-rows .question-visual.referral-visual{height:316px;min-height:316px;display:block;isolation:isolate;overflow:hidden;border-radius:12px;background:radial-gradient(ellipse at 50% 0%,#1b4560 0%,#0b233b 53%,#071a2f 100%)}.referral-visual::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#a6c8d823 0.75px,transparent 0.75px);background-size:16px 16px;opacity:.55;transform:none;pointer-events:none}.question-card:hover .referral-visual::before{transform:none}.referral-stage{position:absolute;inset:0;color:#f2f8ff}.referral-browser{position:absolute;top:17px;left:6%;width:88%;height:139px;border:1px solid #6386a17a;border-radius:9px;background:linear-gradient(150deg,#16344b,#0e283f);box-shadow:0 16px 32px #00102172,inset 0 1px #ffffff14;overflow:visible;z-index:2}.referral-browser-top{height:34px;display:flex;align-items:center;gap:9px;padding:0 12px;border-bottom:1px solid #9cc5d221}.referral-window-dots{display:inline-flex;gap:4px}.referral-window-dots i{width:5px;height:5px;border-radius:50%;background:#6e91a6}.referral-window-dots i:first-child{background:#67c9a2}.referral-browser-title{font-size:10px;font-weight:800;letter-spacing:.095em;color:#e5f3fa}.referral-browser-tag{margin-left:auto;color:#91b5c7;font-size:8px;letter-spacing:.08em}.referral-browser-subtitle{margin:9px 12px 8px;color:#b7ceda;font-size:10px;font-weight:600;letter-spacing:.025em}.referral-agent-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:0 10px}.referral-agent-card{position:relative;display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;height:47px;padding:5px;border:1px solid #6b8ca15e;border-radius:6px;background:#1d4054;color:#e5f3fa;box-shadow:inset 0 1px #ffffff0c}.referral-agent-card strong{font-size:11px;white-space:nowrap;letter-spacing:-.02em}.referral-agent-avatar{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;border:1px solid #779bb0;border-radius:50%;color:#d0e6ef;font-size:10px;font-weight:700}.referral-agent-card.is-selected{border-color:#60d8ab;background:#174e4b;box-shadow:0 0 0 1px #4ce2a43b,0 0 16px #31c8942a}.referral-agent-card.is-selected .referral-agent-avatar{border-color:#79e5ba;color:#9df3cb}.referral-agent-card.is-selected::after{content:"SELECTED";position:absolute;top:-8px;right:4px;padding:2px 5px;border-radius:3px;background:#36bf89;color:#052b22;font-size:7px;font-weight:900;letter-spacing:.05em}.referral-flow{position:absolute;top:161px;width:0;height:69px;z-index:1}.referral-flow--recommendation{left:25%}.referral-flow--fee{left:75%}.referral-track{position:absolute;top:0;bottom:0;left:0;border-left:1px dashed #8bb6cb9c}.referral-flow--fee .referral-track{border-color:#e7bc779e}.referral-track::after{content:"";position:absolute;left:-4px;bottom:0;width:7px;height:7px;border-bottom:1.5px solid #8bc9da;border-right:1.5px solid #8bc9da;transform:rotate(45deg)}.referral-flow--fee .referral-track::after{bottom:auto;top:0;border:0;border-top:1.5px solid #efc47d;border-left:1.5px solid #efc47d;transform:rotate(45deg)}.referral-flow-label{position:absolute;top:24px;left:0;transform:translateX(-50%);z-index:2;padding:3px 5px;border-radius:3px;background:#0b253b;color:#b6e6dd;font-size:9px;font-weight:800;letter-spacing:.055em;white-space:nowrap}.referral-flow--fee .referral-flow-label{color:#f3d39d}.referral-token{position:absolute;left:-4px;top:1px;width:9px;height:9px;border-radius:50%;background:#70e5b4;box-shadow:0 0 0 3px #4de4a52b,0 0 13px #53f0b9}.referral-flow--fee .referral-token{top:auto;bottom:1px;left:-10px;width:21px;height:21px;display:grid;place-items:center;border:1px solid #ffe2a5;background:#b88135;box-shadow:0 0 12px #e5ae6577;color:#fff6e7;font-size:12px;font-weight:900}.referral-participants{position:absolute;bottom:34px;left:6%;width:88%;display:grid;grid-template-columns:1fr 1fr;gap:15px}.referral-person{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:44px;border:1px solid #739ab34d;border-radius:6px;background:#12344b;box-shadow:inset 0 1px #ffffff13}.referral-person strong{font-size:11px;font-weight:800;letter-spacing:.035em}.referral-person small{margin-top:3px;color:#a4c2d0;font-size:8px}.referral-person--agent{border-color:#69d3a383;background:#15433f}.referral-person--agent small{color:#9cdec4}.referral-annotation{position:absolute;left:6%;right:6%;bottom:11px;color:#9eb8c6;text-align:center;font-size:8px;line-height:1.4;letter-spacing:.07em;font-weight:700}.referral-visual.is-playing .referral-agent-card{animation:ac-agent-arrive 9s ease-in-out infinite both}.referral-visual.is-playing .referral-agent-card:nth-child(2){animation-delay:.18s}.referral-visual.is-playing .referral-agent-card:nth-child(3){animation-delay:.36s}.referral-visual.is-playing .referral-agent-card.is-selected{animation:ac-agent-select 9s ease-in-out infinite both}.referral-visual.is-playing .referral-flow--recommendation .referral-token{animation:ac-recommend 9s ease-in-out infinite both}.referral-visual.is-playing .referral-flow--fee .referral-token{animation:ac-fee 9s ease-in-out infinite both}.referral-visual.is-playing .referral-person--agent{animation:ac-agent-receives 9s ease-in-out infinite both}@keyframes ac-agent-arrive{0%,7%{opacity:.28;transform:translateY(7px)}14%,92%{opacity:1;transform:none}100%{opacity:.28;transform:translateY(7px)}}@keyframes ac-agent-select{0%,17%{opacity:.55;filter:brightness(.75);transform:scale(.98)}24%,89%{opacity:1;filter:brightness(1.18);transform:scale(1.015)}100%{opacity:.55;filter:brightness(.75);transform:scale(.98)}}@keyframes ac-recommend{0%,32%{opacity:0;transform:translateY(0)}36%{opacity:1;transform:translateY(0)}53%{opacity:1;transform:translateY(60px)}57%,100%{opacity:0;transform:translateY(60px)}}@keyframes ac-agent-receives{0%,46%{border-color:#69d3a383}51%,61%{border-color:#a6ffd2;box-shadow:0 0 0 3px #70e5b426,0 0 19px #52e6ab36}70%,100%{border-color:#69d3a383;box-shadow:inset 0 1px #ffffff13}}@keyframes ac-fee{0%,59%{opacity:0;transform:translateY(0)}64%{opacity:1;transform:translateY(0)}81%{opacity:1;transform:translateY(-59px)}85%,100%{opacity:0;transform:translateY(-59px)}}@media (max-width:760px){.question-visual.referral-visual,.editorial-rows .question-visual.referral-visual{height:312px;min-height:312px}.referral-browser{left:5%;width:90%}.referral-participants{left:5%;width:90%}.referral-flow--recommendation{left:25%}.referral-flow--fee{left:75%}}@media (max-width:370px){.referral-agent-card{gap:3px;padding:3px}.referral-agent-card strong{font-size:9px}.referral-agent-avatar{width:19px;height:19px;flex-basis:19px}.referral-flow-label{font-size:7px;letter-spacing:0}.referral-browser-tag{font-size:7px}}@media (prefers-reduced-motion:reduce){.referral-visual *{animation:none !important;transition:none !important}.referral-visual .referral-token,.referral-visual .referral-agent-card{opacity:1 !important;transform:none !important}}.motion-paused .referral-visual *{animation:none !important}.motion-paused .referral-visual .referral-token,.motion-paused .referral-visual .referral-agent-card{opacity:1 !important;transform:none !important}
+/* AgentCheck referral journey: blue is the UI colour; green belongs only
+   to the brand shield. The gold route identifies a conditional payment. */
+.question-visual.referral-visual,
+.editorial-rows .question-visual.referral-visual {
+  position: relative;
+  display: block;
+  isolation: isolate;
+  height: 316px;
+  min-height: 316px;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 0%, #1b4560, #0b233b 53%, #071a2f);
+}
+.referral-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#a6c8d823 .75px, transparent .75px);
+  background-size: 16px 16px;
+  opacity: .55;
+  transform: none;
+  pointer-events: none;
+}
+.question-card:hover .referral-visual::before { transform: none; }
+.referral-stage { position: absolute; inset: 0; color: #f2f8ff; }
+.referral-browser {
+  position: absolute;
+  z-index: 3;
+  top: 17px;
+  left: 6%;
+  width: 88%;
+  height: 139px;
+  border: 1px solid #6386a17a;
+  border-radius: 9px;
+  background: linear-gradient(150deg, #16344b, #0e283f);
+  box-shadow: 0 16px 32px #00102172, inset 0 1px #ffffff14;
+}
+.referral-browser-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 34px;
+  padding: 0 12px;
+  border-bottom: 1px solid #9cc5d221;
+}
+.referral-window-dots { display: inline-flex; gap: 4px; }
+.referral-window-dots i { width: 5px; height: 5px; border-radius: 50%; background: #6e91a6; }
+.referral-window-dots i:first-child { background: #80b9ff; }
+.referral-browser-title { font-size: 10px; font-weight: 800; letter-spacing: .095em; color: #e5f3fa; }
+.referral-browser-tag { margin-left: auto; color: #91b5c7; font-size: 8px; letter-spacing: .08em; }
+.referral-browser-subtitle {
+  margin: 9px 12px 8px;
+  color: #b7ceda;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .025em;
+}
+.referral-agent-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  padding: 0 10px;
+}
+.referral-agent-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  height: 47px;
+  padding: 5px;
+  border: 1px solid #6b8ca15e;
+  border-radius: 6px;
+  background: #1d4054;
+  color: #e5f3fa;
+  box-shadow: inset 0 1px #ffffff0c;
+}
+.referral-agent-card strong { font-size: 11px; white-space: nowrap; letter-spacing: -.02em; }
+.referral-agent-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #779bb0;
+  border-radius: 50%;
+  color: #d0e6ef;
+  font-size: 10px;
+  font-weight: 700;
+}
+.referral-agent-card.is-selected {
+  border-color: #83b7ff;
+  background: #1b4c80;
+  box-shadow: 0 0 0 1px #4c96ff3b, 0 0 16px #3189ff2a;
+}
+.referral-agent-card.is-selected .referral-agent-avatar {
+  border-color: #8ac0ff;
+  color: #d0e6ff;
+}
+.referral-agent-card.is-selected::after {
+  content: "SELECTED";
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: #5c9dff;
+  color: #062249;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .05em;
+}
+.referral-routes {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.referral-route {
+  fill: none;
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.referral-route--recommend { stroke: #85b9ff; stroke-dasharray: 4 5; opacity: .75; }
+.referral-route--fee { stroke: #f4ca83; stroke-dasharray: 4 5; opacity: .8; }
+.referral-traveller { opacity: 0; }
+.referral-traveller--recommend { fill: #92c8ff; filter: drop-shadow(0 0 4px #77b6ff); }
+.referral-traveller--fee circle {
+  fill: #c58b43;
+  stroke: #ffe3ae;
+  stroke-width: 1.4;
+  filter: drop-shadow(0 0 4px #e9b669);
+}
+.referral-traveller--fee text {
+  fill: #fff9ee;
+  font: 900 13px system-ui, sans-serif;
+}
+.referral-flow-label {
+  position: absolute;
+  z-index: 4;
+  top: 200px;
+  padding: 4px 5px;
+  border-radius: 3px;
+  background: #0b253b;
+  color: #b9d8ff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .035em;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.referral-flow-label--recommend { left: 25%; }
+.referral-flow-label--fee { left: 75%; color: #f3d39d; }
+.referral-participants {
+  position: absolute;
+  z-index: 3;
+  bottom: 34px;
+  left: 6%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  width: 88%;
+}
+.referral-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid #739ab34d;
+  border-radius: 6px;
+  background: #12344b;
+  box-shadow: inset 0 1px #ffffff13;
+}
+.referral-person strong { font-size: 11px; font-weight: 800; letter-spacing: .035em; }
+.referral-person small { margin-top: 3px; color: #a4c2d0; font-size: 8px; }
+.referral-person--agent { border-color: #80b6ff83; background: #1a3c6a; }
+.referral-person--agent small { color: #bdd8ff; }
+.referral-annotation {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 11px;
+  color: #9eb8c6;
+  text-align: center;
+  font-size: 8px;
+  line-height: 1.4;
+  letter-spacing: .07em;
+  font-weight: 700;
+}
+.referral-visual.is-playing .referral-agent-card { animation: ac-agent-arrive 9s ease-in-out infinite both; }
+.referral-visual.is-playing .referral-agent-card:nth-child(2) { animation-delay: .18s; }
+.referral-visual.is-playing .referral-agent-card:nth-child(3) { animation-delay: .36s; }
+.referral-visual.is-playing .referral-agent-card.is-selected { animation: ac-agent-select 9s ease-in-out infinite both; }
+.referral-visual.is-playing .referral-traveller--recommend { animation: ac-recommend-traveller 9s linear infinite; }
+.referral-visual.is-playing .referral-traveller--fee { animation: ac-fee-traveller 9s linear infinite; }
+.referral-visual.is-playing .referral-person--agent { animation: ac-agent-receives 9s ease-in-out infinite both; }
+@keyframes ac-agent-arrive {
+  0%, 7% { opacity: .28; transform: translateY(7px); }
+  14%, 92% { opacity: 1; transform: none; }
+  100% { opacity: .28; transform: translateY(7px); }
+}
+@keyframes ac-agent-select {
+  0%, 17% { opacity: .55; filter: brightness(.75); transform: scale(.98); }
+  24%, 89% { opacity: 1; filter: brightness(1.18); transform: scale(1.015); }
+  100% { opacity: .55; filter: brightness(.75); transform: scale(.98); }
+}
+@keyframes ac-recommend-traveller {
+  0%, 29%, 55%, 100% { opacity: 0; }
+  31%, 51% { opacity: 1; }
+}
+@keyframes ac-fee-traveller {
+  0%, 59%, 86%, 100% { opacity: 0; }
+  62%, 82% { opacity: 1; }
+}
+@keyframes ac-agent-receives {
+  0%, 46%, 70%, 100% { border-color: #80b6ff83; box-shadow: inset 0 1px #ffffff13; }
+  51%, 61% { border-color: #c3dcff; box-shadow: 0 0 0 3px #70aeff26, 0 0 19px #52a0ff36; }
+}
+@media (max-width: 760px) {
+  .question-visual.referral-visual,
+  .editorial-rows .question-visual.referral-visual { height: 312px; min-height: 312px; }
+  .referral-browser { left: 5%; width: 90%; }
+  .referral-participants { left: 5%; width: 90%; }
+}
+@media (max-width: 370px) {
+  .referral-agent-card { gap: 3px; padding: 3px; }
+  .referral-agent-card strong { font-size: 9px; }
+  .referral-agent-avatar { width: 19px; height: 19px; flex-basis: 19px; }
+  .referral-flow-label { font-size: 7px; letter-spacing: 0; }
+  .referral-browser-tag { font-size: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .referral-visual * { animation: none !important; transition: none !important; }
+  .referral-visual .referral-agent-card { opacity: 1 !important; transform: none !important; }
+}
+.motion-paused .referral-visual * { animation: none !important; }
+.motion-paused .referral-visual .referral-agent-card { opacity: 1 !important; transform: none !important; }
