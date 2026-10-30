@@ -5,6 +5,7 @@ import {
   clientKey,
   responseJson,
   publicError,
+  logNswFailure,
 } from "../../lib/nsw-worker.js";
 
 export async function onRequestGet({ request, env }) {
@@ -30,6 +31,7 @@ export async function onRequestGet({ request, env }) {
       typeof data.licenceDetail !== "object" ||
       Array.isArray(data.licenceDetail)
     ) {
+      logNswFailure("details_shape_invalid");
       return responseJson(
         { error: "Unexpected licence details response." },
         502,
