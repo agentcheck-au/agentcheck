@@ -899,7 +899,9 @@
           /^[\w-]{1,50}$/.test(r.licenceID),
       );
       truncated = data.truncated === true;
-      showRows();
+      // The mobile keyboard/viewport handler controls the initial scroll.
+      // Avoid a second immediate scroll while Safari is still dismissing it.
+      showRows(false);
     } catch (error) {
       if (id !== revision) return;
       $("results-title").textContent = "Search unavailable";
