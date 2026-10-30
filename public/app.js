@@ -35,8 +35,26 @@
     toastTimer,
     truncated = false;
   const reduced = () => paused || motionPreference.matches;
-  const scrollTo = (node, block = "start") =>
-    node.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block });
+  // Scroll vertically only. iOS Safari can otherwise shift the page
+  // sideways when a newly revealed result section is brought into view.
+  const scrollTo = (node, block = "start") => {
+    const rect = node.getBoundingClientRect();
+    const offset = 80;
+    let top = rect.top + window.scrollY - offset;
+    if (block === "nearest") {
+      if (rect.top >= offset && rect.bottom <= window.innerHeight) {
+        window.scrollTo({ left: 0, top: window.scrollY, behavior: "auto" });
+        return;
+      }
+      if (rect.top < offset) top = rect.top + window.scrollY - offset;
+      else top = rect.bottom + window.scrollY - window.innerHeight + 12;
+    }
+    window.scrollTo({
+      top: Math.max(0, top),
+      left: 0,
+      behavior: reduced() ? "auto" : "smooth",
+    });
+  };
   const focus = (node) => {
     node.tabIndex = -1;
     node.focus({ preventScroll: true });
@@ -128,8 +146,20 @@
       try {
         data = await response.json();
       } catch {
+        // A non-JSON response is a hosting/function problem, not evidence
+        // that an agent's licence is invalid. Do not expose response bodies.
+        const contentType = response.headers.get("content-type") || "";
+        if (/text\/html/i.test(contentType)) {
+          throw new Error(
+            "The AgentCheck search server returned a webpage instead of licence data (HTTP " +
+              response.status +
+              "). The server needs attention; this is not a licence result.",
+          );
+        }
         throw new Error(
-          "The licence service returned an unreadable response. Please try again.",
+          "The AgentCheck search server returned invalid data (HTTP " +
+            response.status +
+            "). Please try again later.",
         );
       }
       if (!response.ok)
