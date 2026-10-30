@@ -33,3 +33,18 @@ test("result cards invite visitors to view a record without claiming verificatio
   assert.match(app, /"row-button", "View record ↗"/);
   assert.doesNotMatch(app, /"Verify this record ↗"/);
 });
+
+test("HTML loads new asset paths so cached pre-release JavaScript cannot run", () => {
+  assert.match(html, /src="\/app-20261031-mobile-v3\.js"/);
+  assert.match(html, /href="\/styles-20261031-mobile-v3\.css"/);
+  const deployedApp = readFileSync(new URL("../public/app-20261031-mobile-v3.js", import.meta.url), "utf8");
+  const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v3.css", import.meta.url), "utf8");
+  assert.equal(deployedApp, app);
+  assert.equal(deployedCss, css);
+});
+
+test("iOS waits for returned results before scrolling and does not focus the results heading", () => {
+  assert.match(app, /if \(isMobileViewport\(\)\) revealResultsOnMobile\(id\)/);
+  assert.match(app, /if \(isMobileViewport\(\)\) return;\s*node\.tabIndex/);
+  assert.match(css, /-webkit-text-size-adjust: 100%/);
+});

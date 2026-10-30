@@ -3086,3 +3086,27 @@ html, body { overflow-x: clip; }
   .results-tools input { font-size: 16px; }
   .next-regulatory-step { width: 100%; }
 }
+
+/* iOS Safari: use the layout viewport's actual width for search results.
+   Never disable user pinch zoom. */
+@media (max-width: 760px) {
+  html { -webkit-text-size-adjust: 100%; }
+  .results-section,
+  .results-shell,
+  .results-list,
+  .detail-panel,
+  .profile-layout,
+  .profile-card,
+  .regulatory-card {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .results-heading { min-width: 0; flex-wrap: wrap; }
+  .results-heading > div { min-width: 0; max-width: 100%; }
+  .results-heading h2 { overflow-wrap: anywhere; }
+  .results-tools, .results-tools > div { min-width: 0; max-width: 100%; }
+  .results-tools input { max-width: 100%; font-size: 16px; }
+  .result-row { min-width: 0; }
+  .result-row .row-button { max-width: 100%; }
+}
