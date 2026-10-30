@@ -41,7 +41,7 @@ jobs:
                   if (typeof obj.error === "string") summary += " error=" + JSON.stringify(obj.error.slice(0, 140));
                 } catch { summary = "invalid-json"; }
               } else {
-                const title = text.match(/<title[^>]*>([^<]*)<\\/title>/i);
+                const title = text.match(new RegExp("<title[^>]*>([^<]*)</title>", "i"));
                 summary = "html_title=" + (title ? JSON.stringify(title[1].slice(0, 100)) : "(none)");
               }
               console.log(path + " status=" + response.status + " type=" + type + " bytes=" + text.length + " " + summary);
