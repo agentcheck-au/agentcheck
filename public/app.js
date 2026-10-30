@@ -220,7 +220,7 @@
       `Licence ${value(record.licenceNumber, "—")} · ${value(record.licenceType, "NSW property licence")}`,
     );
     row.append(chip(record.status));
-    const button = add(row, "button", "row-button", "Verify this record ↗");
+    const button = add(row, "button", "row-button", "View record ↗");
     button.type = "button";
     button.setAttribute(
       "aria-label",

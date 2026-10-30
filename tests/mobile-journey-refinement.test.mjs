@@ -28,3 +28,8 @@ test("hero and education section explain the purpose of the two checks", () => {
   assert.match(html, /verify their NSW licence, then check the separate/);
   assert.match(html, /Awards, rankings and referral platforms can shape who you trust/);
 });
+
+test("result cards invite visitors to view a record without claiming verification", () => {
+  assert.match(app, /"row-button", "View record ↗"/);
+  assert.doesNotMatch(app, /"Verify this record ↗"/);
+});
