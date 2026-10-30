@@ -1,0 +1,8 @@
+{
+  "name": "agentcheck",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Independent NSW property licence checking site",
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node --test tests/*.test.js" }
+}
