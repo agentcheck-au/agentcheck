@@ -64,7 +64,7 @@ for (const path of ["public/about/index.html", "public/privacy/index.html"]) {
 }
 assert.match(html, /"@type":"WebSite"/);
 assert.match(html, /property="og:image"/);
-assert.match(html, /agentcheck-share-v2\\.png/);
+assert.ok(html.includes("agentcheck-share-v2.png"));
 assert.match(html, /id="two-registers"/);
 assert.match(html, /href="\/about\/"/);
 assert.match(html, /href="\/privacy\/"/);
