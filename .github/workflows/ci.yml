@@ -21,6 +21,19 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm run check
+      - name: Inspect AgentCheck preview-only OneGov fetch diagnostics
+        run: |
+          node --input-type=module <<'EOF'
+          const url = "https://diagnose-nsw-oauth-connectivity.agentcheck-3o4.pages.dev/api/diagnostic-onegov";
+          try {
+            const r = await fetch(url, { signal: AbortSignal.timeout(15000) });
+            console.log("preview_probe_status", r.status);
+            const data = await r.json();
+            console.log("preview_probe_results", JSON.stringify(data));
+          } catch (e) {
+            console.log("preview_probe_failed", e.name, e.cause?.code || "");
+          }
+          EOF
 
       - name: Diagnose public NSW OneGov DNS and TLS without credentials
         run: |
