@@ -4,6 +4,8 @@
     "https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register";
   const LICENCES = "https://verify.licence.nsw.gov.au/home/Property";
   const RESUME = "agentcheck:resume";
+  const MIN_SEARCH_DISPLAY_MS = 1150;
+  const MIN_RECORD_DISPLAY_MS = 1900;
   const $ = (id) => document.getElementById(id);
   const el = (tag, css = "", text) => {
     const node = document.createElement(tag);
@@ -224,6 +226,24 @@
       signal.removeEventListener("abort", stop);
     }
   }
+  // Keep the existing verification animation visible when government responses
+  // are very fast. Slow responses add no extra delay; cancellation is immediate.
+  // Respect reduced-motion preferences and the site's Pause motion control.
+  function waitForMinimum(startedAt, minimumMs, signal) {
+    if (reduced() || signal.aborted) return Promise.resolve();
+    const remaining = Math.max(0, minimumMs - (Date.now() - startedAt));
+    if (!remaining) return Promise.resolve();
+    return new Promise((resolve) => {
+      let timer;
+      const finish = () => {
+        clearTimeout(timer);
+        signal.removeEventListener("abort", finish);
+        resolve();
+      };
+      signal.addEventListener("abort", finish, { once: true });
+      timer = setTimeout(finish, remaining);
+    });
+  }
   function begin() {
     controller?.abort();
     controller = new AbortController();
@@ -305,6 +325,13 @@
       scrollTo(section);
       focus($("results-title"));
     }
+  }
+  function searchLoading() {
+    const wrap = el("div", "loading-stage");
+    add(wrap, "div", "loading-crest").append(icon("shield"));
+    add(wrap, "h3", "", "Checking NSW licence records");
+    add(wrap, "p", "", "Looking for matching records in the official NSW licence register…");
+    return wrap;
   }
   function loading(record) {
     const wrap = el("div", "loading-stage");
@@ -809,6 +836,7 @@
   }
   async function selectRecord(record, preserveReport = false) {
     const { id, signal } = begin();
+    const startedAt = Date.now();
     activeRecord = record;
     activeDetails = null;
     if (!preserveReport) report = "";
@@ -843,6 +871,8 @@
         throw new Error(
           "The licence service returned an incomplete record. Please try again.",
         );
+      await waitForMinimum(startedAt, MIN_RECORD_DISPLAY_MS, signal);
+      if (id !== revision || signal.aborted) return;
       activeDetails = data.detail;
       activeCheckedAt = data.checkedAt;
       detail.replaceChildren(profile(record, data.detail, data.checkedAt));
@@ -876,6 +906,7 @@
   }
   async function search(q) {
     const { id, signal } = begin();
+    const startedAt = Date.now();
     clearSaved();
     report = "";
     activeDetails = null;
@@ -886,7 +917,7 @@
     section.hidden = false;
     list.hidden = false;
     detail.hidden = true;
-    list.replaceChildren();
+    list.replaceChildren(searchLoading());
     detail.replaceChildren();
     $("results-tools").hidden = true;
     $("back-button").hidden = true;
@@ -909,6 +940,8 @@
         throw new Error(
           "The licence service returned an unreadable result list. Please try again.",
         );
+      await waitForMinimum(startedAt, MIN_SEARCH_DISPLAY_MS, signal);
+      if (id !== revision || signal.aborted) return;
       records = data.results.filter(
         (r) =>
           r &&
@@ -926,6 +959,7 @@
       $("results-subtitle").textContent =
         "Please try again, or use the official property licence register.";
       notify(error.message, true);
+      list.replaceChildren();
       officialLink(
         list,
         "Search the official NSW licence register ↗",

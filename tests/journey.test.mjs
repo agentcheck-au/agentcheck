@@ -39,6 +39,7 @@ function boot({
   storage = new Map(),
   denyStorage = false,
   reducedMotion = false,
+  holdLoading = false,
 } = {}) {
   const { document, window: dom } = parseHTML(html);
   const scrolls = [],
@@ -47,6 +48,7 @@ function boot({
     events = new Map();
   let copied = "",
     focused;
+  const loadingTimers = [];
   dom.HTMLElement.prototype.scrollIntoView = function (options) {
     scrolls.push(options);
   };
@@ -103,7 +105,13 @@ function boot({
       fn();
       return 1;
     },
-    setTimeout: () => 1,
+    setTimeout: (fn, ms) => {
+      if (ms >= 900 && ms <= 2200) {
+        if (holdLoading) loadingTimers.push(fn);
+        else Promise.resolve().then(fn);
+      }
+      return 1;
+    },
     clearTimeout() {},
     fetch: async (url, options) => {
       requests.push({ url, signal: options.signal });
@@ -140,6 +148,9 @@ function boot({
     storage,
     scrolls,
     events,
+    releaseLoading: () => {
+      for (const done of loadingTimers.splice(0)) done();
+    },
     get copied() {
       return copied;
     },
@@ -433,4 +444,31 @@ test("missing or mismatched detailed licence numbers cannot confirm the selected
       /Current licence confirmed/,
     );
   }
+});
+
+test("fast search and detail responses keep their loading screens visible", async () => {
+  const ui = boot({ holdLoading: true });
+  await ui.submit();
+  assert.match(ui.$("results-list").textContent, /Checking NSW licence records/);
+  assert.match(ui.$("results-title").textContent, /Searching NSW records/);
+  ui.releaseLoading();
+  await flush();
+  assert.match(ui.$("results-title").textContent, /Confirm/);
+
+  await ui.select();
+  assert.match(ui.$("detail-panel").textContent, /Checking official records/);
+  ui.releaseLoading();
+  await flush();
+  assert.match(ui.$("detail-panel").textContent, /Current licence confirmed/);
+});
+
+test("starting another search cancels the previous loading hold", async () => {
+  const ui = boot({ holdLoading: true });
+  await ui.submit("First agent");
+  assert.match(ui.$("results-list").textContent, /Checking NSW licence records/);
+  await ui.submit("Second agent");
+  ui.releaseLoading();
+  await flush();
+  assert.match(ui.$("results-title").textContent, /Confirm/);
+  assert.equal(ui.requests.length, 2);
 });

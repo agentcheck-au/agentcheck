@@ -35,10 +35,10 @@ test("result cards invite visitors to view a record without claiming verificatio
 });
 
 test("HTML loads new asset paths so cached pre-release JavaScript cannot run", () => {
-  assert.match(html, /src="\/app-20261031-mobile-v4\.js"/);
-  assert.match(html, /href="\/styles-20261031-mobile-v5\.css"/);
-  const deployedApp = readFileSync(new URL("../public/app-20261031-mobile-v4.js", import.meta.url), "utf8");
-  const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v5.css", import.meta.url), "utf8");
+  assert.match(html, /src="\/app-20261031-mobile-v5\.js"/);
+  assert.match(html, /href="\/styles-20261031-mobile-v6\.css"/);
+  const deployedApp = readFileSync(new URL("../public/app-20261031-mobile-v5.js", import.meta.url), "utf8");
+  const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v6.css", import.meta.url), "utf8");
   assert.equal(deployedApp, app);
   assert.equal(deployedCss, css);
 });
@@ -71,4 +71,30 @@ test("the two official registers are clearly named and independently checked", (
   assert.match(html, /does not automatically search the Name and Shame Register/);
   assert.match(app, /Did you find this agent on the Name and Shame Register/);
   assert.match(app, /STEP 2 \/ 2 · NAME AND SHAME REGISTER/);
+});
+
+test("hero spacing and compact mobile CTA keep the two checks legible", () => {
+  assert.match(css, /\.hero-shell \{\s*padding-top: 96px;/);
+  assert.match(css, /\.search-panel \{ margin-top: 43px; \}/);
+  assert.match(css, /width: min\(204px, 100%\)/);
+  assert.match(css, /\.hero-verification-steps \.two-check-note \{\s*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+});
+
+test("marketing claims section introduces its purpose before showing questions", () => {
+  const section = html.slice(html.indexOf('class="manifesto"'), html.indexOf('class="editorial"'));
+  assert.match(section, /AFTER CHECKING THE REGISTERS/);
+  assert.match(section, /marketing claims, not official checks/);
+  assert.ok(section.indexOf("marketing claims, not official checks") < section.indexOf("01 \/ AWARDS"));
+  assert.match(section, /02 \/ RANKINGS/);
+  assert.match(section, /03 \/ REFERRALS/);
+  assert.match(section, /Explore the questions to ask/);
+  assert.doesNotMatch(section, /manifesto-visual/);
+});
+
+test("quick responses retain a readable loading state without delaying slow requests", () => {
+  assert.match(app, /MIN_SEARCH_DISPLAY_MS = 1150/);
+  assert.match(app, /MIN_RECORD_DISPLAY_MS = 1900/);
+  assert.match(app, /waitForMinimum\(startedAt, MIN_SEARCH_DISPLAY_MS, signal\)/);
+  assert.match(app, /waitForMinimum\(startedAt, MIN_RECORD_DISPLAY_MS, signal\)/);
+  assert.match(app, /if \(reduced\(\) \|\| signal\.aborted\)/);
 });

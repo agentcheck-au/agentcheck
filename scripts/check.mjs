@@ -7,9 +7,11 @@ const allowed = new Set([
   "app.js",
   "app-20261031-mobile-v3.js",
   "app-20261031-mobile-v4.js",
+  "app-20261031-mobile-v5.js",
   "styles.css",
   "styles-20261031-mobile-v4.css",
   "styles-20261031-mobile-v5.css",
+  "styles-20261031-mobile-v6.css",
   "_headers",
   "_routes.json",
   "favicon.svg",
@@ -40,8 +42,8 @@ for (const file of [
   execFileSync(process.execPath, ["--check", file]);
 // The deployed cache-busting copies must exactly match canonical sources.
 for (const [source, deployed] of [
-  ["public/app.js", "public/app-20261031-mobile-v4.js"],
-  ["public/styles.css", "public/styles-20261031-mobile-v5.css"],
+  ["public/app.js", "public/app-20261031-mobile-v5.js"],
+  ["public/styles.css", "public/styles-20261031-mobile-v6.css"],
 ]) {
   assert.equal(await readFile(deployed, "utf8"), await readFile(source, "utf8"),
     `Deployed asset out of sync: ${deployed}`);

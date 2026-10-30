@@ -3167,3 +3167,148 @@ html, body { overflow-x: clip; }
 .two-register-card a:focus-visible{outline:3px solid #46cdb6;outline-offset:5px}
 .two-registers-disclaimer{font-size:14px;line-height:1.65;color:#526479;max-width:980px;margin:20px auto 0;text-align:center}
 @media(max-width:700px){.two-registers{padding:48px 0}.two-registers-grid{grid-template-columns:1fr;gap:14px}.two-register-card{border-radius:18px;padding:25px}.two-registers-intro{text-align:left}.two-registers-disclaimer{text-align:left}}
+
+/* Release polish: readable hero rhythm, compact CTA and distinct check steps. */
+.hero-shell {
+  justify-content: flex-start;
+  padding-top: 116px;
+}
+.hero-copy .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-copy .eyebrow-line { flex: 0 0 27px; margin-right: 0; }
+.hero h1 { margin-top: 24px; }
+.search-panel { margin-top: 48px; }
+.hero-verification-steps {
+  margin-top: 26px;
+  padding-top: 22px;
+}
+.hero-verification-steps .two-check-note {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  column-gap: 28px;
+  row-gap: 14px;
+}
+.hero-verification-steps .two-check-note span {
+  display: block;
+  min-width: 0;
+  line-height: 1.55;
+}
+.hero-verification-steps .two-check-note strong {
+  grid-column: 1 / -1;
+  margin: 0;
+  width: auto;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.hero-verification-steps .search-panel-foot { margin-top: 16px; }
+
+/* Context-first explanation of awards, rankings and referrals. */
+.manifesto {
+  padding: clamp(64px, 7vw, 104px) 0;
+  background: #07162f;
+}
+.manifesto-shell { display: block; }
+.manifesto-intro { max-width: 850px; }
+.manifesto h2 {
+  max-width: 850px;
+  font-size: clamp(38px, 4.8vw, 62px);
+  line-height: 1.12;
+  margin: 22px 0 18px;
+}
+.manifesto-intro p {
+  max-width: 760px;
+  font-size: 16px;
+  line-height: 1.72;
+  margin: 0;
+}
+.manifesto-intro p strong { color: #f4f8ff; }
+.manifesto-points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 36px;
+  border: 0;
+}
+.manifesto-points > div {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid rgba(139, 181, 239, .22);
+  border-radius: 15px;
+  background: rgba(22, 56, 99, .46);
+  gap: 10px;
+}
+.manifesto-points span { color: #96bdf3; }
+.manifesto-points strong { font-size: 19px; line-height: 1.3; }
+.manifesto-points p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #b7cbe6;
+}
+.manifesto-link { margin-top: 20px; }
+
+@media (max-width: 760px) {
+  .hero-shell {
+    padding-top: 96px;
+    padding-bottom: 58px;
+  }
+  .hero h1 { margin-top: 22px; }
+  .search-panel { margin-top: 43px; }
+  .search-panel .search-controls { align-items: stretch; }
+  .search-panel .btn-search {
+    align-self: center;
+    width: min(204px, 100%);
+    min-width: 0;
+    padding-inline: 20px;
+  }
+  .hero-verification-steps {
+    margin-top: 26px;
+    padding: 22px 2px 0;
+  }
+  .hero-verification-steps .two-check-note {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 14px;
+    font-size: 12px;
+  }
+  .hero-verification-steps .two-check-note span {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .hero-verification-steps .two-check-note strong {
+    grid-column: 1 / -1;
+    flex-basis: auto;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .hero-verification-steps .search-panel-foot {
+    margin-top: 15px;
+    font-size: 11px;
+  }
+  .manifesto { padding: 64px 0 70px; }
+  .manifesto h2 {
+    font-size: clamp(33px, 8.3vw, 44px);
+    margin: 18px 0 16px;
+  }
+  .manifesto-intro p { font-size: 15px; line-height: 1.65; }
+  .manifesto-points {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .manifesto-points > div {
+    padding: 18px 20px;
+    gap: 6px;
+  }
+  .manifesto-points strong { font-size: 18px; }
+  .manifesto-points p { font-size: 13px; }
+  .manifesto-link { margin-top: 16px; }
+}
+@media (max-width: 370px) {
+  .hero-verification-steps .two-check-note { column-gap: 12px; }
+  .hero-verification-steps .two-check-note span { font-size: 11px; }
+}
