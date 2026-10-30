@@ -21,3 +21,32 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm run check
+      - name: Inspect live AgentCheck API response types (read-only, no secrets)
+        run: |
+          node --input-type=module <<'EOF'
+          for (const path of ["/api/route-diagnostic-not-found", "/api/search?q=zzzxxyytestagent"]) {
+            try {
+              const response = await fetch("https://agentcheck.au" + path, {
+                headers: { Accept: "application/json" },
+                signal: AbortSignal.timeout(15000),
+              });
+              const type = response.headers.get("content-type") || "(none)";
+              const text = await response.text();
+              const isJson = type.includes("json");
+              let summary = "";
+              if (isJson) {
+                try {
+                  const obj = JSON.parse(text);
+                  summary = "json_keys=" + Object.keys(obj).join(",");
+                  if (typeof obj.error === "string") summary += " error=" + JSON.stringify(obj.error.slice(0, 140));
+                } catch { summary = "invalid-json"; }
+              } else {
+                const title = text.match(/<title[^>]*>([^<]*)<\\/title>/i);
+                summary = "html_title=" + (title ? JSON.stringify(title[1].slice(0, 100)) : "(none)");
+              }
+              console.log(path + " status=" + response.status + " type=" + type + " bytes=" + text.length + " " + summary);
+            } catch (error) {
+              console.log(path + " request_failed=" + error.name);
+            }
+          }
+          EOF
