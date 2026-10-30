@@ -56,3 +56,14 @@ Valdero was outside scope. No database, Vercel project, DNS, account-wide, produ
 - 67/67 tests and static checks pass. Exported PNG dimensions/signatures and each public page's logo/icon/share references are checked. Desktop and 320px mobile header reviewed; no horizontal document overflow.
 - User explicitly approved applying the corrected logo and merging it with the readability changes into main. Pre-release main: `2010fd02038f3feb844fd60d067389f36b944591`; pre-logo review: `3be074967f6970739220a51952dc1f4aa9038ae1`.
 
+# Clearer register handoff and middle-section styling — 31 October 2026
+
+- Removed the extra blue “Continue to Step 2” link from the licence card. The next card explicitly says “NEXT · STEP 2 / 2” and introduces the separate Name and Shame Register check.
+- Added two concise numbered directions: open/paste the ready licence number, then use the browser Back button and choose the result here for guidance.
+- Presented the validated licence number in a labelled readonly field. Renamed the primary action to “Open Name and Shame Register”; automatic copying, fixed official destination, saved return state and failure handling remain intact.
+- Moved optional manual-copy/no-copy links into a native help disclosure. Failed automatic copying still exposes the selectable fallback without navigating away or claiming success.
+- Added a soft blue background and separate rounded question cards to the middle section without adding images or changing the logo.
+- 67/67 automated tests, static checks and diff checks pass. Clipboard/navigation integration coverage now also checks the readonly prefilled number and the simplified action.
+- Local Chromium review: desktop Step 2, middle-section cards, 390px and 320px mobile fit, copying-help disclosure, manual fallback and saved-journey restoration after reload. No horizontal document overflow at either narrow width.
+- Previous production baseline: `f89e5464b31225a09fffe0466a3ba67982eee84b`. No backend, secret, database, DNS or Cloudflare account-setting changes.
+

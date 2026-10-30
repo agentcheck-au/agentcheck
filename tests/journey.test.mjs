@@ -249,6 +249,12 @@ test("simulated clipboard success saves journey then navigates to fixed official
   const ui = boot();
   await ui.submit();
   await ui.select();
+  const readyNumber = ui.document.querySelector(".register-licence-number");
+  assert.equal(readyNumber.value, "TEST123");
+  assert.equal(readyNumber.readOnly, true);
+  assert.equal(ui.document.querySelectorAll(".register-directions li").length, 2);
+  assert.equal(ui.document.querySelector(".next-regulatory-step"), null);
+  assert.match(ui.document.querySelector(".regulatory-cta").textContent, /^Open Name and Shame Register/);
   ui.click(ui.document.querySelector(".regulatory-cta"));
   await flush();
   assert.equal(ui.copied, "TEST123");

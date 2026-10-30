@@ -8,7 +8,8 @@ const html = readFileSync(new URL("../public/index.html", import.meta.url), "utf
 test("the licence record is rendered before the separate regulatory step", () => {
   const profile = app.slice(app.indexOf("function profile("), app.indexOf("function detailsValid("));
   assert.ok(profile.indexOf('const card = add(wrapper, "article", "profile-card")') < profile.indexOf("regulatoryStep(wrapper, record, info)"));
-  assert.match(profile, /Continue to Step 2 · Name and Shame Register/);
+  assert.doesNotMatch(profile, /next-regulatory-step|Continue to Step 2/);
+  assert.match(app, /Next: check the Name and Shame Register/);
   assert.match(app, /card.id = "regulatory-check"/);
 });
 
@@ -35,10 +36,10 @@ test("result cards invite visitors to view a record without claiming verificatio
 });
 
 test("HTML loads new asset paths so cached pre-release JavaScript cannot run", () => {
-  assert.match(html, /src="\/app-20261031-simple-v6\.js"/);
-  assert.match(html, /href="\/styles-20261031-brand-v8\.css"/);
-  const deployedApp = readFileSync(new URL("../public/app-20261031-simple-v6.js", import.meta.url), "utf8");
-  const deployedCss = readFileSync(new URL("../public/styles-20261031-brand-v8.css", import.meta.url), "utf8");
+  assert.match(html, /src="\/app-20261031-journey-v7\.js"/);
+  assert.match(html, /href="\/styles-20261031-journey-v9\.css"/);
+  const deployedApp = readFileSync(new URL("../public/app-20261031-journey-v7.js", import.meta.url), "utf8");
+  const deployedCss = readFileSync(new URL("../public/styles-20261031-journey-v9.css", import.meta.url), "utf8");
   assert.equal(deployedApp, app);
   assert.equal(deployedCss, css);
 });

@@ -3071,20 +3071,11 @@ html, body { overflow-x: clip; }
 
 /* Journey refinements: maintain a readable introduction and explicit check order. */
 .manifesto-explainer { max-width: 620px; }
-.next-regulatory-step {
-  display: inline-flex;
-  width: auto;
-  max-width: 100%;
-  margin-top: 24px;
-  text-align: center;
-  white-space: normal;
-}
 #regulatory-check { scroll-margin-top: 100px; }
 /* Safari focuses and zooms any text input below 16px, including the result filter. */
 @media (max-width: 760px) {
   .search-panel .search-input-wrap input,
   .results-tools input { font-size: 16px; }
-  .next-regulatory-step { width: 100%; }
 }
 
 /* iOS Safari: use the layout viewport's actual width for search results.
@@ -3419,4 +3410,119 @@ body { font-size: 17px; }
 .site-map-footer .footer-identity .logo-wordmark { width: 240px; height: auto; border-radius: 0; }
 @media (max-width: 370px) {
   .brand .logo-wordmark { width: 140px; }
+}
+
+/* A directed second check, with the ready number and action kept together. */
+.regulatory-card {
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+  align-items: start;
+  gap: 40px;
+  margin-top: 32px;
+  padding: 40px;
+}
+.regulatory-kicker { font-size: 13px; line-height: 1.7; }
+.regulatory-content h3 { margin: 18px 0; font-size: clamp(28px, 3vw, 37px); line-height: 1.2; }
+.regulatory-content > p { max-width: 38em; color: #ccdaef; }
+.register-directions {
+  display: grid;
+  gap: 26px;
+  counter-reset: register-direction;
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+}
+.register-directions li { position: relative; min-width: 0; padding-left: 48px; counter-increment: register-direction; }
+.register-directions li::before {
+  content: counter(register-direction);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #91baff24;
+  border: 1px solid #9bc1ff55;
+  color: #e5efff;
+  font-size: 16px;
+  font-weight: 800;
+}
+.register-directions strong { display: block; color: #fff; font-size: 19px; line-height: 1.5; margin-bottom: 7px; }
+.register-directions p { color: #d0def1; font-size: 17px; line-height: 1.7; }
+.regulatory-action {
+  min-width: 0;
+  padding: 26px;
+  border: 1px solid #a6c8f33b;
+  border-radius: 16px;
+  background: #03132a54;
+  gap: 18px;
+}
+.licence-to-copy { display: block; background: transparent; border: 0; border-radius: 0; padding: 0; }
+.licence-to-copy label { display: block; color: #c0d4f2; font-size: 12px; font-weight: 750; letter-spacing: .06em; line-height: 1.6; margin-bottom: 12px; }
+.register-licence-number {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #bed6fa66;
+  border-radius: 10px;
+  background: #f4f8ff;
+  color: #10294b;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: .03em;
+  line-height: 1.5;
+}
+.regulatory-action .regulatory-cta { gap: 16px; justify-content: space-between; padding: 18px; min-height: 64px; font-size: 17px; line-height: 1.5; }
+.regulatory-action .regulatory-hint { color: #c0d4ee; font-size: 15px; line-height: 1.7; }
+.handoff-help { border-top: 1px solid #b4cef43b; padding-top: 18px; color: #d7e7ff; font-size: 15px; line-height: 1.6; }
+.handoff-help summary { cursor: pointer; min-height: 32px; }
+.handoff-help[open] summary { margin-bottom: 16px; }
+.handoff-help .outcome-link, .handoff-help .manual-copy { display: block; font-size: 15px; line-height: 1.7; margin-top: 16px; }
+
+/* Give the middle of the page depth while preserving the quieter reading layout. */
+.editorial {
+  background:
+    radial-gradient(ellipse at 5% 15%, #cbdcfa73, transparent 52%),
+    radial-gradient(ellipse at 95% 80%, #d3e5f578, transparent 48%),
+    #edf2f9;
+  border-block: 1px solid #d9e3f1;
+}
+.editorial-rows { gap: 32px; }
+.editorial-rows .question-card {
+  padding: 36px;
+  gap: 44px;
+  border: 1px solid #d8e3f1;
+  border-radius: 24px;
+  background: #ffffffeb;
+  box-shadow: 0 12px 36px #143e7510;
+  align-items: center;
+}
+.editorial-rows .question-body { min-width: 0; }
+.editorial-rows .question-visual { border-radius: 16px; }
+.editorial-rows .question-index { display: inline-block; align-self: flex-start; padding: 7px 11px; border-radius: 7px; background: #edf3ff; color: #235fb0; }
+.editorial-rows .question-answer { background: #edf3fc; border: 1px solid #dce6f4; border-radius: 12px; }
+@media (max-width: 900px) {
+  .regulatory-card { grid-template-columns: 1fr; gap: 32px; }
+  .regulatory-action { max-width: 100%; }
+}
+@media (max-width: 760px) {
+  .regulatory-card { padding: 28px 22px; }
+  .regulatory-action { padding: 22px; }
+  .register-directions li { padding-left: 40px; }
+  .register-directions li::before { width: 28px; height: 28px; font-size: 15px; }
+  .register-directions strong { font-size: 18px; }
+  .register-directions p { font-size: 16px; }
+  .regulatory-action .regulatory-cta { font-size: 16px; padding: 16px; }
+  .editorial-rows .question-card { padding: 24px; gap: 28px; border-radius: 20px; }
+  .editorial-rows .referral-browser-top { gap: 5px; padding-inline: 8px; }
+  .editorial-rows .referral-browser-title { font-size: 8px; letter-spacing: .03em; }
+  .editorial-rows .referral-browser-tag { font-size: 7px; }
+}
+@media (max-width: 370px) {
+  .regulatory-action { padding: 18px 16px; }
+  .regulatory-action .regulatory-cta { gap: 10px; padding: 16px 12px; }
+  .regulatory-card { padding-inline: 18px; }
+  .editorial-rows .question-card { padding: 20px; }
 }
