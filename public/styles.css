@@ -2694,3 +2694,16 @@ input,
 summary {
   scroll-margin-top: 120px;
 }
+@media (max-width: 760px) {
+  .fallback-row {
+    flex-direction: column;
+  }
+  .fallback-number {
+    width: 100%;
+  }
+}
+#results-title:focus-visible {
+  outline: 2px solid #75a8ff;
+  outline-offset: 6px;
+  border-radius: 4px;
+}
