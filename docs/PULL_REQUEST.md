@@ -11,3 +11,6 @@ Validation: 40/40 tests, static/syntax checks, clean dependency audit and local 
 Production gates: approve a distributed quota/abuse protection plan, confirm historical credential rotation and current government data-use terms, then complete live Preview and real-device acceptance. No production approval is implied by this PR.
 
 Scope: AgentCheck only. No Valdero, Supabase, Vercel project, DNS, production secret or shared account setting was accessed or changed. Merge/deployment requires explicit owner approval.
+
+
+Preview: https://studio-redesign.agentcheck-3o4.pages.dev/ . Cloudflare deployment and both GitHub CI runs succeeded. The deployed UI was reviewed, but a controlled live search currently returns the application's credential-unavailable message. Preview credential configuration and live acceptance remain outstanding; no Cloudflare settings or secret values were accessed or changed.
