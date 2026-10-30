@@ -1,88 +1,493 @@
 <!doctype html>
 <html lang="en-AU">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071630">
-  <meta name="description" content="AgentCheck helps you verify NSW property-agent licences and check the official NSW Fair Trading regulatory register. Free, independent and no sign-up needed.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="AgentCheck — Know your agent. Check the facts.">
-  <meta property="og:description" content="Verify licence details. Then check the official regulatory register. Free and independent.">
-  <title>AgentCheck — Know your agent. Check the facts.</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="/sydney-harbour.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/app.js" defer></script>
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="container header-content">
-      <a href="/" class="brand" aria-label="AgentCheck — home">
-        <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 2.8 27.3 7.3v9c0 7.2-5.4 11.8-11.3 14-5.9-2.2-11.3-6.8-11.3-14v-9L16 2.8Z" stroke="currentColor" stroke-width="1.9"/><path d="m10.5 16.2 3.8 3.8 7.1-7.2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span>Agent<span>Check.</span></span>
-      </a>
-      <nav class="top-nav" aria-label="Primary navigation">
-        <a href="#search-card">Search an agent</a>
-        <a href="#how-it-works">How it works</a>
-        <a href="#official-sources">Sources</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#061329" />
+    <meta
+      name="description"
+      content="Before you appoint a real estate agent, check the facts. Search NSW Government licence records and continue to the official NSW Fair Trading regulatory register. Free, independent and no sign-up."
+    />
+    <meta
+      property="og:title"
+      content="AgentCheck — Know your agent. Question the claims."
+    />
+    <meta
+      property="og:description"
+      content="Awards are claims. Licences are records. Check the facts before appointing a NSW real estate agent."
+    />
+    <meta property="og:type" content="website" />
+    <title>AgentCheck — Know your agent. Check the facts.</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/sydney-harbour.webp"
+      as="image"
+      type="image/webp"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div
+      class="reading-progress"
+      id="reading-progress"
+      aria-hidden="true"
+    ></div>
+    <header class="site-header" id="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/" aria-label="AgentCheck — home">
+          <span class="brand-mark" aria-hidden="true"
+            ><svg viewBox="0 0 32 32" fill="none">
+              <path
+                d="M16 3 27 7.5v8.4c0 7.2-4.5 11.3-11 13.3C9.5 27.2 5 23.1 5 15.9V7.5L16 3Z"
+                stroke="currentColor"
+                stroke-width="1.75"
+              />
+              <path
+                d="m10.2 16 3.7 3.7 7.8-8.1"
+                stroke="currentColor"
+                stroke-width="1.95"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              /></svg
+          ></span>
+          <span class="brand-name">Agent<span>Check</span><b>.</b></span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#search">Verify an agent</a>
+          <a href="#the-standard">The standard</a>
+          <a href="#questions">Questions to ask</a>
+        </nav>
+        <button
+          class="motion-toggle"
+          id="motion-toggle"
+          type="button"
+          aria-pressed="false"
+        >
+          Pause motion
+        </button>
+        <a class="nav-action" href="#search"
+          ><span class="nav-action-dot"></span> Start a check
+          <span aria-hidden="true">↗</span></a
+        >
+        <button
+          class="menu-toggle"
+          id="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+          aria-label="Open menu"
+        >
+          <span></span><span></span>
+        </button>
+      </div>
+      <nav
+        class="mobile-nav"
+        id="mobile-nav"
+        aria-label="Mobile navigation"
+        hidden
+      >
+        <a href="#search">Verify an agent</a
+        ><a href="#the-standard">The standard</a
+        ><a href="#questions">Questions to ask</a>
       </nav>
-      <div class="trust-signal"><span class="online-indicator"></span> Independent NSW agent verification</div>
-    </div>
-  </header>
+    </header>
 
-  <main id="main">
-    <section class="hero" aria-labelledby="page-title">
-      <div class="hero-photo" aria-hidden="true"></div>
-      <div class="container hero-content">
-        <div class="eyebrow hero-eyebrow">TRUSTED SOURCES. INFORMED DECISIONS.</div>
-        <h1 id="page-title">Know your agent.<br><span>Check the facts.</span></h1>
-        <p class="hero-intro">Before you appoint a real estate agent, check their NSW licence and then check the official regulatory register.</p>
-        <div class="search-card" id="search-card">
-          <div class="search-top"><strong>Check a NSW property agent</strong><span class="free-label">Free · No sign-up</span></div>
-          <form id="search-form" role="search" novalidate>
-            <label for="search-input">Agent name or licence number</label>
-            <div class="search-row">
-              <div class="input-wrap"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.9"/><path d="m15.6 15.6 5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><input id="search-input" name="q" type="search" minlength="2" maxlength="80" autocomplete="off" spellcheck="false" placeholder="Enter agent's name or licence number" required></div>
-              <button class="button button-primary" id="search-button" type="submit">Check agent <span aria-hidden="true">→</span></button>
+    <main id="main">
+      <noscript
+        ><div class="noscript-notice">
+          JavaScript is needed for AgentCheck’s licence search. You can still
+          <a href="https://verify.licence.nsw.gov.au/home/Property"
+            >search the official NSW property licence register</a
+          >
+          and
+          <a
+            href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register"
+            >check the separate Name and Shame Register</a
+          >.
+        </div></noscript
+      >
+      <section class="hero" id="search" aria-labelledby="hero-title">
+        <div class="hero-photo" aria-hidden="true"></div>
+        <div class="hero-grain" aria-hidden="true"></div>
+        <div class="hero-orbit orbit-one" aria-hidden="true"></div>
+        <div class="hero-orbit orbit-two" aria-hidden="true"></div>
+        <div class="hero-light" id="hero-light" aria-hidden="true"></div>
+        <div class="shell hero-shell">
+          <div class="hero-copy" data-reveal>
+            <div class="eyebrow eyebrow-light">
+              <span class="eyebrow-line"></span> INDEPENDENT NSW AGENT
+              VERIFICATION
             </div>
-          </form>
+            <h1 id="hero-title">
+              The claims are loud.<br /><em>The facts speak louder.</em>
+            </h1>
+            <p>
+              Before you trust the awards, the rankings or the sales pitch —
+              know who you're dealing with. Start with official NSW Government
+              records.
+            </p>
+          </div>
+          <div class="search-panel" id="search-panel" data-reveal>
+            <div class="search-panel-head">
+              <div>
+                <span class="panel-kicker">START HERE</span>
+                <h2>Know your agent. <span>Check the facts.</span></h2>
+              </div>
+              <span class="free-chip"><span></span> Free · No sign-up</span>
+            </div>
+            <form id="search-form" novalidate role="search">
+              <label for="search-input"
+                >Search a NSW agent by name or licence number</label
+              >
+              <div class="search-controls">
+                <div class="search-input-wrap">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                    <circle
+                      cx="10.5"
+                      cy="10.5"
+                      r="6.5"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    />
+                    <path
+                      d="m15.4 15.4 5.1 5.1"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    /></svg
+                  ><input
+                    name="q"
+                    id="search-input"
+                    type="search"
+                    required
+                    minlength="2"
+                    maxlength="80"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="e.g. an agent's name or licence number"
+                  />
+                </div>
+                <button
+                  class="btn btn-primary btn-search"
+                  type="submit"
+                  id="search-button"
+                >
+                  Check agent
+                  <span class="btn-arrow" aria-hidden="true">↗</span>
+                </button>
+              </div>
+            </form>
+            <p class="two-check-note">
+              <span>01 / Licence status</span
+              ><span>02 / Regulatory register</span
+              ><strong>Two separate checks. Both matter.</strong>
+            </p>
+            <div class="search-panel-foot">
+              <span class="source-dot"></span> Licence lookup from NSW
+              Government records
+              <span class="panel-foot-right"
+                >No account. No payment. Just facts.</span
+              >
+            </div>
+          </div>
+          <div class="hero-bottom" data-reveal>
+            <span class="scroll-cue"
+              ><span class="scroll-mouse"></span> SCROLL TO SEE WHAT
+              MATTERS</span
+            >
+            <div class="hero-proof">
+              <span class="hero-proof-icon" aria-hidden="true">◎</span> An
+              independent consumer information service. Not a government
+              website.
+            </div>
+          </div>
         </div>
-        <div class="steps-line" aria-label="How AgentCheck works">
-          <div><span class="step-no">01</span><span>Search an agent</span></div><span class="step-rule"></span>
-          <div><span class="step-no">02</span><span>View licence</span></div><span class="step-rule"></span>
-          <div><span class="step-no">03</span><span>Check regulatory actions</span></div>
+        <div class="hero-bottom-fade" aria-hidden="true"></div>
+      </section>
+
+      <section
+        id="results-section"
+        class="results-section"
+        hidden
+        aria-label="Agent licence search results"
+        aria-busy="false"
+      >
+        <div class="shell results-shell">
+          <div class="results-heading">
+            <div>
+              <span class="eyebrow eyebrow-dark" id="results-kicker"
+                >OFFICIAL NSW RECORDS</span
+              >
+              <h2 id="results-title">Finding your agent</h2>
+              <p id="results-subtitle">
+                Match the person using their name, suburb and licence number.
+              </p>
+            </div>
+            <button id="clear-button" class="text-button" type="button">
+              ↶ Start a new search
+            </button>
+          </div>
+          <button
+            id="back-button"
+            class="text-button back-button"
+            type="button"
+            hidden
+          >
+            ← Back to matching records
+          </button>
+          <div id="status-message" class="notice" role="status" hidden></div>
+          <div id="results-tools" class="results-tools" hidden>
+            <div>
+              <label for="suburb-filter"
+                >Narrow these matches by suburb or postcode</label
+              ><input
+                id="suburb-filter"
+                type="search"
+                maxlength="90"
+                autocomplete="off"
+                placeholder="Filter returned records only"
+              />
+            </div>
+            <p id="match-count" role="status" aria-live="polite"></p>
+          </div>
+          <div id="results-list" class="results-list"></div>
+          <div id="detail-panel" class="detail-panel" hidden></div>
+        </div>
+      </section>
+
+      <section
+        class="manifesto"
+        id="the-standard"
+        aria-labelledby="manifesto-title"
+      >
+        <div class="manifesto-visual" aria-hidden="true">
+          <span class="manifesto-ring ring-a"></span
+          ><span class="manifesto-ring ring-b"></span
+          ><span class="manifesto-ring ring-c"></span
+          ><span class="manifesto-core">?</span>
+        </div>
+        <div class="shell manifesto-shell">
+          <div class="manifesto-intro" data-reveal>
+            <span class="eyebrow eyebrow-light"
+              ><span class="eyebrow-line"></span> THE STANDARD SHOULD BE
+              HIGHER</span
+            >
+            <h2 id="manifesto-title">
+              A badge is a claim.<br /><em>A licence is a record.</em>
+            </h2>
+            <p>
+              Big promises are easy to publish. Independence, licensing and
+              professional conduct deserve a closer look.
+            </p>
+            <a href="#questions" class="inline-arrow"
+              >Learn what to question <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <div class="manifesto-points" data-reveal>
+            <div>
+              <span>01 / THE AWARD</span
+              ><strong>Who gives it — and who pays?</strong>
+            </div>
+            <div>
+              <span>02 / THE RANKING</span
+              ><strong>What was actually measured?</strong>
+            </div>
+            <div>
+              <span>03 / THE REFERRAL</span
+              ><strong>Whose interests influence the recommendation?</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="editorial"
+        id="questions"
+        aria-labelledby="questions-title"
+      >
+        <div class="shell">
+          <div class="editorial-top" data-reveal>
+            <div>
+              <div class="eyebrow eyebrow-dark">THE QUESTIONS WORTH ASKING</div>
+              <h2 id="questions-title">
+                Look past the <em>polish.</em><br />Find the <em>proof.</em>
+              </h2>
+            </div>
+            <p>
+              Not every award or referral is misleading. But a polished badge
+              cannot tell you how it was earned. Here's how to look a little
+              closer.
+            </p>
+          </div>
+          <div class="question-grid editorial-rows" id="question-grid">
+            <article class="question-card" data-reveal>
+              <div class="question-visual award-visual" aria-hidden="true">
+                <span class="fake-ribbon">TOP AGENT<span>★</span></span
+                ><span class="visual-annotation">QUESTION THE BADGE</span>
+              </div>
+              <div class="question-body">
+                <span class="question-index">01 / AWARDS</span>
+                <h3>An award tells a story. Ask who wrote it.</h3>
+                <p>
+                  Some programs involve paid entry, sponsorship or marketing
+                  packages. Find out what the award actually recognises.
+                </p>
+                <button
+                  class="question-toggle"
+                  type="button"
+                  aria-expanded="false"
+                >
+                  What should I ask? <span aria-hidden="true">+</span>
+                </button>
+                <div class="question-answer" hidden>
+                  <p>
+                    Who runs the award? Are entries paid? Are the criteria and
+                    judging process publicly available? Is it based on audited
+                    performance, popularity or promotion?
+                  </p>
+                </div>
+              </div>
+            </article>
+            <article class="question-card" data-reveal>
+              <div class="question-visual ranking-visual" aria-hidden="true">
+                <span class="ranking-line"><i></i><i></i><i></i><i></i></span
+                ><span class="ranking-label">#1 ?</span
+                ><span class="visual-annotation">QUESTION THE RANKING</span>
+              </div>
+              <div class="question-body">
+                <span class="question-index">02 / RANKINGS</span>
+                <h3>“Number one” means very little without a method.</h3>
+                <p>
+                  A ranking can be based on a suburb, time period, review count
+                  or selected metric. The fine print matters.
+                </p>
+                <button
+                  class="question-toggle"
+                  type="button"
+                  aria-expanded="false"
+                >
+                  What should I ask? <span aria-hidden="true">+</span>
+                </button>
+                <div class="question-answer" hidden>
+                  <p>
+                    Number one at what, exactly? Across which dates and
+                    locations? Who supplied the data, and can I independently
+                    check the methodology?
+                  </p>
+                </div>
+              </div>
+            </article>
+            <article class="question-card" data-reveal>
+              <div class="question-visual referral-visual" aria-hidden="true">
+                <span class="ref-node">YOU</span><span class="ref-link"></span
+                ><span class="ref-node agent-node">AGENT</span
+                ><span class="ref-corner">$?</span
+                ><span class="visual-annotation">QUESTION THE INCENTIVE</span>
+              </div>
+              <div class="question-body">
+                <span class="question-index">03 / REFERRALS</span>
+                <h3>Follow the recommendation. Then follow the incentive.</h3>
+                <p>
+                  If a service is paid when it refers you to an agent,
+                  understand how that relationship affects what you're shown.
+                </p>
+                <button
+                  class="question-toggle"
+                  type="button"
+                  aria-expanded="false"
+                >
+                  What should I ask? <span aria-hidden="true">+</span>
+                </button>
+                <div class="question-answer" hidden>
+                  <p>
+                    Does the platform receive referral fees? Are all local
+                    agents considered? Can agents pay for visibility or priority
+                    placement? What is disclosed to consumers?
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing" aria-labelledby="closing-title">
+        <div class="closing-glow" aria-hidden="true"></div>
+        <div class="shell closing-shell" data-reveal>
+          <div class="eyebrow eyebrow-light">THE NEXT QUESTION IS YOURS</div>
+          <h2 id="closing-title">
+            Don't take their word for it.<br /><em>Check the record.</em>
+          </h2>
+          <p>
+            Two separate checks. A clearer picture. No payment or account
+            required.
+          </p>
+          <a href="#search" class="btn btn-primary closing-cta"
+            >Verify an agent
+            <span class="btn-arrow" aria-hidden="true">↗</span></a
+          >
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="sources">
+      <div class="shell footer-top">
+        <div>
+          <div class="footer-brand">Agent<span>Check</span><b>.</b></div>
+          <p>Know your agent. Check the facts.</p>
+        </div>
+        <div>
+          <strong>Official resources</strong
+          ><a
+            href="https://verify.licence.nsw.gov.au/home/Property"
+            target="_blank"
+            rel="noopener noreferrer"
+            >NSW property licence register ↗</a
+          ><a
+            href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register"
+            target="_blank"
+            rel="noopener noreferrer"
+            >NSW Fair Trading Name and Shame Register ↗</a
+          >
+        </div>
+        <div>
+          <strong>About this service</strong>
+          <p>
+            Independent consumer information. Not affiliated with, approved by
+            or endorsed by the NSW Government. A current licence does not
+            establish an absence of regulatory actions.
+          </p>
         </div>
       </div>
-    </section>
-
-    <section class="results-section" id="results-section" hidden aria-busy="false" aria-live="polite">
-      <div class="container results-wrap">
-        <div class="results-heading">
-          <div><span class="eyebrow section-eyebrow" id="results-kicker">NSW GOVERNMENT RECORDS</span><h2 id="results-title">Search results</h2><p id="results-subtitle">Choose the correct agent using their name, suburb and licence number.</p></div>
-          <button class="quiet-button" id="clear-button" type="button">← New search</button>
-        </div>
-        <div id="status-message" class="status-message" role="status" hidden></div>
-        <div class="results-list" id="results-list"></div>
-        <div class="detail-panel" id="detail-panel" hidden></div>
+      <div class="shell footer-bottom">
+        <span>© <span id="year">2026</span> AgentCheck · Australia</span
+        ><span><a href="#privacy">Privacy &amp; how it works</a></span>
+      </div>
+    </footer>
+    <section id="privacy" class="privacy-note">
+      <div class="shell">
+        <h2>Privacy &amp; how it works</h2>
+        <p>
+          Your search is sent to AgentCheck’s server and the NSW licence
+          service. AgentCheck does not create an account, save your searches to
+          a database or send your reported register findings to the government.
+          The selected public licence record and your reported result can remain
+          in this browser tab for up to 30 minutes to help you return from the
+          register. “Start a new search” clears this saved journey. Browser
+          storage may remain until the tab closes; expired entries are discarded
+          when the page next opens.
+        </p>
+        <p>
+          The hosting and government providers may retain operational access
+          logs. Licence status is time-specific. AgentCheck does not
+          independently search the Name and Shame Register, endorse an agent or
+          assess their suitability.
+        </p>
       </div>
     </section>
-
-    <section class="education-section" id="how-it-works" aria-labelledby="education-heading">
-      <div class="container">
-        <div class="education-heading"><div><span class="eyebrow section-eyebrow">BEFORE YOU APPOINT</span><h2 id="education-heading">Two important checks.<br><span>One better decision.</span></h2></div><p>A current licence is only part of the picture. Checking published regulatory actions can reveal information worth discussing before you sign.</p></div>
-        <div class="education-grid">
-          <article class="education-card"><div class="ed-icon ed-blue" aria-hidden="true">01</div><h3>Confirm the licence</h3><p>Check who the agent is, their licence status, the authorised activities and their listed location.</p></article>
-          <article class="education-card"><div class="ed-icon ed-amber" aria-hidden="true">02</div><h3>Check regulatory actions</h3><p>Search the separate NSW Fair Trading Name and Shame Register before making your decision.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="sources-section" id="official-sources" aria-labelledby="sources-heading">
-      <div class="container sources-content"><div><span class="eyebrow section-eyebrow">KNOW THE SOURCE</span><h2 id="sources-heading">Government records. Independent service.</h2><p>Licence information is retrieved from NSW Government records. The regulatory register is separate and should be checked directly.</p></div><div class="source-actions"><a href="https://verify.licence.nsw.gov.au/home/Property" target="_blank" rel="noopener noreferrer">NSW property licence register <span aria-hidden="true">↗</span></a><a href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register" target="_blank" rel="noopener noreferrer">NSW Fair Trading Name and Shame Register <span aria-hidden="true">↗</span></a></div></div>
-    </section>
-  </main>
-  <footer class="footer"><div class="container footer-content"><div><strong>AgentCheck.</strong><p>Independent consumer information service. Not affiliated with or endorsed by the NSW Government.</p></div><div class="footer-meta">NSW licence records are checked live. Regulatory findings are not checked automatically.<br>© <span id="year">2026</span> AgentCheck · Australia</div></div></footer>
-  <div class="toast" role="status" aria-live="polite" id="toast" hidden></div>
-</body>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  </body>
 </html>

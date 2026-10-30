@@ -23,3 +23,19 @@ build/
 .DS_Store
 *.pem
 *.tsbuildinfo
+
+# Cloudflare local secrets, generated bundles and tooling
+.dev.vars
+.dev.vars.*
+.wrangler/
+.openai/
+dist/
+coverage/
+test-results/
+playwright-report/
+*.zip
+*.key
+*.p12
+*.pfx
+*.crt
+*.local

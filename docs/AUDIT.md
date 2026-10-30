@@ -37,3 +37,7 @@ The separate Fair Trading Name and Shame Register is a visitor handoff. AgentChe
 ## Isolation
 
 Only AgentCheck repository/source, public site, supplied candidate, and relevant public platform/government documentation were used. No Valdero resources, Supabase systems, Vercel projects, DNS, account-wide settings or production secrets were accessed or changed. Unrelated search suggestions are excluded from the task.
+
+## Subsequent deployment evidence
+
+The baseline commit's GitHub **check run** (distinct from commit statuses) was found after the initial audit. `Cloudflare Pages` reported success for an existing `studio-redesign` preview under `agentcheck-3o4.pages.dev`; its project-scoped dashboard link identifies the Pages project as `agentcheck`. This confirms an existing automatic preview integration. No Cloudflare settings were changed.
