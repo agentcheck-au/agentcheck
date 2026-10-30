@@ -1,0 +1,25 @@
+
+# Dependencies
+node_modules/
+.pnp.*
+
+# Next.js
+.next/
+out/
+build/
+
+# Environment variables and API secrets
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+
+# Other
+.DS_Store
+*.pem
+*.tsbuildinfo
