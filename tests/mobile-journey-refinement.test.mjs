@@ -38,7 +38,7 @@ test("HTML loads new asset paths so cached pre-release JavaScript cannot run", (
   assert.match(html, /src="\/app-20261031-mobile-v3\.js"/);
   assert.match(html, /href="\/styles-20261031-mobile-v3\.css"/);
   const deployedApp = readFileSync(new URL("../public/app-20261031-mobile-v3.js", import.meta.url), "utf8");
-  const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v3.css", import.meta.url), "utf8");
+  const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v4.css", import.meta.url), "utf8");
   assert.equal(deployedApp, app);
   assert.equal(deployedCss, css);
 });
@@ -47,4 +47,19 @@ test("iOS waits for returned results before scrolling and does not focus the res
   assert.match(app, /if \(isMobileViewport\(\)\) revealResultsOnMobile\(id\)/);
   assert.match(app, /if \(isMobileViewport\(\)\) return;\s*node\.tabIndex/);
   assert.match(css, /-webkit-text-size-adjust: 100%/);
+});
+
+test("SEO and public information pages include crawlable, truthful metadata", () => {
+  const about = readFileSync(new URL("../public/about/index.html", import.meta.url), "utf8");
+  const privacy = readFileSync(new URL("../public/privacy/index.html", import.meta.url), "utf8");
+  const robots = readFileSync(new URL("../public/robots.txt", import.meta.url), "utf8");
+  const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
+  assert.match(html, /https:\/\/agentcheck\.au\/agentcheck-share\.png/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/agentcheck\.au\/"/);
+  assert.match(html, /application\/ld\+json/);
+  assert.match(about, /not a government website/);
+  assert.match(privacy, /30 minutes/);
+  assert.match(robots, /Disallow: \/api\//);
+  assert.match(sitemap, /https:\/\/agentcheck\.au\/about\//);
+  assert.match(html, /class="footer-sitemap"/);
 });

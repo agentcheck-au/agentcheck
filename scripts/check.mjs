@@ -7,13 +7,19 @@ const allowed = new Set([
   "app.js",
   "app-20261031-mobile-v3.js",
   "styles.css",
-  "styles-20261031-mobile-v3.css",
+  "styles-20261031-mobile-v4.css",
   "_headers",
   "_routes.json",
   "favicon.svg",
   "sydney-harbour.webp",
   "referral-motion.css",
   "referral-motion.js",
+  "about",
+  "privacy",
+  "agentcheck-badge.svg",
+  "agentcheck-share.png",
+  "robots.txt",
+  "sitemap.xml",
 ]);
 for (const file of publicFiles)
   assert.ok(allowed.has(file), `Unexpected public artifact: ${file}`);
@@ -32,7 +38,7 @@ for (const file of [
 // The deployed cache-busting copies must exactly match canonical sources.
 for (const [source, deployed] of [
   ["public/app.js", "public/app-20261031-mobile-v3.js"],
-  ["public/styles.css", "public/styles-20261031-mobile-v3.css"],
+  ["public/styles.css", "public/styles-20261031-mobile-v4.css"],
 ]) {
   assert.equal(await readFile(deployed, "utf8"), await readFile(source, "utf8"),
     `Deployed asset out of sync: ${deployed}`);
@@ -42,8 +48,22 @@ const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
 assert.equal(ids.length, new Set(ids).size, "Duplicate HTML IDs");
 for (const [, id] of html.matchAll(/href="#([^"]+)"/g))
   assert.ok(ids.includes(id), `Broken anchor #${id}`);
-for (const [, url] of html.matchAll(/(?:src|href)="(\/[^"#]+)"/g))
-  assert.ok(publicFiles.includes(url.slice(1)), `Missing local asset ${url}`);
+for (const [, url] of html.matchAll(/(?:src|href)="(\/[^"#]+)"/g)) {
+  const path = url.slice(1);
+  const exists = publicFiles.includes(path) || (path.endsWith("/") && publicFiles.includes(path.slice(0, -1)));
+  assert.ok(exists, `Missing local asset ${url}`);
+}
+for (const path of ["public/about/index.html", "public/privacy/index.html"]) {
+  const content = await readFile(path, "utf8");
+  assert.match(content, /<link rel="canonical"/);
+  assert.match(content, /<meta name="description"/);
+  assert.match(content, /agentcheck-share\.png/);
+}
+assert.match(html, /"@type":"WebSite"/);
+assert.match(html, /property="og:image"/);
+assert.match(html, /href="\/about\/"/);
+assert.match(html, /href="\/privacy\/"/);
+
 assert.ok(
   Buffer.byteLength(await readFile("public/sydney-harbour.webp")) < 100000,
   "Hero asset budget",

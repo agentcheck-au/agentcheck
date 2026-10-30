@@ -22,3 +22,18 @@
 
 /styles-20261031-mobile-v3.css
   Cache-Control: no-cache, must-revalidate
+
+/agentcheck-share.png
+  Cache-Control: public, max-age=86400
+
+/agentcheck-badge.svg
+  Cache-Control: public, max-age=86400
+
+/about/
+  Cache-Control: no-cache, must-revalidate
+
+/privacy/
+  Cache-Control: no-cache, must-revalidate
+
+/styles-20261031-mobile-v4.css
+  Cache-Control: no-cache, must-revalidate
