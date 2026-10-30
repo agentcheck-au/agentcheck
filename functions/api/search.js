@@ -5,6 +5,7 @@ import {
   clientKey,
   responseJson,
   publicError,
+  logNswFailure,
 } from "../../lib/nsw-worker.js";
 
 export async function onRequestGet({ request, env }) {
@@ -27,11 +28,13 @@ export async function onRequestGet({ request, env }) {
     const data = await requestNsw(env, "/propertyregister/v1/browse", {
       searchText: q,
     });
-    if (!Array.isArray(data))
+    if (!Array.isArray(data)) {
+      logNswFailure("browse_shape_invalid");
       return responseJson(
         { error: "Unexpected response from the NSW service." },
         502,
       );
+    }
     return responseJson({
       results: data
         .slice(0, 20)
