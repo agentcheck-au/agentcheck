@@ -21,3 +21,25 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm run check
+
+      - name: Smoke test production licence search (no sensitive output)
+        run: |
+          node --input-type=module <<'EOF'
+          const url = "https://agentcheck.au/api/search?q=Glenn%20Hagan";
+          try {
+            const response = await fetch(url, { signal: AbortSignal.timeout(15000), headers: { Accept: "application/json" } });
+            const contentType = response.headers.get("content-type") || "";
+            let data = null;
+            if (contentType.includes("application/json")) {
+              data = await response.json();
+            }
+            console.log("production_search_smoke", JSON.stringify({
+              status: response.status,
+              isJson: !!data,
+              resultCount: Array.isArray(data?.results) ? data.results.length : null,
+              errorCategory: data?.error ? (response.status === 502 ? "upstream_502" : "application_error") : null,
+            }));
+          } catch (error) {
+            console.log("production_search_smoke", JSON.stringify({ transportError: error.name }));
+          }
+          EOF
