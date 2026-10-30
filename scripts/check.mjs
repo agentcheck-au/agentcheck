@@ -50,7 +50,7 @@ for (const [, id] of html.matchAll(/href="#([^"]+)"/g))
   assert.ok(ids.includes(id), `Broken anchor #${id}`);
 for (const [, url] of html.matchAll(/(?:src|href)="(\/[^"#]+)"/g)) {
   const path = url.slice(1);
-  const exists = publicFiles.includes(path) || (path.endsWith("/") && publicFiles.includes(path.slice(0, -1)));
+  const exists = path === "" || publicFiles.includes(path) || (path.endsWith("/") && publicFiles.includes(path.slice(0, -1)));
   assert.ok(exists, `Missing local asset ${url}`);
 }
 for (const path of ["public/about/index.html", "public/privacy/index.html"]) {
