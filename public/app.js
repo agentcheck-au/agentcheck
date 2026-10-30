@@ -901,34 +901,32 @@
   });
   motionPreference.addEventListener?.("change", syncMotion);
   syncMotion();
-  const observer =
-    !reduced() && "IntersectionObserver" in window
-      ? new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries)
-              if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-                observer.unobserve(entry.target);
-              }
-          },
-          { threshold: 0.08 },
-        )
-      : null;
-  // Editorial cards should not animate as soon as a few pixels appear at
-  // the bottom of the screen. Each card reveals when it is being read.
-  const editorialObserver =
-    !reduced() && "IntersectionObserver" in window
-      ? new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries)
-              if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-                editorialObserver.unobserve(entry.target);
-              }
-          },
-          { threshold: 0.28, rootMargin: "0px 0px -18% 0px" },
-        )
-      : null;
+  // Reversible, section-specific reveals: the same section responds when
+  // scrolling back up. Remove only after it is completely out of view, so
+  // nothing disappears while the visitor is still reading it.
+  function makeRevealObserver(threshold, rootMargin) {
+    return new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.intersectionRatio >= threshold) {
+            entry.target.classList.add("visible");
+          } else if (!entry.isIntersecting) {
+            entry.target.classList.remove("visible");
+          }
+        }
+      },
+      { threshold: [0, threshold], rootMargin },
+    );
+  }
+  const canObserve = !reduced() && "IntersectionObserver" in window;
+  const observer = canObserve
+    ? makeRevealObserver(0.08, "0px 0px -10% 0px")
+    : null;
+  // The large editorial cards should not animate until the reader has
+  // actually reached that section, in either scrolling direction.
+  const editorialObserver = canObserve
+    ? makeRevealObserver(0.28, "0px 0px -18% 0px")
+    : null;
   for (const node of document.querySelectorAll("[data-reveal]")) {
     if (node.matches(".question-card")) {
       if (editorialObserver) editorialObserver.observe(node);
@@ -937,10 +935,16 @@
     else node.classList.add("visible");
   }
   let scrollFrame = 0;
+  let previousScrollY = window.scrollY || 0;
   function updateScroll() {
     scrollFrame = 0;
     const y = window.scrollY || 0,
       max = document.documentElement.scrollHeight - innerHeight;
+    if (Math.abs(y - previousScrollY) > 3) {
+      document.documentElement.dataset.scrollDirection =
+        y < previousScrollY ? "up" : "down";
+    }
+    previousScrollY = y;
     $("reading-progress").style.width =
       `${Math.max(0, Math.min(100, max ? (y / max) * 100 : 0))}%`;
     $("site-header").classList.toggle("is-scrolled", y > 60);

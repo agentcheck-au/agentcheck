@@ -32,7 +32,7 @@
   if ("IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
       (entries) => {
-        inView = entries.some((entry) => entry.isIntersecting);
+        inView = entries.some((entry) => entry.intersectionRatio >= 0.55);
         update();
       },
       { threshold: 0.55, rootMargin: "0px 0px -12% 0px" },

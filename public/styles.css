@@ -2918,3 +2918,145 @@ summary {
   /* The first screen no longer contains a disclaimer or a bottom trust badge. */
   .hero-bottom { display: none; }
 }
+
+/* Compact hero and clearly separated verification journey.
+   The licence form is unchanged; only its presentation is reduced. */
+.hero { min-height: 0; }
+.hero-shell {
+  min-height: min(100svh, 840px);
+  padding-top: 125px;
+  padding-bottom: 56px;
+}
+.hero h1 {
+  max-width: 850px;
+  margin: 18px 0 17px;
+  font-size: clamp(46px, 6.1vw, 78px);
+}
+.hero-copy > p {
+  max-width: 590px;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.search-panel {
+  width: min(650px, 100%);
+  margin-top: 26px;
+  padding: 21px 23px 23px;
+  border-radius: 16px;
+}
+.search-panel-head { margin-bottom: 14px; }
+.search-panel h2 { margin-top: 3px; font-size: 19px; }
+.search-panel label { margin-bottom: 7px; }
+.search-panel .search-input-wrap input { height: 52px; }
+.search-panel .btn-search { min-height: 52px; height: 52px; }
+.hero-verification-steps {
+  width: min(650px, 100%);
+  margin-top: 17px;
+  padding: 15px 2px 0;
+  border-top: 1px solid #a2c3ef55;
+  color: #d8e8ff;
+}
+.hero-verification-steps .two-check-note {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 9px 20px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #e1ecff;
+  font-size: 12px;
+}
+.hero-verification-steps .two-check-note span {
+  font-weight: 750;
+}
+.hero-verification-steps .two-check-note strong {
+  margin-left: 0;
+  color: #b5cbea;
+  font-weight: 450;
+}
+.hero-verification-steps .search-panel-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 11px 0 0;
+  padding: 0;
+  border: 0;
+  color: #b7cbe9;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.hero-verification-steps .source-dot {
+  flex: 0 0 7px;
+  width: 7px;
+  height: 7px;
+  margin: 0;
+  background: #69a7ff;
+  box-shadow: 0 0 12px #5b9aff55;
+}
+.hero-bottom { margin-top: 26px; }
+
+/* Upward and downward scrolling have matching, subtle entrance directions. */
+html.enhanced[data-scroll-direction="up"] [data-reveal]:not(.visible) {
+  transform: translateY(-20px);
+}
+html.enhanced[data-scroll-direction="up"] .question-card[data-reveal]:not(.visible) {
+  transform: translateY(-34px);
+}
+@media (max-width: 760px) {
+  .hero-shell {
+    min-height: 0;
+    padding-top: 116px;
+    padding-bottom: 50px;
+  }
+  .hero h1 {
+    font-size: clamp(37px, 9.1vw, 57px);
+    line-height: 1.08;
+    margin: 16px 0 15px;
+  }
+  .hero-copy > p {
+    max-width: 350px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .search-panel {
+    width: 100%;
+    margin-top: 23px;
+    padding: 18px 18px 20px;
+    border-radius: 15px;
+  }
+  .search-panel-head { margin-bottom: 14px; }
+  .search-panel h2 { font-size: 17px; }
+  .search-panel label { font-size: 12px; }
+  .search-panel .search-controls { gap: 9px; }
+  .search-panel .search-input-wrap input {
+    height: 50px;
+    font-size: 14px;
+  }
+  .search-panel .btn-search {
+    min-height: 50px;
+    height: 50px;
+  }
+  .hero-verification-steps {
+    width: 100%;
+    margin-top: 17px;
+    padding-top: 14px;
+  }
+  .hero-verification-steps .two-check-note {
+    gap: 8px 13px;
+    font-size: 11px;
+  }
+  .hero-verification-steps .two-check-note strong {
+    flex-basis: 100%;
+    width: auto;
+    font-size: 11px;
+  }
+  .hero-verification-steps .search-panel-foot { font-size: 10px; }
+  .editorial-top h2 {
+    font-size: clamp(37px, 9.1vw, 46px);
+    line-height: 1.1;
+  }
+}
+@media (max-width: 370px) {
+  .hero h1 { font-size: 36px; }
+  .hero-verification-steps .two-check-note { gap: 7px 10px; font-size: 10px; }
+}
