@@ -36,9 +36,9 @@ test("result cards invite visitors to view a record without claiming verificatio
 
 test("HTML loads new asset paths so cached pre-release JavaScript cannot run", () => {
   assert.match(html, /src="\/app-20261031-simple-v6\.js"/);
-  assert.match(html, /href="\/styles-20261031-simple-v7\.css"/);
+  assert.match(html, /href="\/styles-20261031-brand-v8\.css"/);
   const deployedApp = readFileSync(new URL("../public/app-20261031-simple-v6.js", import.meta.url), "utf8");
-  const deployedCss = readFileSync(new URL("../public/styles-20261031-simple-v7.css", import.meta.url), "utf8");
+  const deployedCss = readFileSync(new URL("../public/styles-20261031-brand-v8.css", import.meta.url), "utf8");
   assert.equal(deployedApp, app);
   assert.equal(deployedCss, css);
 });
@@ -54,7 +54,7 @@ test("SEO and public information pages include crawlable, truthful metadata", ()
   const privacy = readFileSync(new URL("../public/privacy/index.html", import.meta.url), "utf8");
   const robots = readFileSync(new URL("../public/robots.txt", import.meta.url), "utf8");
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
-  assert.match(html, /https:\/\/agentcheck\.au\/agentcheck-share-v2\.png/);
+  assert.match(html, /https:\/\/agentcheck\.au\/agentcheck-share-v3\.png/);
   assert.match(html, /<link rel="canonical" href="https:\/\/agentcheck\.au\/"/);
   assert.match(html, /application\/ld\+json/);
   assert.match(about, /not a government website/);

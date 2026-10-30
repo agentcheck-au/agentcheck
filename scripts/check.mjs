@@ -9,6 +9,7 @@ const allowed = new Set([
   "app-20261031-mobile-v4.js",
   "app-20261031-mobile-v5.js",
   "styles.css",
+  "styles-20261031-brand-v8.css",
   "styles-20261031-simple-v7.css",
   "app-20261031-simple-v6.js",
   "styles-20261031-mobile-v4.css",
@@ -17,6 +18,14 @@ const allowed = new Set([
   "_headers",
   "_routes.json",
   "favicon.svg",
+  "favicon.png",
+  "favicon.ico",
+  "apple-touch-icon.png",
+  "agentcheck-wordmark-v3.svg",
+  "agentcheck-wordmark-light-v3.svg",
+  "agentcheck-icon-v3.svg",
+  "agentcheck-icon-v3.png",
+  "agentcheck-logo-v3.png",
   "sydney-harbour.webp",
   "referral-motion.css",
   "referral-motion.js",
@@ -24,6 +33,7 @@ const allowed = new Set([
   "privacy",
   "agentcheck-badge.svg",
   "agentcheck-share.png",
+  "agentcheck-share-v3.png",
   "agentcheck-share-v2.png",
   "robots.txt",
   "sitemap.xml",
@@ -45,7 +55,7 @@ for (const file of [
 // The deployed cache-busting copies must exactly match canonical sources.
 for (const [source, deployed] of [
   ["public/app.js", "public/app-20261031-simple-v6.js"],
-  ["public/styles.css", "public/styles-20261031-simple-v7.css"],
+  ["public/styles.css", "public/styles-20261031-brand-v8.css"],
 ]) {
   assert.equal(await readFile(deployed, "utf8"), await readFile(source, "utf8"),
     `Deployed asset out of sync: ${deployed}`);
@@ -64,14 +74,35 @@ for (const path of ["public/about/index.html", "public/privacy/index.html"]) {
   const content = await readFile(path, "utf8");
   assert.match(content, /<link rel="canonical"/);
   assert.match(content, /<meta name="description"/);
-  assert.match(content, /agentcheck-share-v2\.png/);
+  assert.match(content, /agentcheck-share-v3\.png/);
 }
 assert.match(html, /"@type":"WebSite"/);
 assert.match(html, /property="og:image"/);
-assert.ok(html.includes("agentcheck-share-v2.png"));
+assert.ok(html.includes("agentcheck-share-v3.png"));
 assert.match(html, /id="two-registers"/);
 assert.match(html, /href="\/about\/"/);
 assert.match(html, /href="\/privacy\/"/);
+
+// Validate the actual exported pixels and the references crawlers/link services use.
+for (const [file, width, height] of [
+  ["favicon.png", 96, 96],
+  ["apple-touch-icon.png", 180, 180],
+  ["agentcheck-icon-v3.png", 512, 512],
+  ["agentcheck-logo-v3.png", 1200, 260],
+  ["agentcheck-share-v3.png", 1200, 630],
+]) {
+  const bytes = await readFile(`public/${file}`);
+  assert.equal(bytes.subarray(0, 8).toString("hex"), "89504e470d0a1a0a", `${file}: PNG signature`);
+  assert.equal(bytes.readUInt32BE(16), width, `${file}: width`);
+  assert.equal(bytes.readUInt32BE(20), height, `${file}: height`);
+}
+for (const page of ["public/index.html", "public/about/index.html", "public/privacy/index.html"]) {
+  const content = await readFile(page, "utf8");
+  assert.match(content, /rel="icon" href="\/favicon\.png"/);
+  assert.match(content, /rel="apple-touch-icon"/);
+  assert.match(content, /src="\/agentcheck-wordmark-v3\.svg"/);
+  assert.doesNotMatch(content, /agentcheck-badge\.svg|agentcheck-share-v2\.png|class="brand-mark"/);
+}
 
 assert.ok(
   Buffer.byteLength(await readFile("public/sydney-harbour.webp")) < 100000,

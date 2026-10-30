@@ -3411,3 +3411,12 @@ body { font-size: 17px; }
   .regulatory-card { gap: 32px; }
   .regulatory-cta { font-size: 16px; padding: 18px; }
 }
+
+
+/* Approved brand: a small raised shield-and-tick beside the wordmark. */
+.brand { gap: 0; min-width: 0; }
+.brand .logo-wordmark { display: block; width: 176px; height: auto; max-width: 100%; }
+.site-map-footer .footer-identity .logo-wordmark { width: 240px; height: auto; border-radius: 0; }
+@media (max-width: 370px) {
+  .brand .logo-wordmark { width: 140px; }
+}

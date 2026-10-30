@@ -48,3 +48,11 @@ Valdero was outside scope. No database, Vercel project, DNS, account-wide, produ
 - `npm test`: 67/67 passed. `npm run check` and `git diff --check`: passed.
 - New versioned JS/CSS assets match canonical sources; previous asset URLs retained for open tabs.
 
+# Approved shield-and-tick logo — 31 October 2026
+
+- Owner approved the corrected logo: the tick remains inside the shield; the complete mark is small and raised at the right of the AgentCheck wordmark.
+- Applied outlined SVG wordmarks to the homepage header/footer and About/Privacy headers. Small-display strokes stay legible without changing the approved proportions.
+- Updated Open Graph/Twitter artwork to a new 1200×630 URL, structured-data logo, 96px PNG favicon, ICO fallbacks and 180px Apple touch icon. Legacy direct badge/share URLs also use the current identity.
+- 67/67 tests and static checks pass. Exported PNG dimensions/signatures and each public page's logo/icon/share references are checked. Desktop and 320px mobile header reviewed; no horizontal document overflow.
+- User explicitly approved applying the corrected logo and merging it with the readability changes into main. Pre-release main: `2010fd02038f3feb844fd60d067389f36b944591`; pre-logo review: `3be074967f6970739220a51952dc1f4aa9038ae1`.
+
