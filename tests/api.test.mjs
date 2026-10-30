@@ -158,7 +158,7 @@ test("mocked search preserves OneGov endpoint, escapes query, caps results, excl
   const browse = calls.find((c) => c.url.includes("/browse"));
   assert.equal(new URL(browse.url).hostname, "api.onegov.nsw.gov.au");
   assert.equal(new URL(browse.url).searchParams.get("searchText"), "Alex & Co");
-  assert.equal(browse.options.redirect, "error");
+  assert.equal(browse.options.redirect, "manual"); // explicit 3xx rejection prevents forwarding tokens
   assert.equal(browse.options.headers.Authorization, "Bearer mock-token");
 });
 test("mocked detail requires an object, handles upstream failure, exposes only public fields", async (t) => {
