@@ -460,6 +460,7 @@
     const number = value(info.licenceNumber, "");
     const card = add(parent, "section", "regulatory-card");
     card.setAttribute("aria-label", "Check two: regulatory register");
+    card.id = "regulatory-check";
     const content = add(card, "div", "regulatory-content");
     add(content, "div", "regulatory-kicker", "CHECK 02 / 02 · DO THIS NEXT");
     add(content, "h3", "", "A licence is only half the story.");
@@ -587,9 +588,9 @@
         "strong",
         "outcome-title",
         danger
-          ? "RED FLAG · Visitor-reported matching action"
+          ? "RED FLAG · Matching action selected"
           : type === "none"
-            ? "No matching entry · Visitor-reported"
+            ? "No matching entry · Selection recorded"
             : "Regulatory check still uncertain",
       );
       add(
@@ -597,16 +598,16 @@
         "p",
         "",
         danger
-          ? "You reported a matching published regulatory action. Read the notice, date, licence number and outcome carefully. Consider the seriousness and seek clarification before appointing this agent."
+          ? "A matching published regulatory action was selected. Read the notice, date, licence number and outcome carefully. Consider the seriousness and seek clarification before appointing this agent."
           : type === "none"
-            ? "You reported no matching entry. This is not an official all-clear or a guarantee that there is no other relevant history."
+            ? "No matching entry was selected. This is not an official all-clear or a guarantee that there is no other relevant history."
             : "Check both the licence number and name. If the identity or notice is unclear, contact NSW Fair Trading for clarification.",
       );
       add(
         answer,
         "small",
         "",
-        "This is your reported result, not a finding independently verified by AgentCheck. A current licence does not establish a clean disciplinary history.",
+        "This selection is not a finding independently verified by AgentCheck. A current licence does not establish a clean disciplinary history.",
       );
       if (danger)
         add(
@@ -626,8 +627,7 @@
   function profile(record, info, checkedAt) {
     const wrapper = el("div", "profile-layout");
     wrapper.append(progress(info.status));
-    // The second check stays above the extended record, so it is prominent on mobile.
-    regulatoryStep(wrapper, record, info);
+    // Complete check 01 before presenting the separate check 02.
     const card = add(wrapper, "article", "profile-card");
     const header = add(card, "div", "profile-head"),
       title = add(header, "div");
@@ -727,6 +727,14 @@
     );
     refresh.type = "button";
     refresh.addEventListener("click", () => selectRecord(record, true));
+    const nextStep = add(
+      card,
+      "a",
+      "btn btn-primary next-regulatory-step",
+      "Continue to Step 2 · Check regulatory history ↓",
+    );
+    nextStep.href = "#regulatory-check";
+    regulatoryStep(wrapper, record, info);
     return wrapper;
   }
   function detailsValid(info) {
@@ -852,8 +860,31 @@
       "Matching government licence records for your search.";
     notify("Contacting NSW Government records…");
     busy(true);
-    scrollTo(section);
-    focus($("results-title"));
+    // On iOS, the keyboard must finish closing before scrolling to newly
+    // rendered results. Scrolling while the visual viewport is compressed
+    // leaves Safari horizontally zoomed into the result layout.
+    const revealSearchResults = () => {
+      scrollTo(section);
+      focus($("results-title"));
+    };
+    if (window.matchMedia("(max-width: 760px)").matches) {
+      const viewport = window.visualViewport;
+      let settled = false;
+      const finish = () => {
+        if (settled || id !== revision) return;
+        settled = true;
+        viewport?.removeEventListener("resize", onViewportResize);
+        revealSearchResults();
+      };
+      const onViewportResize = () => {
+        if (!viewport || viewport.height >= window.innerHeight * 0.78)
+          window.setTimeout(finish, 80);
+      };
+      viewport?.addEventListener("resize", onViewportResize);
+      window.setTimeout(finish, 500);
+    } else {
+      revealSearchResults();
+    }
     try {
       const data = await api(`/api/search?q=${encodeURIComponent(q)}`, signal);
       if (id !== revision) return;
@@ -896,6 +927,9 @@
       return;
     }
     input.setCustomValidity("");
+    // Dismiss the iOS keyboard before changing sections; never suppress
+    // pinch zoom or modify the viewport's accessibility settings.
+    input.blur();
     search(q);
   });
   input.addEventListener("input", () => input.setCustomValidity(""));
