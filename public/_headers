@@ -49,3 +49,9 @@
 
 /styles-20261031-brand-v8.css
   Cache-Control: no-cache, must-revalidate
+
+/app-20261031-journey-v7.js
+  Cache-Control: no-cache, must-revalidate
+
+/styles-20261031-journey-v9.css
+  Cache-Control: no-cache, must-revalidate

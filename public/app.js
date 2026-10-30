@@ -522,35 +522,62 @@
     card.setAttribute("aria-label", "Check two: Name and Shame Register");
     card.id = "regulatory-check";
     const content = add(card, "div", "regulatory-content");
-    add(content, "div", "regulatory-kicker", "STEP 2 / 2 · NAME AND SHAME REGISTER");
-    add(content, "h3", "", "Check the Name and Shame Register.");
+    add(content, "div", "regulatory-kicker", "NEXT · STEP 2 / 2 · NAME AND SHAME REGISTER");
+    add(content, "h3", "", "Next: check the Name and Shame Register.");
     add(
       content,
       "p",
       "",
       "A current licence does not rule out regulatory action. Check this separate official register yourself.",
     );
+    const directions = add(content, "ol", "register-directions");
+    for (const [title, description] of [
+      [
+        "Open the register and paste",
+        "Your agent’s licence number is ready. Open the register, then paste the number into its search bar.",
+      ],
+      [
+        "Return here for guidance",
+        "Use your browser’s Back button after checking. Choose what you found below to see what it means.",
+      ],
+    ]) {
+      const step = add(directions, "li");
+      add(step, "strong", "", title);
+      add(step, "p", "", description);
+    }
     const action = add(card, "div", "regulatory-action");
     const licence = add(action, "div", "licence-to-copy");
-    add(licence, "span", "", "LICENCE NUMBER");
-    add(licence, "strong", "", number || "Not supplied");
+    const numberLabel = add(licence, "label", "", "YOUR AGENT’S LICENCE NUMBER");
+    numberLabel.htmlFor = "regulatory-licence-number";
+    const numberInput = add(licence, "input", "register-licence-number");
+    numberInput.id = "regulatory-licence-number";
+    numberInput.type = "text";
+    numberInput.readOnly = true;
+    numberInput.value = number || "Not supplied";
+    numberInput.addEventListener("click", () => numberInput.select());
     const button = add(
       action,
       "button",
       "btn btn-primary regulatory-cta",
-      "Copy licence & open Name and Shame Register ↗",
+      "Open Name and Shame Register",
     );
+    add(button, "span", "btn-arrow", "↗").setAttribute("aria-hidden", "true");
     button.type = "button";
     button.disabled = !number;
-    add(
+    button.setAttribute("aria-describedby", "regulatory-copy-hint");
+    const copyHint = add(
       action,
       "p",
       "regulatory-hint",
-      "Search the official site using the copied number or the agent’s name. Use Back to return. AgentCheck does not search this register.",
+      "We’ll copy the number when you open the register. AgentCheck does not search this register.",
     );
+    copyHint.id = "regulatory-copy-hint";
     const savedNotice = add(action, "p", "regulatory-hint");
+    savedNotice.hidden = true;
+    const help = add(action, "details", "handoff-help");
+    add(help, "summary", "", "Need help copying?");
     officialLink(
-      action,
+      help,
       "Open Name and Shame Register without copying ↗",
       REGISTER,
       true,
@@ -558,7 +585,7 @@
     const fallback = add(parent, "div");
     fallback.hidden = true;
     const manual = add(
-      action,
+      help,
       "button",
       "text-button manual-copy",
       "Copy manually instead",
@@ -578,6 +605,7 @@
       if (expected !== revision || activeRecord?.licenceID !== record.licenceID)
         return;
       if (!saveJourney()) {
+        savedNotice.hidden = false;
         savedNotice.textContent =
           "Your browser blocked session storage. Keep this tab open and use the register link in a new tab.";
         const link = officialLink(action, "Open register in a new tab ↗");
@@ -787,13 +815,6 @@
     );
     refresh.type = "button";
     refresh.addEventListener("click", () => selectRecord(record, true));
-    const nextStep = add(
-      card,
-      "a",
-      "btn btn-primary next-regulatory-step",
-      "Continue to Step 2 · Name and Shame Register ↓",
-    );
-    nextStep.href = "#regulatory-check";
     regulatoryStep(wrapper, record, info);
     return wrapper;
   }
