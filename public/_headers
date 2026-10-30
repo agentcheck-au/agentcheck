@@ -55,3 +55,21 @@
 
 /styles-20261031-journey-v9.css
   Cache-Control: no-cache, must-revalidate
+
+/app-20261031-seo-v8.js
+  Cache-Control: no-cache, must-revalidate
+
+/styles-20261031-seo-v10.css
+  Cache-Control: no-cache, must-revalidate
+
+/guides-20261031.css
+  Cache-Control: no-cache, must-revalidate
+
+/check-nsw-real-estate-agent/
+  Cache-Control: no-cache, must-revalidate
+
+/check-nsw-real-estate-agency/
+  Cache-Control: no-cache, must-revalidate
+
+/nsw-name-and-shame-register/
+  Cache-Control: no-cache, must-revalidate

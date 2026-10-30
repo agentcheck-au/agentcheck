@@ -37,6 +37,7 @@ const records = [
     postcode: "",
   },
 ];
+const corporation = { licenceID: "qa-corporation", licenceName: "Example Property Pty Ltd", licenceNumber: "DEMO99999", licenceType: "Property - Corporation", status: "Current", suburb: "Riverstone", postcode: "2765" };
 const types = {
   ".html": "text/html",
   ".js": "text/javascript",
@@ -72,11 +73,11 @@ createServer(async (req, res) => {
     if (q === "quota")
       return json(res, { error: "Simulated lookup limit. Try later." }, 429);
     const found =
-      q === "none" ? [] : q === "single" ? records.slice(0, 1) : records;
+      q === "corporation" ? [corporation] : q === "none" ? [] : q === "single" ? records.slice(0, 1) : records;
     return json(res, { results: found, truncated: q === "many", checkedAt });
   }
   if (url.pathname === "/api/details") {
-    const record = records.find(
+    const record = [...records, corporation].find(
       (r) => r.licenceID === url.searchParams.get("id"),
     );
     if (!record)

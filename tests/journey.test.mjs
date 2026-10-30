@@ -176,6 +176,31 @@ test("one result still requires explicit identity selection, then verifies a sep
   );
   assert.equal(ui.focused.id, "results-title");
 });
+test("corporation records retain their company identity through details and register handoff", async () => {
+  const company = {
+    ...record,
+    licenceID: "company-1",
+    licenceName: "Example Property Pty Ltd",
+    licenceNumber: "CORP123",
+    licenceType: "Property - Corporation",
+  };
+  const ui = boot({
+    fetcher: async (url) => Response.json(url.startsWith("/api/search")
+      ? { results: [company] }
+      : { detail: { ...info, ...company }, checkedAt: new Date().toISOString() }),
+  });
+  await ui.submit("Example Property Pty Ltd");
+  assert.match(ui.$("results-list").textContent, /Property - Corporation/);
+  await ui.select();
+  assert.equal(ui.document.querySelector(".profile-head h3").textContent, company.licenceName);
+  assert.match(ui.document.querySelector(".corporation-note").textContent, /Check the individual agent separately/);
+  assert.equal(ui.$("regulatory-licence-number").value, company.licenceNumber);
+  ui.click(ui.document.querySelector(".regulatory-cta"));
+  await flush();
+  assert.equal(ui.copied, company.licenceNumber);
+  assert.equal(ui.navigations.length, 1);
+  assert.match(ui.navigations[0], /nsw\.gov\.au/);
+});
 test("ambiguous records filter by returned suburb and preserve list on Back", async () => {
   const ui = boot({
     fetcher: async (url) =>

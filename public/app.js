@@ -159,7 +159,7 @@
     $("search-button").disabled = flag;
     $("search-button").firstChild.textContent = flag
       ? "Searching… "
-      : "Check agent ";
+      : "Check licence ";
   }
   function chip(text) {
     const label = value(text, "Status not supplied");
@@ -297,7 +297,7 @@
         list,
         "p",
         "notice",
-        "No returned records match this suburb. Clear the filter or search again with more of the agent’s name.",
+        "No returned records match this suburb. Clear the filter or search again with more of the person’s or company’s name.",
       );
   }
   function showRows(moveFocus = true) {
@@ -309,7 +309,7 @@
     $("results-kicker").textContent = "NSW GOVERNMENT LICENCE SEARCH";
     $("results-title").textContent =
       records.length === 1
-        ? "One record. Confirm it’s your agent."
+        ? "One record. Confirm the person or company."
         : `${records.length} matching licence records`;
     $("results-subtitle").textContent =
       "Start with the suburb. Match the name and licence number before selecting a record.";
@@ -534,7 +534,7 @@
     for (const [title, description] of [
       [
         "Open the register and paste",
-        "Your agent’s licence number is ready. Open the register, then paste the number into its search bar.",
+        "The selected licence number is ready. Open the register, then paste the number into its search bar.",
       ],
       [
         "Return here for guidance",
@@ -547,7 +547,7 @@
     }
     const action = add(card, "div", "regulatory-action");
     const licence = add(action, "div", "licence-to-copy");
-    const numberLabel = add(licence, "label", "", "YOUR AGENT’S LICENCE NUMBER");
+    const numberLabel = add(licence, "label", "", "SELECTED LICENCE NUMBER");
     numberLabel.htmlFor = "regulatory-licence-number";
     const numberInput = add(licence, "input", "register-licence-number");
     numberInput.id = "regulatory-licence-number";
@@ -629,7 +629,7 @@
     );
     const header = add(follow, "div", "followup-header"),
       words = add(header, "div");
-    add(words, "h3", "", "Did you find this agent on the Name and Shame Register?");
+    add(words, "h3", "", "Did you find this person or company on the Name and Shame Register?");
     add(
       words,
       "p",
@@ -686,7 +686,7 @@
         "p",
         "",
         danger
-          ? "A matching published regulatory action was selected. Read the notice, date, licence number and outcome carefully. Consider the seriousness and seek clarification before appointing this agent."
+          ? "A matching published regulatory action was selected. Read the notice, date, licence number and outcome carefully. Consider the seriousness and seek clarification before appointing this agent or agency."
           : type === "none"
             ? "No matching entry was selected. This is not an official all-clear or a guarantee that there is no other relevant history."
             : "Check both the licence number and name. If the identity or notice is unclear, contact NSW Fair Trading for clarification.",
@@ -727,6 +727,8 @@
       "profile-subtitle",
       `${value(record.suburb, "Suburb not published")} · ${value(info.licenceType)}`,
     );
+    if (/corporation/i.test(info.licenceType))
+      add(card, "p", "notice corporation-note", "This is a company licence. Check the individual agent separately. If the agency uses a trading name, confirm it belongs to this legal company.");
     header.append(chip(info.status));
     const grid = add(card, "dl", "profile-grid");
     for (const [label, content] of [

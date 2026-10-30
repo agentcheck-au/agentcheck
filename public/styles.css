@@ -3526,3 +3526,8 @@ body { font-size: 17px; }
   .regulatory-card { padding-inline: 18px; }
   .editorial-rows .question-card { padding: 20px; }
 }
+
+/* Keep agency guidance compact and the search-first layout readable. */
+.search-help { margin: 22px 0 0; color: #52647d; font-size: 15px; line-height: 1.7; }
+.search-help a { color: #175cc1; text-underline-offset: 3px; }
+.corporation-note { margin-block: 28px; line-height: 1.75; }
