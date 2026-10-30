@@ -24,7 +24,7 @@ jobs:
       - name: Inspect live AgentCheck API response types (read-only, no secrets)
         run: |
           node --input-type=module <<'EOF'
-          for (const path of ["/api/route-diagnostic-not-found", "/api/search?q=zzzxxyytestagent"]) {
+          for (const path of ["/api/route-diagnostic-not-found", "/api/search?q=a", "/api/details?id=abc", "/api/search?q=zzzxxyytestagent"]) {
             try {
               const response = await fetch("https://agentcheck.au" + path, {
                 headers: { Accept: "application/json" },
