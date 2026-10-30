@@ -38,7 +38,9 @@ jobs:
                 try {
                   const obj = JSON.parse(text);
                   summary = "json_keys=" + Object.keys(obj).join(",");
-                  if (typeof obj.error === "string") summary += " error=" + JSON.stringify(obj.error.slice(0, 140));
+                  for (const key of ["error", "error_code", "error_name", "error_category", "title", "detail", "cloudflare_error"]) {
+                    if (typeof obj[key] === "string" || typeof obj[key] === "number") summary += " " + key + "=" + JSON.stringify(String(obj[key]).slice(0, 180));
+                  }
                 } catch { summary = "invalid-json"; }
               } else {
                 const title = text.match(new RegExp("<title[^>]*>([^<]*)</title>", "i"));
