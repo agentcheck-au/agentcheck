@@ -61,9 +61,42 @@
       node.scrollIntoView?.({ behavior: "auto", block, inline: "nearest" });
     }
   };
+  const isMobileViewport = () => window.matchMedia("(max-width: 760px)").matches;
   const focus = (node) => {
+    // iOS can retain the keyboard's magnified visual viewport when focus
+    // moves during a programmatic scroll. Do not focus headings on mobile.
+    if (isMobileViewport()) return;
     node.tabIndex = -1;
     node.focus({ preventScroll: true });
+  };
+  const revealResultsOnMobile = (id) => {
+    if (id !== revision) return;
+    // Defer until the keyboard has had time to close and the result DOM
+    // has been laid out. No artificial zoom, viewport scaling or pan.
+    const show = () => {
+      if (id !== revision) return;
+      requestAnimationFrame(() => scrollTo(section));
+    };
+    const viewport = window.visualViewport;
+    if (!viewport) {
+      window.setTimeout(show, 200);
+      return;
+    }
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      viewport.removeEventListener("resize", check);
+      show();
+    };
+    const check = () => {
+      if (viewport.height >= window.innerHeight * 0.78) {
+        window.setTimeout(finish, 100);
+      }
+    };
+    viewport.addEventListener("resize", check);
+    window.setTimeout(finish, 650);
+    check();
   };
   const clearSaved = () => {
     try {
@@ -224,7 +257,7 @@
     button.type = "button";
     button.setAttribute(
       "aria-label",
-      `Verify ${value(record.licenceName)} in ${value(record.suburb, "suburb not listed")}, licence ${value(record.licenceNumber)}`,
+      `View record for ${value(record.licenceName)} in ${value(record.suburb, "suburb not listed")}, licence ${value(record.licenceNumber)}`,
     );
     button.addEventListener("click", () => selectRecord(record));
     return row;
@@ -791,8 +824,10 @@
       "First: retrieve the licence record. Next: visit the separate regulatory register.";
     notify();
     busy(true);
-    scrollTo(section);
-    focus($("results-title"));
+    if (!isMobileViewport()) {
+      scrollTo(section);
+      focus($("results-title"));
+    }
     try {
       const data = await api(
         `/api/details?id=${encodeURIComponent(record.licenceID)}`,
@@ -812,6 +847,7 @@
       activeCheckedAt = data.checkedAt;
       detail.replaceChildren(profile(record, data.detail, data.checkedAt));
       saveJourney();
+      if (isMobileViewport()) revealResultsOnMobile(id);
     } catch (error) {
       if (id !== revision) return;
       detail.replaceChildren();
@@ -860,30 +896,11 @@
       "Matching government licence records for your search.";
     notify("Contacting NSW Government records…");
     busy(true);
-    // On iOS, the keyboard must finish closing before scrolling to newly
-    // rendered results. Scrolling while the visual viewport is compressed
-    // leaves Safari horizontally zoomed into the result layout.
-    const revealSearchResults = () => {
+    // Do not scroll/focus while the keyboard is open or the results are
+    // still loading. Safari otherwise retains a zoomed, clipped viewport.
+    if (!isMobileViewport()) {
       scrollTo(section);
       focus($("results-title"));
-    };
-    if (window.matchMedia("(max-width: 760px)").matches) {
-      const viewport = window.visualViewport;
-      let settled = false;
-      const finish = () => {
-        if (settled || id !== revision) return;
-        settled = true;
-        viewport?.removeEventListener("resize", onViewportResize);
-        revealSearchResults();
-      };
-      const onViewportResize = () => {
-        if (!viewport || viewport.height >= window.innerHeight * 0.78)
-          window.setTimeout(finish, 80);
-      };
-      viewport?.addEventListener("resize", onViewportResize);
-      window.setTimeout(finish, 500);
-    } else {
-      revealSearchResults();
     }
     try {
       const data = await api(`/api/search?q=${encodeURIComponent(q)}`, signal);
@@ -902,6 +919,7 @@
       // The mobile keyboard/viewport handler controls the initial scroll.
       // Avoid a second immediate scroll while Safari is still dismissing it.
       showRows(false);
+      if (isMobileViewport()) revealResultsOnMobile(id);
     } catch (error) {
       if (id !== revision) return;
       $("results-title").textContent = "Search unavailable";
@@ -913,6 +931,7 @@
         "Search the official NSW licence register ↗",
         LICENCES,
       );
+      if (isMobileViewport()) revealResultsOnMobile(id);
     } finally {
       if (id === revision) busy(false);
     }

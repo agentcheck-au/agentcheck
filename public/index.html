@@ -4,30 +4,57 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#061329" />
+    <link rel="canonical" href="https://agentcheck.au/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="AgentCheck" />
+    <meta property="og:site_name" content="AgentCheck" />
+    <meta property="og:locale" content="en_AU" />
+    <meta property="og:url" content="https://agentcheck.au/" />
+    <meta property="og:image" content="https://agentcheck.au/agentcheck-share.png" />
+    <meta property="og:image:secure_url" content="https://agentcheck.au/agentcheck-share.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="AgentCheck shield badge. Know your agent. Check the facts. NSW licence and regulatory checks." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AgentCheck | Check NSW Real Estate Agent Licences" />
+    <meta name="twitter:description" content="Free NSW real estate agent licence search and separate regulatory history check using official government sources." />
+    <meta name="twitter:image" content="https://agentcheck.au/agentcheck-share.png" />
+    <link rel="icon" href="/agentcheck-badge.svg" type="image/svg+xml" />
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@graph":[
+        {"@type":"Organization","@id":"https://agentcheck.au/#organization","name":"AgentCheck","url":"https://agentcheck.au/","logo":{"@type":"ImageObject","url":"https://agentcheck.au/agentcheck-badge.svg"},"description":"Independent NSW real estate agent licence and regulatory record checking information. Not affiliated with the NSW Government."},
+        {"@type":"WebSite","@id":"https://agentcheck.au/#website","url":"https://agentcheck.au/","name":"AgentCheck","inLanguage":"en-AU","publisher":{"@id":"https://agentcheck.au/#organization"},"description":"Free NSW real estate agent licence lookup and guidance on checking the separate NSW Fair Trading regulatory register."},
+        {"@type":"WebPage","@id":"https://agentcheck.au/#webpage","url":"https://agentcheck.au/","name":"Check NSW Real Estate Agent Licences | AgentCheck","isPartOf":{"@id":"https://agentcheck.au/#website"},"inLanguage":"en-AU","description":"Check a NSW real estate agent's licence status, licence number and authorised activities using NSW Government records, then check the separate NSW Fair Trading regulatory register. Free, independent and no sign-up."}
+      ]
+    }
+    </script>
+
     <meta
       name="description"
-      content="Before you appoint a real estate agent, check the facts. Search NSW Government licence records and continue to the official NSW Fair Trading regulatory register. Free, independent and no sign-up."
+      content="Check a NSW real estate agent's licence status, licence number and authorised activities using NSW Government records, then check the separate NSW Fair Trading regulatory register. Free, independent and no sign-up."
     />
     <meta
       property="og:title"
-      content="AgentCheck — Know your agent. Question the claims."
+      content="AgentCheck | Check NSW Real Estate Agent Licences"
     />
     <meta
       property="og:description"
-      content="Awards are claims. Licences are records. Check the facts before appointing a NSW real estate agent."
+      content="Free NSW real estate agent licence search and guidance on checking the separate NSW Fair Trading regulatory register. Official records. No sign-up."
     />
     <meta property="og:type" content="website" />
-    <title>AgentCheck — Know your agent. Check the facts.</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Check NSW Real Estate Agent Licences | AgentCheck</title>
     <link
       rel="preload"
       href="/sydney-harbour.webp"
       as="image"
       type="image/webp"
     />
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles-20261031-mobile-v4.css" />
     <link rel="stylesheet" href="/referral-motion.css" />
-    <script src="/app.js" defer></script>
+    <script src="/app-20261031-mobile-v3.js" defer></script>
     <script src="/referral-motion.js" defer></script>
   </head>
   <body>
@@ -58,6 +85,7 @@
           <span class="brand-name">Agent<span>Check</span><b>.</b></span>
         </a>
         <nav class="nav-links" aria-label="Main navigation">
+          <a href="/about/">About</a>
           <a href="#search">Verify an agent</a>
           <a href="#the-standard">The standard</a>
           <a href="#questions">Questions to ask</a>
@@ -91,7 +119,8 @@
         aria-label="Mobile navigation"
         hidden
       >
-        <a href="#search">Verify an agent</a
+        <a href="/about/">About AgentCheck</a
+        ><a href="#search">Verify an agent</a
         ><a href="#the-standard">The standard</a
         ><a href="#questions">Questions to ask</a>
       </nav>
@@ -452,6 +481,22 @@
         </div>
       </section>
 
+
+      <section class="about-home" id="about-agentcheck" aria-labelledby="about-home-title">
+        <div class="shell about-home-grid">
+          <div>
+            <span class="eyebrow eyebrow-dark">ABOUT AGENTCHECK</span>
+            <h2 id="about-home-title">What does AgentCheck do?</h2>
+            <p>AgentCheck is a free, independent consumer information website for people checking real estate agents in New South Wales. It helps you look up an agent's NSW property licence record and explains why you should separately check published regulatory actions.</p>
+            <p>Licence status and regulatory history are <strong>two different checks</strong>. A current licence does not mean an agent has no published regulatory history. AgentCheck is not a government service, and it does not endorse or rank agents.</p>
+            <a class="about-home-link" href="/about/">About AgentCheck and how the two checks work ↗</a>
+          </div>
+          <div class="about-home-steps" aria-label="The two checks">
+            <div><span>01</span><strong>Check the NSW licence record</strong><p>Match the agent's name and licence number; review status, type and authorised activities.</p></div>
+            <div><span>02</span><strong>Check the regulatory register</strong><p>Visit the official NSW Fair Trading Name and Shame Register and carefully confirm any matching published record.</p></div>
+          </div>
+        </div>
+      </section>
       <section class="closing" aria-labelledby="closing-title">
         <div class="closing-glow" aria-hidden="true"></div>
         <div class="shell closing-shell" data-reveal>
@@ -471,62 +516,48 @@
       </section>
     </main>
 
-    <footer class="footer" id="sources">
-      <div class="shell footer-top">
-        <div>
-          <div class="footer-brand">Agent<span>Check</span><b>.</b></div>
-          <p>Know your agent. Check the facts.</p>
-          <p class="footer-service-note">Free to use · No sign-up required</p>
+
+    <footer class="footer site-map-footer" id="sources" aria-label="AgentCheck footer and site map">
+      <div class="shell">
+        <div class="footer-feature">
+          <a class="footer-identity" href="/" aria-label="AgentCheck home">
+            <img src="/agentcheck-badge.svg" width="66" height="66" alt="" loading="lazy" />
+            <span class="footer-brand">Agent<span>Check</span><b>.</b></span>
+          </a>
+          <div>
+            <strong class="footer-feature-title">Know your agent. Check the facts.</strong>
+            <p>Independent NSW real estate agent licence information.</p><p class="footer-service-note">Free to use · No sign-up required</p>
+          </div>
         </div>
-        <div>
-          <strong>Official resources</strong
-          ><a
-            href="https://verify.licence.nsw.gov.au/home/Property"
-            target="_blank"
-            rel="noopener noreferrer"
-            >NSW property licence register ↗</a
-          ><a
-            href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register"
-            target="_blank"
-            rel="noopener noreferrer"
-            >NSW Fair Trading Name and Shame Register ↗</a
-          >
-        </div>
-        <div>
-          <strong>About this service</strong>
-          <p>
-            Independent consumer information. Not affiliated with, approved by
-            or endorsed by the NSW Government. A current licence does not
-            establish an absence of regulatory actions.
-          </p>
-        </div>
-      </div>
-      <div class="shell footer-bottom">
-        <span>© <span id="year">2026</span> AgentCheck · Australia</span
-        ><span><a href="#privacy">Privacy &amp; how it works</a></span>
+        <nav class="footer-sitemap" aria-label="Site map">
+          <div class="footer-group">
+            <h2>Check an agent</h2>
+            <a href="/#search">Search an agent's licence</a>
+            <a href="/#about-agentcheck">How the two checks work</a>
+            <a href="/#questions">Questions to ask an agent</a>
+          </div>
+          <div class="footer-group">
+            <h2>Consumer information</h2>
+            <a href="/#the-standard">Awards, rankings &amp; referrals</a>
+            <a href="/about/">About AgentCheck</a>
+            <a href="/about/#two-checks">Understanding licence &amp; regulatory records</a>
+          </div>
+          <div class="footer-group">
+            <h2>Official NSW resources</h2>
+            <a href="https://verify.licence.nsw.gov.au/home/Property" target="_blank" rel="noopener noreferrer">NSW property licence register ↗</a>
+            <a href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register" target="_blank" rel="noopener noreferrer">NSW Fair Trading Name and Shame Register ↗</a>
+          </div>
+          <div class="footer-group">
+            <h2>AgentCheck</h2>
+            <a href="/about/">Our purpose &amp; limitations</a>
+            <a href="/privacy/">Privacy &amp; how it works</a>
+            <a href="/sitemap.xml">XML sitemap</a>
+          </div>
+        </nav>
+        <div class="footer-disclaimer">AgentCheck is an independent consumer information service. Not affiliated with, approved by or endorsed by the NSW Government. A current licence does not establish an absence of regulatory actions. Always confirm records with the official sources.</div>
+        <div class="footer-bottom"><span>© <span id="year">2026</span> AgentCheck · Australia</span><span><a href="/about/">About</a> · <a href="/privacy/">Privacy</a></span></div>
       </div>
     </footer>
-    <section id="privacy" class="privacy-note">
-      <div class="shell">
-        <h2>Privacy &amp; how it works</h2>
-        <p>
-          Your search is sent to AgentCheck’s server and the NSW licence
-          service. AgentCheck does not create an account, save your searches to
-          a database or send your reported register findings to the government.
-          The selected public licence record and your reported result can remain
-          in this browser tab for up to 30 minutes to help you return from the
-          register. “Start a new search” clears this saved journey. Browser
-          storage may remain until the tab closes; expired entries are discarded
-          when the page next opens.
-        </p>
-        <p>
-          The hosting and government providers may retain operational access
-          logs. Licence status is time-specific. AgentCheck does not
-          independently search the Name and Shame Register, endorse an agent or
-          assess their suitability.
-        </p>
-      </div>
-    </section>
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   </body>
 </html>
