@@ -26,9 +26,9 @@ test("verification stages and NSW source attribution are outside the search card
   assert.match(panel, /id="search-input"/);
   assert.match(panel, /id="search-button"/);
   assert.doesNotMatch(panel, /01 \/ Licence status/);
-  assert.doesNotMatch(panel, /02 \/ Regulatory register/);
+  assert.doesNotMatch(panel, /02 \/ Name and Shame Register/);
   assert.match(html.slice(panelEnd, html.indexOf('<div class="hero-bottom"', panelEnd)), /01 \/ Licence status/);
-  assert.match(html.slice(panelEnd, html.indexOf('<div class="hero-bottom"', panelEnd)), /02 \/ Regulatory register/);
+  assert.match(html.slice(panelEnd, html.indexOf('<div class="hero-bottom"', panelEnd)), /02 \/ Name and Shame Register/);
   assert.match(html.slice(panelEnd, html.indexOf('<div class="hero-bottom"', panelEnd)), /Licence lookup from NSW Government records/);
   assert.match(css, /width: min\(650px, 100%\)/);
 });

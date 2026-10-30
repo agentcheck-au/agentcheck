@@ -8,7 +8,7 @@ const html = readFileSync(new URL("../public/index.html", import.meta.url), "utf
 test("the licence record is rendered before the separate regulatory step", () => {
   const profile = app.slice(app.indexOf("function profile("), app.indexOf("function detailsValid("));
   assert.ok(profile.indexOf('const card = add(wrapper, "article", "profile-card")') < profile.indexOf("regulatoryStep(wrapper, record, info)"));
-  assert.match(profile, /Continue to Step 2 · Check regulatory history/);
+  assert.match(profile, /Continue to Step 2 · Name and Shame Register/);
   assert.match(app, /card.id = "regulatory-check"/);
 });
 
@@ -25,7 +25,7 @@ test("mobile search dismisses keyboard and delays scrolling until viewport settl
 });
 
 test("hero and education section explain the purpose of the two checks", () => {
-  assert.match(html, /verify their NSW licence, then check the separate/);
+  assert.match(html, /verify their NSW licence, then independently search the separate/);
   assert.match(html, /Awards, rankings and referral platforms can shape who you trust/);
 });
 
@@ -35,10 +35,10 @@ test("result cards invite visitors to view a record without claiming verificatio
 });
 
 test("HTML loads new asset paths so cached pre-release JavaScript cannot run", () => {
-  assert.match(html, /src="\/app-20261031-mobile-v3\.js"/);
-  assert.match(html, /href="\/styles-20261031-mobile-v4\.css"/);
-  const deployedApp = readFileSync(new URL("../public/app-20261031-mobile-v3.js", import.meta.url), "utf8");
-  const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v4.css", import.meta.url), "utf8");
+  assert.match(html, /src="\/app-20261031-mobile-v4\.js"/);
+  assert.match(html, /href="\/styles-20261031-mobile-v5\.css"/);
+  const deployedApp = readFileSync(new URL("../public/app-20261031-mobile-v4.js", import.meta.url), "utf8");
+  const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v5.css", import.meta.url), "utf8");
   assert.equal(deployedApp, app);
   assert.equal(deployedCss, css);
 });
@@ -54,7 +54,7 @@ test("SEO and public information pages include crawlable, truthful metadata", ()
   const privacy = readFileSync(new URL("../public/privacy/index.html", import.meta.url), "utf8");
   const robots = readFileSync(new URL("../public/robots.txt", import.meta.url), "utf8");
   const sitemap = readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
-  assert.match(html, /https:\/\/agentcheck\.au\/agentcheck-share\.png/);
+  assert.match(html, /https:\/\/agentcheck\.au\/agentcheck-share-v2\.png/);
   assert.match(html, /<link rel="canonical" href="https:\/\/agentcheck\.au\/"/);
   assert.match(html, /application\/ld\+json/);
   assert.match(about, /not a government website/);
@@ -62,4 +62,13 @@ test("SEO and public information pages include crawlable, truthful metadata", ()
   assert.match(robots, /Disallow: \/api\//);
   assert.match(sitemap, /https:\/\/agentcheck\.au\/about\//);
   assert.match(html, /class="footer-sitemap"/);
+});
+
+test("the two official registers are clearly named and independently checked", () => {
+  assert.match(html, /id="two-registers"/);
+  assert.match(html, /01 \/ LICENCE REGISTER/);
+  assert.match(html, /02 \/ NAME AND SHAME REGISTER/);
+  assert.match(html, /does not automatically search the Name and Shame Register/);
+  assert.match(app, /Did you find this agent on the Name and Shame Register/);
+  assert.match(app, /STEP 2 \/ 2 · NAME AND SHAME REGISTER/);
 });
