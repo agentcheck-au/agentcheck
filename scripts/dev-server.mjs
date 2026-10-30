@@ -1,6 +1,6 @@
 // Local QA only. This script never loads credentials or calls the NSW service.
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { resolve, extname } from "node:path";
 const root = resolve("public");
 const portIndex = process.argv.indexOf("--port");
@@ -109,8 +109,9 @@ createServer(async (req, res) => {
       res.writeHead(403);
       return res.end();
     }
-    let data = await readFile(path);
-    if (path.endsWith(".html"))
+    const filePath = (await stat(path)).isDirectory() ? resolve(path, "index.html") : path;
+    let data = await readFile(filePath);
+    if (filePath.endsWith(".html"))
       data = Buffer.from(
         data
           .toString()
@@ -120,7 +121,7 @@ createServer(async (req, res) => {
           ),
       );
     res.writeHead(200, {
-      "Content-Type": types[extname(path)] || "application/octet-stream",
+      "Content-Type": types[extname(filePath)] || "application/octet-stream",
       "Cache-Control": "no-store",
     });
     res.end(data);

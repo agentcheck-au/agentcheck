@@ -528,7 +528,7 @@
       content,
       "p",
       "",
-      "Search the official NSW Fair Trading Name and Shame Register for published regulatory action. This separate check matters even when a licence is current.",
+      "A current licence does not rule out regulatory action. Check this separate official register yourself.",
     );
     const action = add(card, "div", "regulatory-action");
     const licence = add(action, "div", "licence-to-copy");
@@ -546,7 +546,7 @@
       action,
       "p",
       "regulatory-hint",
-      "Copies the licence number and opens the NSW Fair Trading Name and Shame Register. Search by the agent's name or licence number as supported by the official site, then use Back to return. AgentCheck does not search this register.",
+      "Search the official site using the copied number or the agent’s name. Use Back to return. AgentCheck does not search this register.",
     );
     const savedNotice = add(action, "p", "regulatory-hint");
     officialLink(
@@ -606,7 +606,7 @@
       words,
       "p",
       "",
-      "After independently searching the official Name and Shame Register, choose what you found. Confirm any matching name, licence number and published notice. Your answer is not verified by AgentCheck.",
+      "After checking the official register, select what you found. Confirm the name, licence number and notice. AgentCheck cannot verify your answer.",
     );
     const buttons = add(follow, "div", "answer-buttons");
     const answer = add(follow, "div", "register-conclusion");

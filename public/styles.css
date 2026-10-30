@@ -3312,3 +3312,102 @@ html, body { overflow-x: clip; }
   .hero-verification-steps .two-check-note { column-gap: 12px; }
   .hero-verification-steps .two-check-note span { font-size: 11px; }
 }
+
+/* Site-wide reading rhythm: one message per section, generous readable copy. */
+body { font-size: 17px; }
+.nav-links { font-size: 15px; }
+.hero-shell { padding-top: 124px; padding-bottom: 80px; }
+.hero-copy > p { max-width: 32em; font-size: 20px; line-height: 1.65; }
+.hero h1 { margin-bottom: 26px; }
+.search-panel { padding: 32px; margin-top: 48px; }
+.search-panel h2 { font-size: 24px; margin: 0 0 24px; }
+.search-panel label { font-size: 16px; line-height: 1.5; margin-bottom: 14px; }
+.search-panel .search-input-wrap input { font-size: 17px; height: 56px; }
+.search-panel .btn-search { min-height: 56px; height: auto; font-size: 17px; }
+.hero-verification-steps { padding-top: 26px; margin-top: 32px; }
+.hero-verification-steps .two-check-note span { font-size: 15px; line-height: 1.65; }
+.hero-verification-steps .search-panel-foot { font-size: 14px; margin-top: 22px; }
+.hero-bottom { margin-top: 28px; font-size: 15px; color: #d5e4fa; }
+.two-registers, .editorial, .about-home, .closing { padding-block: clamp(88px, 9vw, 144px); }
+.two-registers-intro { max-width: 760px; margin-bottom: 56px; }
+.two-registers-intro h2 { margin-bottom: 24px; }
+.two-registers-intro p { font-size: 20px; }
+.two-registers-grid { gap: 32px; }
+.two-register-card { padding: 40px; box-shadow: none; }
+.two-register-card h3 { margin-block: 24px; }
+.two-register-card p { font-size: 18px; line-height: 1.7; margin-bottom: 32px; max-width: 36em; }
+.two-register-card a { font-size: 17px; }
+.two-registers-disclaimer { max-width: 760px; font-size: 16px; line-height: 1.75; margin-top: 36px; }
+.editorial { background: #fff; }
+.editorial-top { display: block; max-width: 760px; margin-bottom: 64px; }
+.editorial-top h2 { margin-bottom: 28px; font-size: clamp(36px, 4.8vw, 64px); }
+.editorial-top p { max-width: 36em; font-size: 20px; line-height: 1.7; color: #4d6078; }
+#the-standard, #questions { scroll-margin-top: 110px; }
+.editorial-rows { border-top: 0; gap: 64px; }
+.editorial-rows .question-card { gap: 64px; padding: 0 0 64px; }
+.editorial-rows .question-body { padding-block: 8px; }
+.editorial-rows .question-body h3 { margin: 20px 0; font-size: 34px; }
+.editorial-rows .question-body > p { font-size: 18px; line-height: 1.75; margin-bottom: 28px; max-width: 36em; }
+.editorial-rows .question-toggle { background: transparent; border-radius: 0; border-width: 1px 0 0; padding: 20px 0; font-size: 18px; gap: 20px; }
+.editorial-rows .question-answer { padding: 24px; font-size: 17px; line-height: 1.75; }
+.question-index, .two-register-number, .eyebrow { font-size: 13px; line-height: 1.6; }
+.about-home-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: center; }
+.about-home p { font-size: 18px; line-height: 1.75; max-width: 36em; margin-bottom: 0; }
+.about-home-link { font-size: 18px; }
+.closing h2 { margin-bottom: 40px; }
+.site-map-footer .footer-sitemap { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; padding-block: 56px; }
+.site-map-footer .footer-group h2 { font-size: 17px; margin-bottom: 24px; }
+.site-map-footer .footer-group a { font-size: 16px; margin-bottom: 18px; line-height: 1.7; }
+.site-map-footer .footer-feature p { font-size: 16px; line-height: 1.7; }
+.site-map-footer .footer-disclaimer { font-size: 15px; line-height: 1.8; max-width: 70ch; padding-block: 32px; }
+.site-map-footer .footer-bottom { font-size: 15px; }
+.results-heading p, .results-tools label { font-size: 17px; line-height: 1.7; }
+.result-name { font-size: 22px; }
+.result-meta, .row-button, .profile-subtitle, .field-value { font-size: 17px; line-height: 1.65; }
+.profile-grid { gap: 32px; }
+.field-label { font-size: 13px; color: #52647d; line-height: 1.5; }
+.profile-bottom, .checked-at, .conditions-disclosure summary { font-size: 15px; line-height: 1.7; }
+.regulatory-content > p, .followup-header p, .register-conclusion p { font-size: 17px; line-height: 1.75; }
+.regulatory-hint, .register-conclusion small { font-size: 15px; line-height: 1.75; }
+.regulatory-kicker, .followup-overline { font-size: 13px; line-height: 1.6; }
+.regulatory-card, .register-followup { margin-top: 48px; }
+.regulatory-cta, .answer-button { font-size: 17px; white-space: normal; line-height: 1.5; }
+
+@media (max-width: 760px) {
+  .shell { width: calc(100% - 40px); }
+  .hero-shell { padding-top: 104px; padding-bottom: 72px; }
+  .hero-copy > p { font-size: 18px; line-height: 1.65; max-width: 30em; }
+  .hero h1 { font-size: clamp(36px, 9vw, 56px); line-height: 1.13; }
+  .hero-copy .eyebrow { font-size: 11px; letter-spacing: .1em; }
+  .search-panel { padding: 26px 22px; margin-top: 40px; }
+  .search-panel h2 { font-size: 23px; margin-bottom: 24px; }
+  .search-panel label { font-size: 16px; }
+  .search-panel .search-controls { gap: 20px; }
+  .search-panel .search-input-wrap input { font-size: 16px; }
+  .search-panel .btn-search { width: min(204px, 100%); }
+  .hero-verification-steps .two-check-note { column-gap: 24px; }
+  .hero-verification-steps .two-check-note span { font-size: 14px; }
+  .hero-verification-steps .search-panel-foot { font-size: 13px; line-height: 1.7; }
+  .two-registers, .editorial, .about-home, .closing { padding-block: 80px; }
+  .two-registers-intro, .editorial-top { margin-bottom: 40px; }
+  .two-registers-intro p, .editorial-top p { font-size: 18px; }
+  .two-registers-grid { grid-template-columns: 1fr; gap: 28px; }
+  .two-register-card { padding: 30px 26px; }
+  .two-register-card h3 { font-size: 28px; }
+  .two-register-card p, .editorial-rows .question-body > p { font-size: 17px; }
+  .two-registers-disclaimer { text-align: left; font-size: 16px; }
+  .editorial-rows { gap: 48px; }
+  .editorial-rows .question-card { grid-template-columns: 1fr; gap: 28px; padding-bottom: 48px; }
+  .editorial-rows .question-visual { border-radius: 16px; }
+  .editorial-rows .question-body h3 { font-size: 30px; }
+  .editorial-rows .question-toggle { font-size: 17px; }
+  .about-home-grid { grid-template-columns: 1fr; gap: 28px; }
+  .about-home h2 { font-size: 34px; }
+  .site-map-footer .footer-sitemap { grid-template-columns: 1fr; gap: 32px; }
+  .site-map-footer .footer-feature { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .profile-card, .regulatory-card, .register-followup { padding: 28px 22px; }
+  .profile-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
+  .field-value { font-size: 16px; }
+  .regulatory-card { gap: 32px; }
+  .regulatory-cta { font-size: 16px; padding: 18px; }
+}

@@ -38,3 +38,13 @@ The tests cover fixed OneGov endpoints, token sharing/refresh, errors/429/503, r
 Preview credential availability must be resolved through a separately authorised AgentCheck-only configuration step before live licence acceptance. Distributed quota protection, historical credential-rotation confirmation and current government data-use terms remain open. Production merge/deployment requires explicit owner approval.
 
 Valdero was outside scope. No database, Vercel project, DNS, account-wide, production-secret or production-branch changes were made.
+# Readability pass — 31 October 2026
+
+- Homepage copy reduced from 1,058 to 589 words (about 44%, counting text outside scripts/styles).
+- Combined the repeated marketing-claims sections; removed duplicate two-check explanations and reduced footer links. Supporting award/ranking/referral questions remain expandable.
+- Main reading text uses 17–20px with wider line spacing, larger section gaps and shorter line lengths. About and Privacy use a single reading column.
+- Local Chromium review: desktop hero, 390px mobile hero and licence journey, expanded award details, and 320px homepage/About layouts. The narrow pages fit their viewport without horizontal document overflow.
+- Local search and detail checks used the explicitly labelled simulated QA server; this pass does not reverify live government data or real-device Safari clipboard behavior.
+- `npm test`: 67/67 passed. `npm run check` and `git diff --check`: passed.
+- New versioned JS/CSS assets match canonical sources; previous asset URLs retained for open tabs.
+

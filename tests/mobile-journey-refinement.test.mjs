@@ -25,8 +25,8 @@ test("mobile search dismisses keyboard and delays scrolling until viewport settl
 });
 
 test("hero and education section explain the purpose of the two checks", () => {
-  assert.match(html, /verify their NSW licence, then independently search the separate/);
-  assert.match(html, /Awards, rankings and referral platforms can shape who you trust/);
+  assert.match(html, /Check their NSW licence. Then check published regulatory actions./);
+  assert.match(html, /Awards, rankings and referrals are marketing claims, not official checks/);
 });
 
 test("result cards invite visitors to view a record without claiming verification", () => {
@@ -35,10 +35,10 @@ test("result cards invite visitors to view a record without claiming verificatio
 });
 
 test("HTML loads new asset paths so cached pre-release JavaScript cannot run", () => {
-  assert.match(html, /src="\/app-20261031-mobile-v5\.js"/);
-  assert.match(html, /href="\/styles-20261031-mobile-v6\.css"/);
-  const deployedApp = readFileSync(new URL("../public/app-20261031-mobile-v5.js", import.meta.url), "utf8");
-  const deployedCss = readFileSync(new URL("../public/styles-20261031-mobile-v6.css", import.meta.url), "utf8");
+  assert.match(html, /src="\/app-20261031-simple-v6\.js"/);
+  assert.match(html, /href="\/styles-20261031-simple-v7\.css"/);
+  const deployedApp = readFileSync(new URL("../public/app-20261031-simple-v6.js", import.meta.url), "utf8");
+  const deployedCss = readFileSync(new URL("../public/styles-20261031-simple-v7.css", import.meta.url), "utf8");
   assert.equal(deployedApp, app);
   assert.equal(deployedCss, css);
 });
@@ -81,14 +81,14 @@ test("hero spacing and compact mobile CTA keep the two checks legible", () => {
 });
 
 test("marketing claims section introduces its purpose before showing questions", () => {
-  const section = html.slice(html.indexOf('class="manifesto"'), html.indexOf('class="editorial"'));
-  assert.match(section, /AFTER CHECKING THE REGISTERS/);
+  const section = html.slice(html.indexOf('class="editorial"'), html.indexOf('class="about-home"'));
+  assert.match(section, /BEYOND THE REGISTERS/);
   assert.match(section, /marketing claims, not official checks/);
-  assert.ok(section.indexOf("marketing claims, not official checks") < section.indexOf("01 \/ AWARDS"));
+  assert.ok(section.indexOf("marketing claims, not official checks") < section.indexOf("01 / AWARDS"));
   assert.match(section, /02 \/ RANKINGS/);
   assert.match(section, /03 \/ REFERRALS/);
-  assert.match(section, /Explore the questions to ask/);
-  assert.doesNotMatch(section, /manifesto-visual/);
+  assert.equal((html.match(/01 \/ AWARDS/g) || []).length, 1);
+  assert.doesNotMatch(html, /manifesto-points|about-home-steps/);
 });
 
 test("quick responses retain a readable loading state without delaying slow requests", () => {

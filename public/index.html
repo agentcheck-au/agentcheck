@@ -52,9 +52,9 @@
       as="image"
       type="image/webp"
     />
-    <link rel="stylesheet" href="/styles-20261031-mobile-v6.css" />
+    <link rel="stylesheet" href="/styles-20261031-simple-v7.css" />
     <link rel="stylesheet" href="/referral-motion.css" />
-    <script src="/app-20261031-mobile-v5.js" defer></script>
+    <script src="/app-20261031-simple-v6.js" defer></script>
     <script src="/referral-motion.js" defer></script>
   </head>
   <body>
@@ -87,7 +87,6 @@
         <nav class="nav-links" aria-label="Main navigation">
           <a href="/about/">About</a>
           <a href="#search">Verify an agent</a>
-          <a href="#the-standard">The standard</a>
           <a href="#questions">Questions to ask</a>
         </nav>
         <button
@@ -121,7 +120,6 @@
       >
         <a href="/about/">About AgentCheck</a
         ><a href="#search">Verify an agent</a
-        ><a href="#the-standard">The standard</a
         ><a href="#questions">Questions to ask</a>
       </nav>
     </header>
@@ -156,16 +154,13 @@
               Look past the <em>polish.</em><br />Find the <em>proof.</em>
             </h1>
             <p>
-              Agents and agencies promote awards and rankings. Look beyond the
-              polished image: verify their NSW licence, then independently search the separate
-              NSW Fair Trading Name and Shame Register.
+              Check their NSW licence. Then check published regulatory actions.
             </p>
           </div>
           <div class="search-panel" id="search-panel" data-reveal>
             <div class="search-panel-head">
               <div>
-                <span class="panel-kicker">START HERE</span>
-                <h2>Know your agent. <span>Check the facts.</span></h2>
+                <h2>Check a NSW agent</h2>
               </div>
             </div>
             <form id="search-form" novalidate role="search">
@@ -197,7 +192,7 @@
                     maxlength="80"
                     autocomplete="off"
                     spellcheck="false"
-                    placeholder="e.g. an agent's name or licence number"
+                    placeholder="Name or licence number"
                   />
                 </div>
                 <button
@@ -215,20 +210,13 @@
             <div class="two-check-note">
               <span>01 / Licence status</span>
               <span>02 / Name and Shame Register</span>
-              <strong>Two separate checks. Both matter.</strong>
             </div>
             <p class="search-panel-foot">
               <span class="source-dot" aria-hidden="true"></span>
               Licence lookup from NSW Government records
             </p>
           </div>
-          <div class="hero-bottom" data-reveal>
-            <span class="scroll-cue"
-              ><span class="scroll-mouse"></span> SCROLL TO SEE WHAT
-              MATTERS</span
-            >
-            
-          </div>
+          <div class="hero-bottom"><span>Free to use · No sign-up</span></div>
         </div>
         <div class="hero-bottom-fade" aria-hidden="true"></div>
       </section>
@@ -287,66 +275,24 @@
         <div class="shell">
           <div class="two-registers-intro">
             <span class="eyebrow eyebrow-dark">TWO SEPARATE NSW REGISTERS</span>
-            <h2 id="two-registers-title">One checks the licence. The other checks published regulatory actions.</h2>
-            <p>These are <strong>two different official registers</strong>. Checking only an agent's licence does not tell you whether they appear on the NSW Fair Trading Name and Shame Register.</p>
+            <h2 id="two-registers-title">Two checks. A clearer picture.</h2>
+            <p>A licence check is only the first step.</p>
           </div>
           <div class="two-registers-grid">
             <article class="two-register-card">
               <span class="two-register-number">01 / LICENCE REGISTER</span>
               <h3>Is the agent licensed?</h3>
-              <p>Search the NSW property licence register for the agent's name, licence number, status and authorised activities.</p>
+              <p>View their licence status and authorised activities using NSW Government records.</p>
               <a href="#search">Start with a licence check <span aria-hidden="true">↗</span></a>
             </article>
             <article class="two-register-card two-register-card-contrast">
               <span class="two-register-number">02 / NAME AND SHAME REGISTER</span>
-              <h3>Does the agent appear on the Name and Shame Register?</h3>
-              <p>Search the separate NSW Fair Trading Name and Shame Register to see whether a matching agent or agency has a published regulatory action. Confirm identity and read the actual notice.</p>
-              <a href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register" target="_blank" rel="noopener noreferrer">Open the official Name and Shame Register <span aria-hidden="true">↗</span></a>
+              <h3>Any published regulatory action?</h3>
+              <p>Search the NSW Fair Trading Name and Shame Register yourself. Confirm the identity and read any matching notice.</p>
+              <a href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register" target="_blank" rel="noopener noreferrer">Open Name and Shame Register <span aria-hidden="true">↗</span></a>
             </article>
           </div>
-          <p class="two-registers-disclaimer">AgentCheck looks up licence records. It <strong>does not automatically search the Name and Shame Register</strong>; you must check that official register yourself. No matching entry is not a guarantee of a clean history.</p>
-        </div>
-      </section>
-
-      <section
-        class="manifesto"
-        id="the-standard"
-        aria-labelledby="manifesto-title"
-      >
-        <div class="shell manifesto-shell">
-          <div class="manifesto-intro" data-reveal>
-            <span class="eyebrow eyebrow-light">
-              <span class="eyebrow-line"></span> AFTER CHECKING THE REGISTERS
-            </span>
-            <h2 id="manifesto-title">
-              What about awards, rankings <em>and recommendations?</em>
-            </h2>
-            <p>
-              Awards, rankings and referral platforms can shape who you trust.
-              But these are <strong>marketing claims, not official checks</strong>.
-              Before relying on them, ask how they work and who benefits.
-            </p>
-          </div>
-          <div class="manifesto-points" aria-label="Three marketing claims worth questioning">
-            <div data-reveal>
-              <span>01 / AWARDS</span>
-              <strong>Who can enter?</strong>
-              <p>Does payment, sponsorship or a subscription affect eligibility?</p>
-            </div>
-            <div data-reveal>
-              <span>02 / RANKINGS</span>
-              <strong>What was measured?</strong>
-              <p>Which area, timeframe and results support the ranking?</p>
-            </div>
-            <div data-reveal>
-              <span>03 / REFERRALS</span>
-              <strong>Who benefits?</strong>
-              <p>Does the website receive a fee from the agent it recommends?</p>
-            </div>
-          </div>
-          <a href="#questions" class="inline-arrow manifesto-link">
-            Explore the questions to ask <span aria-hidden="true">↗</span>
-          </a>
+          <p class="two-registers-disclaimer">AgentCheck <strong>does not automatically search the Name and Shame Register</strong>. No match is not an all-clear.</p>
         </div>
       </section>
 
@@ -356,18 +302,12 @@
         aria-labelledby="questions-title"
       >
         <div class="shell">
-          <div class="editorial-top" data-reveal>
+          <div class="editorial-top" id="the-standard" data-reveal>
             <div>
-              <div class="eyebrow eyebrow-dark">THE QUESTIONS WORTH ASKING</div>
-              <h2 id="questions-title">
-                The claims are loud.<br /><em>The facts speak louder.</em>
-              </h2>
+              <div class="eyebrow eyebrow-dark">BEYOND THE REGISTERS</div>
+              <h2 id="questions-title">Look beyond <em>the badge.</em></h2>
+              <p>Awards, rankings and referrals are marketing claims, not official checks. Ask what sits behind them.</p>
             </div>
-            <p>
-              Not every award or referral is misleading. But a polished badge
-              cannot tell you how it was earned. Here's how to look a little
-              closer.
-            </p>
           </div>
           <div class="question-grid editorial-rows" id="question-grid">
             <article class="question-card" data-reveal>
@@ -377,18 +317,16 @@
               </div>
               <div class="question-body">
                 <span class="question-index">01 / AWARDS</span>
-                <h3>An award tells a story. Ask who wrote it.</h3>
+                <h3>Who can win?</h3>
                 <p>
-                  Some programs involve paid entry, subscriptions or sponsorship.
-                  Ask whether agents who do not pay the platform can still be
-                  considered on equal terms.
+                  Ask whether payment or a subscription affects eligibility.
                 </p>
                 <button
                   class="question-toggle"
                   type="button"
                   aria-expanded="false"
                 >
-                  Can agents pay to enter — and who is eligible? <span aria-hidden="true">+</span>
+                  Can agents pay to enter? <span aria-hidden="true">+</span>
                 </button>
                 <div class="question-answer" hidden>
                   <p>
@@ -408,17 +346,16 @@
               </div>
               <div class="question-body">
                 <span class="question-index">02 / RANKINGS</span>
-                <h3>“Number one” means very little without a method.</h3>
+                <h3>Number one at what?</h3>
                 <p>
-                  A ranking can be based on a suburb, time period, review count
-                  or selected metric. The fine print matters.
+                  Check the area, timeframe and results behind the claim.
                 </p>
                 <button
                   class="question-toggle"
                   type="button"
                   aria-expanded="false"
                 >
-                  What does “number one” actually measure? <span aria-hidden="true">+</span>
+                  How was it measured? <span aria-hidden="true">+</span>
                 </button>
                 <div class="question-answer" hidden>
                   <p>
@@ -472,18 +409,16 @@
               </div>
               <div class="question-body">
                 <span class="question-index">03 / REFERRALS</span>
-                <h3>Follow the recommendation. Then follow the incentive.</h3>
+                <h3>Who gets paid?</h3>
                 <p>
-                  A referral platform may introduce you to an agent, and some
-                  platforms receive a fee from that agent. Ask whether payment
-                  affects which agents are recommended.
+                  Some websites receive a fee from the agent they recommend.
                 </p>
                 <button
                   class="question-toggle"
                   type="button"
                   aria-expanded="false"
                 >
-                  Who benefits financially from this referral? <span aria-hidden="true">+</span>
+                  Who benefits from the referral? <span aria-hidden="true">+</span>
                 </button>
                 <div class="question-answer" hidden>
                   <p>
@@ -504,28 +439,18 @@
         <div class="shell about-home-grid">
           <div>
             <span class="eyebrow eyebrow-dark">ABOUT AGENTCHECK</span>
-            <h2 id="about-home-title">What does AgentCheck do?</h2>
-            <p>AgentCheck is a free, independent consumer information website for people checking real estate agents in New South Wales. It helps you look up an agent's NSW property licence record and explains why you should separately check published regulatory actions.</p>
-            <p>NSW has <strong>two separate registers to check</strong>: the property licence register shows an agent's licence details, while the <strong>Name and Shame Register</strong> lets you check whether NSW Fair Trading has publicly named the agent in a published regulatory action. A current licence does not mean an agent has no published regulatory history. AgentCheck is not a government service, and it does not endorse or rank agents.</p>
-            <a class="about-home-link" href="/#two-registers">See the two registers and how they differ ↗</a>
+            <h2 id="about-home-title">Independent. Free. For you.</h2>
+            <p>We help you check NSW agents using official records. We don’t rank or recommend agents.</p>
           </div>
-          <div class="about-home-steps" aria-label="The two checks">
-            <div><span>01</span><strong>Check the NSW licence record</strong><p>Match the agent's name and licence number; review status, type and authorised activities.</p></div>
-            <div><span>02</span><strong>Check the Name and Shame Register</strong><p>Visit the official NSW Fair Trading Name and Shame Register and carefully confirm any matching published record.</p></div>
-          </div>
+          <a class="about-home-link" href="/about/">How AgentCheck works ↗</a>
         </div>
       </section>
       <section class="closing" aria-labelledby="closing-title">
         <div class="closing-glow" aria-hidden="true"></div>
         <div class="shell closing-shell" data-reveal>
-          <div class="eyebrow eyebrow-light">THE NEXT QUESTION IS YOURS</div>
           <h2 id="closing-title">
-            Don't take their word for it.<br /><em>Check the record.</em>
+            Your next step?<br /><em>Check the record.</em>
           </h2>
-          <p>
-            Two separate checks. A clearer picture. No payment or account
-            required.
-          </p>
           <a href="#search" class="btn btn-primary closing-cta"
             >Verify an agent
             <span class="btn-arrow" aria-hidden="true">↗</span></a
@@ -549,30 +474,23 @@
         </div>
         <nav class="footer-sitemap" aria-label="Site map">
           <div class="footer-group">
-            <h2>Check an agent</h2>
-            <a href="/#search">Search an agent's licence</a>
-            <a href="/#about-agentcheck">How the two checks work</a>
-            <a href="/#questions">Questions to ask an agent</a>
-          </div>
-          <div class="footer-group">
-            <h2>Consumer information</h2>
-            <a href="/#the-standard">Awards, rankings &amp; referrals</a>
-            <a href="/about/">About AgentCheck</a>
-            <a href="/#two-registers">Understanding licence &amp; regulatory records</a>
-          </div>
-          <div class="footer-group">
-            <h2>Official NSW resources</h2>
-            <a href="https://verify.licence.nsw.gov.au/home/Property" target="_blank" rel="noopener noreferrer">NSW property licence register ↗</a>
-            <a href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register" target="_blank" rel="noopener noreferrer">NSW Fair Trading Name and Shame Register ↗</a>
-          </div>
-          <div class="footer-group">
             <h2>AgentCheck</h2>
-            <a href="/about/">Our purpose &amp; limitations</a>
-            <a href="/privacy/">Privacy &amp; how it works</a>
-            <a href="/sitemap.xml">XML sitemap</a>
+            <a href="/#search">Check an agent</a>
+            <a href="/about/">About</a>
+            <a href="/privacy/">Privacy</a>
+          </div>
+          <div class="footer-group">
+            <h2>Understand the checks</h2>
+            <a href="/#two-registers">The two registers</a>
+            <a href="/#questions">Awards, rankings &amp; referrals</a>
+          </div>
+          <div class="footer-group">
+            <h2>Official NSW sources</h2>
+            <a href="https://verify.licence.nsw.gov.au/home/Property" target="_blank" rel="noopener noreferrer">Property licence register ↗</a>
+            <a href="https://www.nsw.gov.au/departments-and-agencies/fair-trading/how-we-regulate/name-and-shame-register#search-the-register" target="_blank" rel="noopener noreferrer">Name and Shame Register ↗</a>
           </div>
         </nav>
-        <div class="footer-disclaimer">AgentCheck is an independent consumer information service. Not affiliated with, approved by or endorsed by the NSW Government. A current licence does not establish an absence of regulatory actions. Always confirm records with the official sources.</div>
+        <div class="footer-disclaimer">Not affiliated with, approved by or endorsed by the NSW Government. Always confirm records with the official sources.</div>
         <div class="footer-bottom"><span>© <span id="year">2026</span> AgentCheck · Australia</span><span><a href="/about/">About</a> · <a href="/privacy/">Privacy</a></span></div>
       </div>
     </footer>
