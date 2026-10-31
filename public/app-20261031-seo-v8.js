@@ -608,7 +608,7 @@
       "p",
       "regulatory-hint",
       number
-        ? "Opens the official register in a new tab. AgentCheck attempts to copy the licence number; if copying is blocked, select it above."
+        ? "Opens the official register in a new tab. AgentCheck does not search this register. We'll try to copy the number; if blocked, select it above."
         : "No licence number was supplied. Search the official register by the exact legal name.",
     );
     copyHint.id = "regulatory-copy-hint";

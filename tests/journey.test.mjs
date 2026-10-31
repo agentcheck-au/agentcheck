@@ -198,8 +198,10 @@ test("corporation records retain their company identity through details and regi
   ui.click(ui.document.querySelector(".regulatory-cta"));
   await flush();
   assert.equal(ui.copied, company.licenceNumber);
-  assert.equal(ui.navigations.length, 1);
-  assert.match(ui.navigations[0], /nsw\.gov\.au/);
+  assert.equal(ui.navigations.length, 0);
+  const official = ui.document.querySelector(".regulatory-cta");
+  assert.equal(official.target, "_blank");
+  assert.match(official.href, /nsw\.gov\.au/);
 });
 test("ambiguous records filter by returned suburb and preserve list on Back", async () => {
   const ui = boot({
