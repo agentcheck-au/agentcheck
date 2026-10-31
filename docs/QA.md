@@ -67,3 +67,11 @@ Valdero was outside scope. No database, Vercel project, DNS, account-wide, produ
 - Local Chromium review: desktop Step 2, middle-section cards, 390px and 320px mobile fit, copying-help disclosure, manual fallback and saved-journey restoration after reload. No horizontal document overflow at either narrow width.
 - Previous production baseline: `f89e5464b31225a09fffe0466a3ba67982eee84b`. No backend, secret, database, DNS or Cloudflare account-setting changes.
 
+
+## Consumer-verification priorities — 31 October 2026 (PR only)
+
+- Introduced an optional locality query mode that runs the **existing OneGov general browse search** and only displays returned records whose registered suburb/postcode match the query. **The API's coverage for suburb input is not confirmed; this is not an authoritative, complete or verified suburb directory.** The official Verify NSW locality filter is always linked for a broader search; zero API matches must not be taken as zero agents.
+- Government licence details continue to render in AgentCheck directly via the current server-side OneGov adapter. No new upstream API provider, credentials or database was introduced.
+- The Name and Shame Register opens in a separate browser tab. AgentCheck remains available for visitor-provided follow-up guidance, and explicitly does not automate the second government register.
+- Added a crawlable five-point independent guide about licence status, compliance checks, comparable sales evidence, awards and referral incentives. No individual-agent accusations or clean-history claims.
+- Release gates: check exact upstream location behaviour with authorized live access (e.g. Riverstone and 2765), official register new-tab/clipboard behaviour on iOS, 320/390px mobile layout, and review legal/data-use wording. No production deployment is authorized by this change.

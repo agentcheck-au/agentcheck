@@ -405,6 +405,41 @@ button[disabled] {
   font-weight: 800;
   margin: 0 0 9px;
 }
+.search-mode {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 17px;
+}
+.search-mode-option {
+  appearance: none;
+  border: 1px solid #cfdbeb;
+  border-radius: 999px;
+  padding: 9px 15px;
+  background: #f3f7fc;
+  color: #415974;
+  font: 750 12px/1.35 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+}
+.search-mode-option.is-selected {
+  border-color: #175fcb;
+  background: #eaf2ff;
+  color: #124a9c;
+}
+.search-mode-option:focus-visible {
+  outline: 3px solid #3385ef;
+  outline-offset: 3px;
+}
+.search-location-guide {
+  padding-top: 8px;
+  color: #536885;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.editorial-guide-link { margin-top: 14px; font-size: 14px; font-weight: 700; }
+.editorial-guide-link a { color: #175fcb; }
+@media (max-width: 390px) {
+  .search-mode-option { padding: 8px 11px; font-size: 11px; }
+}
 .search-controls {
   display: flex;
   gap: 10px;

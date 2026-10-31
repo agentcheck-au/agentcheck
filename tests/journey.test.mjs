@@ -198,8 +198,10 @@ test("corporation records retain their company identity through details and regi
   ui.click(ui.document.querySelector(".regulatory-cta"));
   await flush();
   assert.equal(ui.copied, company.licenceNumber);
-  assert.equal(ui.navigations.length, 1);
-  assert.match(ui.navigations[0], /nsw\.gov\.au/);
+  assert.equal(ui.navigations.length, 0);
+  const official = ui.document.querySelector(".regulatory-cta");
+  assert.equal(official.target, "_blank");
+  assert.match(official.href, /nsw\.gov\.au/);
 });
 test("ambiguous records filter by returned suburb and preserve list on Back", async () => {
   const ui = boot({
@@ -270,7 +272,7 @@ test("visitor-reported outcomes cannot become a government all-clear", async () 
   ui.click(buttons[2]);
   assert.match(conclusion.textContent, /still uncertain/);
 });
-test("simulated clipboard success saves journey then navigates to fixed official URL", async () => {
+test("simulated clipboard success keeps AgentCheck open with official new-tab link", async () => {
   const ui = boot();
   await ui.submit();
   await ui.select();
@@ -283,8 +285,10 @@ test("simulated clipboard success saves journey then navigates to fixed official
   ui.click(ui.document.querySelector(".regulatory-cta"));
   await flush();
   assert.equal(ui.copied, "TEST123");
-  assert.equal(ui.navigations.length, 1);
-  assert.match(ui.navigations[0], /^https:\/\/www.nsw.gov.au\//);
+  assert.equal(ui.navigations.length, 0);
+  const official = ui.document.querySelector(".regulatory-cta");
+  assert.equal(official.target, "_blank");
+  assert.match(official.href, /^https:\/\/www.nsw.gov.au\//);
   const saved = JSON.parse(ui.storage.get("agentcheck:resume"));
   assert.equal(saved.details.licenceNumber, "TEST123");
   const returned = boot({ storage: ui.storage });
@@ -311,21 +315,16 @@ test("simulated clipboard failure exposes selectable fallback and still saves ma
   assert.doesNotMatch(ui.$("toast").textContent, /number copied/);
   assert.ok(ui.storage.has("agentcheck:resume"));
 });
-test("blocked storage preserves current page with a new-tab register option", async () => {
+test("blocked storage does not prevent opening a fixed new-tab register link", async () => {
   const ui = boot({ denyStorage: true });
   await ui.submit();
   await ui.select();
   ui.click(ui.document.querySelector(".regulatory-cta"));
   await flush();
   assert.equal(ui.navigations.length, 0);
-  assert.match(
-    ui.document.querySelector(".regulatory-action").textContent,
-    /blocked session storage/,
-  );
-  const link = [...ui.document.querySelectorAll(".regulatory-action a")].find(
-    (a) => a.textContent.includes("new tab"),
-  );
+  const link = ui.document.querySelector(".regulatory-cta");
   assert.equal(link.target, "_blank");
+  assert.match(link.href, /^https:\/\/www.nsw.gov.au\//);
 });
 test("expired, future, oversized and malformed resume states fail closed", () => {
   for (const text of [
@@ -502,4 +501,15 @@ test("starting another search cancels the previous loading hold", async () => {
   await flush();
   assert.match(ui.$("results-title").textContent, /Confirm/);
   assert.equal(ui.requests.length, 2);
+});
+
+test("suburb mode sends a distinct bounded-location request and displays limited coverage", async () => {
+  const ui = boot();
+  ui.click(ui.document.querySelector('[data-search-mode="location"]'));
+  await ui.submit("Riverstone");
+  assert.match(ui.requests[0].url, /q=Riverstone&mode=location/);
+  assert.match(ui.$("results-subtitle").textContent, /not a directory of every agent/);
+  assert.match(ui.$("status-message").textContent, /Coverage may be incomplete/);
+  const official = [...ui.$("results-list").querySelectorAll("a")].find(x => x.href.includes("verify.licence.nsw.gov.au"));
+  assert.equal(official.target, "_blank");
 });
