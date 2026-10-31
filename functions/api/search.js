@@ -17,9 +17,9 @@ export async function onRequestGet({ request, env }) {
   }
   const params = new URL(request.url).searchParams;
   const raw = params.getAll("q").length === 1 ? params.get("q") : null;
-  const rawMode = params.getAll("mode").length <= 1 ? params.get("mode") : null;
-  const mode = rawMode || "name";
-  if (!["name", "location"].includes(mode)) {
+  const modeValues = params.getAll("mode");
+  const mode = modeValues[0] || "name";
+  if (modeValues.length > 1 || !["name", "location"].includes(mode)) {
     return responseJson({ error: "Invalid search mode." }, 400);
   }
   const q = typeof raw === "string" ? raw.trim().replace(/ +/g, " ") : "";

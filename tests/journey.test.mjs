@@ -500,3 +500,14 @@ test("starting another search cancels the previous loading hold", async () => {
   assert.match(ui.$("results-title").textContent, /Confirm/);
   assert.equal(ui.requests.length, 2);
 });
+
+test("suburb mode sends a distinct bounded-location request and displays limited coverage", async () => {
+  const ui = boot();
+  ui.click(ui.document.querySelector('[data-search-mode="location"]'));
+  await ui.submit("Riverstone");
+  assert.match(ui.requests[0].url, /q=Riverstone&mode=location/);
+  assert.match(ui.$("results-subtitle").textContent, /not a directory of every agent/);
+  assert.match(ui.$("status-message").textContent, /Coverage may be incomplete/);
+  const official = [...ui.$("results-list").querySelectorAll("a")].find(x => x.href.includes("verify.licence.nsw.gov.au"));
+  assert.equal(official.target, "_blank");
+});

@@ -303,7 +303,13 @@
   }
   for (const option of document.querySelectorAll("[data-search-mode]")) {
     option.addEventListener("click", () => {
-      setSearchMode(option.dataset.searchMode);
+      if (option.dataset.searchMode !== searchMode) {
+        // Switching query interpretation cancels an in-flight request.
+        begin();
+        input.value = "";
+        section.hidden = true;
+        setSearchMode(option.dataset.searchMode);
+      }
       input.focus();
     });
   }
