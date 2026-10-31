@@ -12,6 +12,7 @@ const allowed = new Set([
   "check-nsw-real-estate-agent",
   "check-nsw-real-estate-agency",
   "nsw-name-and-shame-register",
+  "choose-a-real-estate-agent",
   "app.js",
   "app-20261031-mobile-v3.js",
   "app-20261031-mobile-v4.js",
@@ -127,7 +128,7 @@ console.log(
 );
 
 // Validate the public documents crawlers actually receive, including guide discovery.
-const pagePaths = ["", "about/", "privacy/", "check-nsw-real-estate-agent/", "check-nsw-real-estate-agency/", "nsw-name-and-shame-register/"];
+const pagePaths = ["", "about/", "privacy/", "check-nsw-real-estate-agent/", "check-nsw-real-estate-agency/", "nsw-name-and-shame-register/", "choose-a-real-estate-agent/"];
 const titles = new Set();
 const descriptions = new Set();
 const sitemap = await readFile("public/sitemap.xml", "utf8");
@@ -159,4 +160,4 @@ for (const path of pagePaths) {
     }
   }
 }
-console.log("PASS: six crawlable pages, unique metadata, structured data, sitemap and internal links.");
+console.log("PASS: seven crawlable pages, unique metadata, structured data, sitemap and internal links.");

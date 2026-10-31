@@ -21,13 +21,14 @@ test("editorial identity retains an accurate public source description", () => {
   assert.doesNotMatch(html, /NSW Property API/);
   assert.match(css, /prefers-reduced-motion/);
 });
-test("government endpoints and same-tab clipboard-first handoff remain available", () => {
+test("government endpoints and non-disruptive official-register handoff remain available", () => {
   assert.match(html, /id="search-form"/);
   assert.match(js, /\/api\/search\?q=/);
   assert.match(js, /\/api\/details\?id=/);
   assert.match(js, /await copyLicence\(number\)/);
-  assert.match(js, /window\.location\.assign\(REGISTER\)/);
-  assert.doesNotMatch(js, /window\.open\(REGISTER/);
+  assert.match(js, /button\.target = "_blank"/);
+  assert.match(js, /button\.href = REGISTER/);
+  assert.doesNotMatch(js, /window\.location\.assign\(REGISTER\)/);
 });
 test("a red flag can only follow an explicit user-reported match", () => {
   assert.match(js, /setOutcome\(type, true\)/);

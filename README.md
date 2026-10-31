@@ -4,8 +4,9 @@ Independent consumer information for checking NSW property agents. **Not a gover
 
 The visitor journey has two distinct checks:
 
-1. Search NSW Government property licence records; explicitly identify an agent using the published suburb, name and licence number; retrieve the detailed licence status.
-2. Visit the official NSW Fair Trading Name and Shame Register. AgentCheck does not independently search it. Any finding entered on return is labelled **visitor-reported**, never government-verified. A current licence is not evidence of a clean disciplinary history.
+1. Search NSW Government property licence records by name/licence number, select the correct identity and read the detailed licence status directly in AgentCheck. An optional suburb/postcode mode matches registered-address fields returned by the existing general-text API; its coverage is **not verified or comprehensive**. The official Verify NSW location search remains necessary for broader results.
+2. Keep AgentCheck open while visiting the official NSW Fair Trading Name and Shame Register in a separate tab. AgentCheck does not independently search it. Any finding entered by the visitor is labelled **visitor-reported**, never government-verified. A current licence is not evidence of a clean disciplinary history.
+3. Read the independent five-point consumer checklist covering licence status, regulatory history, sales evidence, awards and referral incentives.
 
 ## Source of truth
 

@@ -150,7 +150,11 @@
               </div>
             </div>
             <form id="search-form" novalidate role="search">
-              <label for="search-input"
+              <div class="search-mode" role="group" aria-label="Choose how to search">
+                <button class="search-mode-option is-selected" data-search-mode="name" type="button" aria-pressed="true">Name / licence</button>
+                <button class="search-mode-option" data-search-mode="location" type="button" aria-pressed="false">Suburb / postcode</button>
+              </div>
+              <label for="search-input" id="search-label"
                 >Search an agent or agency by name or licence number</label
               >
               <div class="search-controls">
@@ -190,7 +194,8 @@
                   <span class="btn-arrow" aria-hidden="true">↗</span>
                 </button>
               </div>
-              <p class="search-help">For agencies, use the legal company name or corporation licence number. <a href="/check-nsw-real-estate-agency/">Agency checking guide ↗</a></p>
+              <p class="search-help" id="search-mode-note">For agencies, use the legal company name or corporation licence number. <a href="/check-nsw-real-estate-agency/">Agency checking guide ↗</a></p>
+              <p class="search-location-guide" id="search-location-guide" hidden>Location results are limited to matches returned by the government's general text-search service. They are not a list of every agent serving that area. For a broader suburb or postcode search, <a href="https://verify.licence.nsw.gov.au/home/Property" target="_blank" rel="noopener noreferrer">use Verify NSW's location filters ↗</a>.</p>
             </form>
           </div>
           <div class="hero-verification-steps" data-reveal aria-label="How the two checks work">
@@ -294,6 +299,7 @@
               <div class="eyebrow eyebrow-dark">BEYOND THE REGISTERS</div>
               <h2 id="questions-title">Look beyond <em>the badge.</em></h2>
               <p>Awards, rankings and referrals are marketing claims, not official checks. Ask what sits behind them.</p>
+              <p class="editorial-guide-link"><a href="/choose-a-real-estate-agent/">Read the independent five-point agent selection guide ↗</a></p>
             </div>
           </div>
           <div class="question-grid editorial-rows" id="question-grid">
@@ -470,6 +476,7 @@
             <a href="/check-nsw-real-estate-agent/">Check an agent’s licence</a>
             <a href="/check-nsw-real-estate-agency/">Check an agency’s licence</a>
             <a href="/nsw-name-and-shame-register/">Name and Shame Register guide</a>
+            <a href="/choose-a-real-estate-agent/">Five checks before appointing an agent</a>
             <a href="/#questions">Awards, rankings &amp; referrals</a>
           </div>
           <div class="footer-group">

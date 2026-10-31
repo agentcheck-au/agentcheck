@@ -32,7 +32,9 @@
     records = [],
     activeRecord,
     activeDetails,
-    activeCheckedAt;
+    activeCheckedAt,
+    searchMode = "name",
+    lastSearch = "";
   let report = "",
     toastTimer,
     truncated = false;
@@ -282,6 +284,29 @@
     button.addEventListener("click", () => selectRecord(record));
     return row;
   }
+  function setSearchMode(mode) {
+    searchMode = mode;
+    for (const option of document.querySelectorAll("[data-search-mode]")) {
+      const selected = option.dataset.searchMode === mode;
+      option.classList.toggle("is-selected", selected);
+      option.setAttribute("aria-pressed", String(selected));
+    }
+    const location = mode === "location";
+    $("search-label").textContent = location
+      ? "Explore NSW licence records by registered suburb or postcode"
+      : "Search an agent or agency by name or licence number";
+    input.placeholder = location ? "Suburb or postcode, e.g. Riverstone" : "Name or licence number";
+    $("search-button").firstChild.textContent = location ? "Search records " : "Check licence ";
+    $("search-mode-note").hidden = location;
+    $("search-location-guide").hidden = !location;
+    input.setCustomValidity("");
+  }
+  for (const option of document.querySelectorAll("[data-search-mode]")) {
+    option.addEventListener("click", () => {
+      setSearchMode(option.dataset.searchMode);
+      input.focus();
+    });
+  }
   function drawRows() {
     const term = $("suburb-filter").value.trim().toLocaleLowerCase("en-AU");
     const filtered = records.filter(
@@ -304,23 +329,30 @@
     busy(false);
     detail.hidden = true;
     list.hidden = false;
-    $("results-tools").hidden = records.length === 0;
+    $("results-tools").hidden = records.length === 0 || searchMode === "location";
     $("back-button").hidden = true;
     $("results-kicker").textContent = "NSW GOVERNMENT LICENCE SEARCH";
-    $("results-title").textContent =
-      records.length === 1
+    $("results-title").textContent = searchMode === "location"
+      ? `${records.length} returned location matches`
+      : records.length === 1
         ? "One record. Confirm the person or company."
         : `${records.length} matching licence records`;
-    $("results-subtitle").textContent =
-      "Start with the suburb. Match the name and licence number before selecting a record.";
+    $("results-subtitle").textContent = searchMode === "location"
+      ? `Showing matching registered suburb/postcode fields for “${lastSearch}” where returned by the NSW general search API. This is not a directory of every agent operating there.`
+      : "Start with the suburb. Match the name and licence number before selecting a record.";
     notify(
-      truncated
-        ? "Showing the first 20 matches. A suburb filter only filters these returned records; search with a full name for more precise results."
-        : records.length
-          ? ""
-          : "No licence records matched. Try a full name or a licence number.",
+      searchMode === "location"
+        ? "Coverage may be incomplete, including when zero matches are returned. Verify NSW provides the official suburb and postcode search filters."
+        : truncated
+          ? "Showing the first 20 matches. A suburb filter only filters these returned records; search with a full name for more precise results."
+          : records.length
+            ? ""
+            : "No licence records matched. Try a full name or a licence number.",
     );
     drawRows();
+    if (searchMode === "location") {
+      officialLink(list, "Run a broader search using Verify NSW suburb filters ↗", LICENCES);
+    }
     if (moveFocus) {
       scrollTo(section);
       focus($("results-title"));
@@ -484,7 +516,7 @@
       box,
       "p",
       "",
-      "Select and copy this licence number, then continue to the NSW register. Use your browser’s Back button to return here.",
+      "Select and copy this licence number, then open the NSW register in a separate tab. Return to this AgentCheck tab for guidance.",
     );
     const row = add(box, "div", "fallback-row");
     const numberInput = add(row, "input", "fallback-number");
@@ -509,7 +541,6 @@
       box,
       "Continue to the Name and Shame Register ↗",
       REGISTER,
-      true,
     );
     host.scrollIntoView({ behavior: "auto", block: "center" });
     numberInput.focus();
@@ -537,8 +568,8 @@
         "The selected licence number is ready. Open the register, then paste the number into its search bar.",
       ],
       [
-        "Return here for guidance",
-        "Use your browser’s Back button after checking. Choose what you found below to see what it means.",
+        "Keep AgentCheck open",
+        "The official register opens in a new tab. After checking it, return to this tab and choose what you found below.",
       ],
     ]) {
       const step = add(directions, "li");
@@ -557,31 +588,27 @@
     numberInput.addEventListener("click", () => numberInput.select());
     const button = add(
       action,
-      "button",
+      "a",
       "btn btn-primary regulatory-cta",
       "Open Name and Shame Register",
     );
+    button.href = REGISTER;
+    button.target = "_blank";
+    button.rel = "noopener noreferrer";
     add(button, "span", "btn-arrow", "↗").setAttribute("aria-hidden", "true");
-    button.type = "button";
-    button.disabled = !number;
     button.setAttribute("aria-describedby", "regulatory-copy-hint");
     const copyHint = add(
       action,
       "p",
       "regulatory-hint",
-      "We’ll copy the number when you open the register. AgentCheck does not search this register.",
+      number
+        ? "Opens the official register in a new tab. AgentCheck attempts to copy the licence number; if copying is blocked, select it above."
+        : "No licence number was supplied. Search the official register by the exact legal name.",
     );
     copyHint.id = "regulatory-copy-hint";
-    const savedNotice = add(action, "p", "regulatory-hint");
-    savedNotice.hidden = true;
     const help = add(action, "details", "handoff-help");
     add(help, "summary", "", "Need help copying?");
-    officialLink(
-      help,
-      "Open Name and Shame Register without copying ↗",
-      REGISTER,
-      true,
-    );
+    officialLink(help, "Open the register without copying ↗");
     const fallback = add(parent, "div");
     fallback.hidden = true;
     const manual = add(
@@ -591,33 +618,21 @@
       "Copy manually instead",
     );
     manual.type = "button";
-    manual.addEventListener("click", () => {
-      saveJourney();
-      fallbackCopy(fallback, number, false);
-    });
     manual.disabled = !number;
+    manual.addEventListener("click", () => fallbackCopy(fallback, number, false));
     button.addEventListener("click", async () => {
+      // Native anchor navigation opens the official register in a separate tab
+      // under the user's own click, regardless of clipboard permissions.
+      saveJourney();
       if (!number) return;
       const expected = revision;
-      button.disabled = true;
       const copied = await copyLicence(number);
-      button.disabled = false;
-      if (expected !== revision || activeRecord?.licenceID !== record.licenceID)
-        return;
-      if (!saveJourney()) {
-        savedNotice.hidden = false;
-        savedNotice.textContent =
-          "Your browser blocked session storage. Keep this tab open and use the register link in a new tab.";
-        const link = officialLink(action, "Open register in a new tab ↗");
-        link.focus();
-        return;
-      }
+      if (expected !== revision || activeRecord?.licenceID !== record.licenceID) return;
       if (copied) {
-        toast("Licence number copied. Use it to check the Name and Shame Register.");
-        window.location.assign(REGISTER);
+        toast("Licence number copied. Paste it into the official register, then return to this tab.");
       } else {
         fallbackCopy(fallback, number);
-        toast("Copy unavailable. Select the number to copy it manually.");
+        toast("Copy unavailable. Select the number above and copy it manually.");
       }
     });
     const follow = add(parent, "section", "register-followup");
@@ -930,6 +945,7 @@
   async function search(q) {
     const { id, signal } = begin();
     const startedAt = Date.now();
+    lastSearch = q;
     clearSaved();
     report = "";
     activeDetails = null;
@@ -957,7 +973,8 @@
       focus($("results-title"));
     }
     try {
-      const data = await api(`/api/search?q=${encodeURIComponent(q)}`, signal);
+      const mode = searchMode === "location" ? "&mode=location" : "";
+      const data = await api(`/api/search?q=${encodeURIComponent(q)}${mode}`, signal);
       if (id !== revision) return;
       if (!Array.isArray(data.results))
         throw new Error(
@@ -999,7 +1016,9 @@
     const q = raw.trim().replace(/ +/g, " ");
     if (q.length < 2 || q.length > 80 || /[\u0000-\u001f\u007f]/.test(raw)) {
       input.setCustomValidity(
-        "Enter a name or licence number using 2 to 80 characters.",
+        searchMode === "location"
+          ? "Enter a registered suburb or postcode using 2 to 80 characters."
+          : "Enter a name or licence number using 2 to 80 characters.",
       );
       input.reportValidity();
       return;
